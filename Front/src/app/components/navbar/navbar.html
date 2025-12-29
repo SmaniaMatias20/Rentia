@@ -1,0 +1,44 @@
+<nav class="
+    w-full h-16
+    bg-gray-800 text-white
+    flex items-center justify-between
+    px-6
+    shadow-lg
+  ">
+    <!-- Logo + Nombre -->
+    <div class="flex items-center gap-3">
+        <img src="assets/images/rentia.png" alt="Rentia" class="h-10 w-auto" />
+        <span class="text-xl font-bold tracking-wide">
+            Rentia
+        </span>
+    </div>
+
+    <!-- Usuario + Logout -->
+    <div class="flex items-center gap-6">
+        <!-- Usuario -->
+        <div class="flex items-center gap-2">
+            <span class="material-icons !text-2xl">
+                person
+            </span>
+            <span class="font-medium">
+                {{ username }}
+            </span>
+        </div>
+
+        <!-- Logout -->
+        <button (click)="logout()" class="
+        flex items-center gap-2
+        px-4 py-2
+        rounded-lg
+        bg-red-600 hover:bg-red-700
+        transition
+      ">
+            <span class="material-icons !text-xl">
+                logout
+            </span>
+            <span class="hidden sm:inline">
+                Salir
+            </span>
+        </button>
+    </div>
+</nav>
