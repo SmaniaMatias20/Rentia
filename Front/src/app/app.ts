@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
+import { NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,21 @@ import { Navbar } from './components/navbar/navbar';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('front-rentia');
+  showNavbar = true;
+
+  onNavigationStart(event: NavigationStart) {
+    if (event.url === '/') {
+      this.showNavbar = false;
+    } else {
+      this.showNavbar = true;
+    }
+  }
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.onNavigationStart(event);
+      }
+    });
+  }
 }
