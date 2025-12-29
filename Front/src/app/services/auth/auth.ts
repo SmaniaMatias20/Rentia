@@ -81,11 +81,26 @@ export class Auth {
   }
 
   /**
-   * Obtiene el usuario actual logueado (async)
+   * Obtiene el usuario actual logueado con todos los datos de la tabla "users"
    */
-  async getCurrentUser(): Promise<User | null> {
-    const { data } = await this.db.client.auth.getUser();
-    return data.user;
+  async getCurrentUser(): Promise<any | null> {
+    // 1️⃣ Obtener el user id desde Supabase Auth
+    const { data: authData, error: authError } = await this.db.client.auth.getUser();
+    if (authError || !authData.user) return null;
+
+    const userId = authData.user.id;
+
+    // 2️⃣ Buscar usuario en la tabla "users" por su id
+    const { data: user, error: fetchError } = await this.db.client
+      .from('users')
+      .select('*') // devuelve todos los campos: username, role, active, image_url, etc.
+      .eq('id', userId)
+      .single();
+
+    if (fetchError || !user) return null;
+
+    return user;
   }
+
 
 }
