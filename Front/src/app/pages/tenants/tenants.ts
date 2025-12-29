@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CardTenant } from './components/card-tenant/card-tenant';
 
 @Component({
   selector: 'app-tenants',
-  imports: [],
+  imports: [CardTenant],
   templateUrl: './tenants.html',
   styleUrl: './tenants.css',
 })
@@ -13,6 +14,10 @@ export class Tenants {
 
   goToHome() {
     this.router.navigateByUrl('/home');
+  }
+
+  goToNewTenant() {
+    console.log('go to new tenant');
   }
 
 }

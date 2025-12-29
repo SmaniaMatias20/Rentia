@@ -1,0 +1,15 @@
+<div class="
+    sm:w-128 sm:h-64 w-96 h-40
+    rounded-xl p-6
+    text-white shadow-lg
+    flex items-center justify-center gap-2
+    cursor-pointer
+    transition hover:scale-[1.03]
+    relative
+  " [ngClass]="bgColor" [style.backgroundImage]="backgroundImage" [style.backgroundSize]="'cover'"
+    [style.backgroundPosition]="'center'" [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
+    <div class="absolute inset-0 bg-black/30 rounded-xl z-0"></div>
+
+    <span class="material-icons !text-5xl z-10">{{ icon }}</span>
+    <h1 class="font-semibold text-center text-4xl text-white drop-shadow-xl z-10">{{ title }}</h1>
+</div>

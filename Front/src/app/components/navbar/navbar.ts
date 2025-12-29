@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Auth } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -11,13 +12,11 @@ export class Navbar {
 
   username = 'Matías';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private auth: Auth) { }
 
   logout() {
     console.log('Logout');
-    // limpiar token / session
-    // redirigir a login
-    this.router.navigateByUrl('/auth');
+    this.auth.signOut();
 
   }
 

@@ -7,6 +7,7 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
+import { Auth } from '../../../../services/auth/auth';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ import {
 export class Register {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private auth: Auth) {
     this.registerForm = this.fb.group({
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -32,6 +33,18 @@ export class Register {
       return;
     }
     console.log(this.registerForm.value);
+
+    this.auth.signUp(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password)
+      .then(({ user }) => {
+        if (user) {
+          console.log('Registro exitoso:', user.email);
+        } else {
+          console.error('Error al registrarse:');
+        }
+      })
+      .catch((error) => {
+        console.error('Error al registrarse:', error.message);
+      });
   }
 
 }

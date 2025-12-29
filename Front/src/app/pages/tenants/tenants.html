@@ -1,18 +1,55 @@
-<div class="max-w-screen bg-black px-4 relative border">
+<div class="max-w-screen bg-black px-4 relative border sm:max-h-screen">
 
-    <button class="
-      absolute top-4 right-4
-      py-2 px-4
-      rounded-lg bg-blue-600 hover:bg-blue-700
-      disabled:bg-blue-400 disabled:cursor-not-allowed
-      text-white font-semibold transition
-    " (click)="goToHome()">
-        Volver al menú
-    </button>
+    <!-- Contenedor de botones arriba a la derecha -->
+    <div class="absolute top-4 right-4 flex flex-wrap gap-2 z-20">
+        <!-- Nueva propiedad -->
+        <button class="
+        flex items-center gap-1
+        py-2 px-4
+        rounded-lg bg-green-600 hover:bg-green-700
+        disabled:bg-green-400 disabled:cursor-not-allowed
+        text-white font-semibold transition
+      " (click)="goToNewTenant()">
+            <span class="material-icons">add</span>
+            Nuevo inquilino
+        </button>
 
-    <!-- Aquí va el resto del contenido del div -->
-    <div class="pt-12">
-        <!-- Tu contenido principal, por ejemplo las cards -->
+        <!-- Volver al menú -->
+        <button class="
+        flex items-center gap-1
+        py-2 px-4
+        rounded-lg bg-blue-600 hover:bg-blue-700
+        disabled:bg-blue-400 disabled:cursor-not-allowed
+        text-white font-semibold transition
+      " (click)="goToHome()">
+            <span class="material-icons">arrow_back</span>
+            Volver al menú
+        </button>
     </div>
 
+    <!-- Contenido principal (cards) -->
+    <div class="pt-24">
+        <div class="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        lg:grid-cols-3
+        gap-6
+        place-items-center
+        w-full
+        p-4
+      ">
+            <app-card-tenant icon="person" title="Juan Perez" bgColor="bg-green-600"
+                backgroundImage="url('assets/images/tenant.jpg')"></app-card-tenant>
+
+            <app-card-tenant icon="person" title="Rodrigo Gomez" bgColor="bg-emerald-600"
+                backgroundImage="url('assets/images/tenant.jpg')"></app-card-tenant>
+
+            <app-card-tenant icon="person" title="Claudia Rodriguez" bgColor="bg-rose-600"
+                backgroundImage="url('assets/images/tenant.jpg')"></app-card-tenant>
+
+            <app-card-tenant icon="person" title="Maria Perez" bgColor="bg-sky-600"
+                backgroundImage="url('assets/images/tenant.jpg')"></app-card-tenant>
+        </div>
+    </div>
 </div>
