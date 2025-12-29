@@ -1,7 +1,7 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, NavigationEnd, Router } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
-import { NavigationStart, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,21 +10,20 @@ import { NavigationStart, Router } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  showNavbar = true;
 
-  onNavigationStart(event: NavigationStart) {
-    if (event.url === '/') {
-      this.showNavbar = false;
-    } else {
-      this.showNavbar = true;
-    }
-  }
 
-  constructor(private router: Router) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        this.onNavigationStart(event);
-      }
+  showNavbar: boolean = false;
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.showNavbar = event.url.includes('/home') || event.url.includes('/profile') || event.url.includes('/statistics') || event.url.includes('/payments') || event.url.includes('/tenants') || event.url.includes('/properties');
     });
+
+
   }
+
+
 }
