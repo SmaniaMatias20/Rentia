@@ -22,7 +22,7 @@
                 person
             </span>
             <span class="font-medium">
-                {{ user?.username }}
+                {{ user?.username.substring(0, 1).toUpperCase() + user?.username.substring(1) }}
             </span>
         </div>
 

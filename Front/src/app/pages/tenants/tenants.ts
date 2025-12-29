@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardTenant } from './components/card-tenant/card-tenant';
+import { FormTenant } from './components/form-tenant/form-tenant';
 
 @Component({
   selector: 'app-tenants',
-  imports: [CardTenant],
+  imports: [CardTenant, FormTenant],
   templateUrl: './tenants.html',
   styleUrl: './tenants.css',
 })
 export class Tenants {
+  formTenant = false;
 
   constructor(private router: Router) { }
 
@@ -16,8 +18,8 @@ export class Tenants {
     this.router.navigateByUrl('/home');
   }
 
-  goToNewTenant() {
-    console.log('go to new tenant');
+  openFormTenant() {
+    this.formTenant = true;
   }
 
 }

@@ -1,0 +1,62 @@
+<!-- Fondo oscuro semi-transparente -->
+<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <!-- Formulario centrado en modo oscuro -->
+    <form [formGroup]="tenantForm" (ngSubmit)="submit()"
+        class="bg-gray-700 text-white p-6 rounded-xl shadow-lg w-full max-w-md space-y-4 relative">
+
+        <!-- Botón de cerrar -->
+        <button type="button" class="absolute top-2 right-2 text-gray-300 hover:text-white font-bold" (click)="close()">
+            ✕
+        </button>
+
+        <!-- Nombre -->
+        <div>
+            <input type="text" formControlName="name" placeholder="Nombre"
+                class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <!-- error -->
+            <div class="min-h-[1.25rem]">
+                @if (name && name.touched) {
+                <p class="text-sm text-red-500 mt-1">
+                    El nombre es obligatorio y debe tener al menos 3 caracteres.
+                </p>
+                }
+            </div>
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+            <input type="text" formControlName="phone" placeholder="Teléfono"
+                class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <!-- error -->
+            <div class="min-h-[1.25rem]">
+                @if (phone && phone.touched) {
+                <p class="text-sm text-red-500 mt-1">
+                    Teléfono inválido. Formato: +123456789
+                </p>
+                }
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <input type="email" formControlName="email" placeholder="Correo"
+                class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <!-- error -->
+            <div class="min-h-[1.25rem]">
+                @if (email && email.touched) {
+                <p class="text-sm text-red-500 mt-1">
+                    Email inválido
+                </p>
+                }
+            </div>
+        </div>
+
+        <button type="submit" [disabled]="submitting"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">
+            Guardar Inquilino
+        </button>
+    </form>
+</div>
