@@ -1,28 +1,67 @@
-<div class="mt-10 w-screen">
+<div class="mx-auto mt-10">
 
     @if (propertyData != null)
     {
     <div
-        class="bg-gray-800 text-white rounded-xl shadow-lg overflow-hidden relative hover:scale-105 transform transition-all duration-300">
+        class="bg-gray-800 text-white rounded-xl shadow-lg overflow-hidden relative hover:scale-105 transform transition-all duration-300 flex">
 
-        <!-- Imagen de la propiedad -->
-        <img class="w-full h-48 object-cover" [src]="propertyData.url_image" [alt]="propertyData.name">
+        <!-- Imagen a la izquierda -->
+        <img class="w-1/3 h-auto object-cover" [src]="propertyData.url_image" [alt]="propertyData.name">
 
-        <div class="p-6">
-            <h2 class="text-2xl font-bold mb-2">{{ propertyData.name }}</h2>
-            <p class="text-gray-300 mb-1"><strong>Dirección:</strong> {{ propertyData.address }}</p>
-            <p class="text-gray-300 mb-1"><strong>Valor:</strong> ${{ propertyData.value }}</p>
-            <p class="text-gray-300 mb-1"><strong>Costos adicionales:</strong> ${{ propertyData.additional_costs }}</p>
-            <p class="text-gray-300 mb-1"><strong>Creada el:</strong> {{ propertyData.created_at | date:'short' }}</p>
-            <p class="text-gray-300 mb-1"><strong>Inquilino asignado:</strong> {{ propertyData.tenant_id ?
-                propertyData.tenant_id : 'Ninguno' }}</p>
+        <!-- Información a la derecha -->
+        <div class="p-6 flex-1 flex flex-col justify-between">
+            <div class="flex flex-col gap-4">
+                <h2 class="text-2xl font-bold mb-4 flex items-center">
+                    <span class="material-icons mr-2">home</span>
+                    {{ propertyData.name }}
+                </h2>
+
+                <div class="grid grid-cols-2 gap-4">
+
+                    <p class="text-gray-300 mb-2 flex items-center">
+                        <span class="material-icons mr-2">place</span>
+                        <strong>Dirección:</strong> {{ propertyData.address }}
+                    </p>
+                    <p class="text-gray-300 mb-2 flex items-center">
+                        <span class="material-icons mr-2">attach_money</span>
+                        <strong>Valor:</strong> ${{ propertyData.value }}
+                    </p>
+                    <p class="text-gray-300 mb-2 flex items-center">
+                        <span class="material-icons mr-2">payments</span>
+                        <strong>Costos adicionales:</strong> ${{ propertyData.additional_costs }}
+                    </p>
+                    <p class="text-gray-300 mb-2 flex items-center">
+                        <span class="material-icons mr-2">calendar_today</span>
+                        <strong>Creada el:</strong> {{ propertyData.created_at | date:'short' }}
+                    </p>
+                    <p class="text-gray-300 mb-2 flex items-center">
+                        <span class="material-icons mr-2">person</span>
+                        <strong>Inquilino:</strong> {{ propertyData.tenant_id ? propertyData.tenant_id : 'Ninguno'
+                        }}
+                    </p>
+                    <p class=" text-gray-300 mb-2 flex items-center">
+                        <span class="material-icons mr-2">status</span>
+                        <strong>Estado:</strong> {{ propertyData.is_enabled ? 'Activa' : 'Inactiva' }}
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <!-- Badge de estado -->
+                <span class="self-start mt-4 px-3 py-1 rounded-full font-semibold text-sm"
+                    [ngClass]="propertyData.is_enabled ? 'bg-green-600' : 'bg-red-600'">
+                    {{ propertyData.is_enabled ? 'Activa' : 'Inactiva' }}
+                </span>
+
+                <!-- Badge de estado -->
+                <span class="self-start mt-4 px-3 py-1 rounded-full font-semibold text-sm"
+                    [ngClass]="propertyData.tenant_id ? 'bg-green-600' : 'bg-red-600'">
+                    {{ propertyData.tenant_id ? 'Alquilada' : 'No alquilada' }}
+                </span>
+
+            </div>
         </div>
-
-        <!-- Badge de estado -->
-        <span class="absolute top-4 right-4 px-3 py-1 rounded-full font-semibold text-sm"
-            [ngClass]="propertyData.is_enabled ? 'bg-green-600' : 'bg-red-600'">
-            {{ propertyData.is_enabled ? 'Activa' : 'Inactiva' }}
-        </span>
     </div>
     }
     @else
