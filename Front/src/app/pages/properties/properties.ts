@@ -64,6 +64,11 @@ export class Properties {
     this.openFormProperty();
   }
 
+  async removeProperty(id: number) {
+    console.log('Eliminando propiedad:', id);
+    await this.property.deleteProperty(id);
+    this.loadProperties();
+  }
 
 
 }

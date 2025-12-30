@@ -7,9 +7,18 @@
     transition hover:scale-[1.03]
     relative
   " [ngClass]="bgColor" [style.backgroundImage]="backgroundImage" [style.backgroundSize]="'cover'"
-    [style.backgroundPosition]="'center'" [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
-    <div class="absolute inset-0 bg-black/30 rounded-xl z-0"></div>
+  [style.backgroundPosition]="'center'" [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
 
-    <span class="material-icons !text-5xl z-10">{{ icon }}</span>
-    <h1 class="font-semibold text-center text-4xl text-white drop-shadow-xl z-10">{{ title }}</h1>
+
+  <div class="absolute inset-0 bg-black/30 rounded-xl z-0"></div>
+  <button class="
+    absolute top-2 right-2
+    text-gray-300 hover:text-white font-bold
+    transition z-20
+  " (click)="deleteProperty(); $event.stopPropagation()">
+    ✕
+  </button>
+
+  <span class="material-icons !text-5xl z-10">{{ icon }}</span>
+  <h1 class="font-semibold text-center text-4xl text-white drop-shadow-xl z-10">{{ title }}</h1>
 </div>

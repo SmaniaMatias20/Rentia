@@ -49,15 +49,17 @@
         p-4
       ">
             @for (property of properties; track property.id) {
-            <app-card-property icon="person" title="{{property.name}}" bgColor="bg-green-600"
-                backgroundImage="url('assets/images/property.webp')"></app-card-property>
+            <app-card-property icon="person" title="{{property.name}}" bgColor="bg-green-600" [property]="property"
+                backgroundImage="url('assets/images/property.webp')" (delete)="removeProperty($event)">
+            </app-card-property>
+
             }
         </div>
     </div>
 
     <!-- Formulario para crear nueva propiedad -->
     @if (formProperty) {
-    <app-form-property (closeForm)="formProperty = false" (createProperty)="onPropertyCreated()"></app-form-property>
+    <app-form-property (closeForm)=" formProperty=false" (createProperty)="onPropertyCreated()"></app-form-property>
     }
     }
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -14,8 +14,10 @@ export class CardProperty {
   @Input() title!: string;
   @Input() bgColor: string = 'bg-blue-600';
   @Input() backgroundImage: string = '';
-  @Input() url!: string;         // url
+  @Input() url!: string;
+  @Input() property!: any;
 
+  @Output() delete = new EventEmitter<number>(); // <-- emitir id al padre
 
   constructor(private router: Router) { }
 
@@ -25,5 +27,9 @@ export class CardProperty {
     }
   }
 
+  deleteProperty() {
+    console.log('Eliminando propiedad:', this.property.id);
+    this.delete.emit(this.property.id); // <-- emitir el id al padre
+  }
 
 }

@@ -46,4 +46,22 @@ export class Property {
     return data || [];
   }
 
+  /**
+   * Elimina una propiedad en la tabla "properties"
+   */
+  async deleteProperty(id: number): Promise<{ error?: PostgrestError }> {
+    const { error } = await this.db.client
+      .from('properties')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error al eliminar propiedad:', error.message);
+      return { error };
+    }
+
+    console.log('Propiedad eliminada correctamente');
+    return {};
+  }
+
 }
