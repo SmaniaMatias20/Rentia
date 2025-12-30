@@ -47,8 +47,8 @@ export class Tenants {
   }
 
   onTenantCreated() {
-    this.loadTenants(); // solo recargar lista de inquilinos, no abrir form
-    this.formTenant = false; // asegurar que se cierra
+    this.loadTenants();
+    this.formTenant = false;
   }
 
   goToHome() {

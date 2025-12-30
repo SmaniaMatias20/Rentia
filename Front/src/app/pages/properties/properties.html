@@ -39,17 +39,17 @@
         w-full
         p-4
       ">
-            <app-card-property icon="home" title="Propiedad 1" bgColor="bg-green-600"
+            @for (property of properties; track property.id) {
+            <app-card-property icon="person" title="{{property.name}}" bgColor="bg-green-600"
                 backgroundImage="url('assets/images/property.webp')"></app-card-property>
-
-            <app-card-property icon="home" title="Propiedad 2" bgColor="bg-emerald-600"
-                backgroundImage="url('assets/images/property.webp')"></app-card-property>
-
-            <app-card-property icon="home" title="Propiedad 3" bgColor="bg-rose-600"
-                backgroundImage="url('assets/images/property.webp')"></app-card-property>
-
-            <app-card-property icon="home" title="Propiedad 4" bgColor="bg-sky-600"
-                backgroundImage="url('assets/images/property.webp')"></app-card-property>
+            }
         </div>
     </div>
+
+    <!-- Formulario para crear nueva propiedad -->
+    @if (formProperty) {
+    <app-form-property (closeForm)="formProperty = false" (createProperty)="onPropertyCreated()"></app-form-property>
+    }
+
+
 </div>
