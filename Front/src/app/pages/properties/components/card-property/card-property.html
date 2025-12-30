@@ -11,12 +11,13 @@
 
 
   <div class="absolute inset-0 bg-black/30 rounded-xl z-0"></div>
+  <!-- Botón de eliminar con icono trash -->
   <button class="
     absolute top-2 right-2
-    text-gray-300 hover:text-white font-bold
-    transition z-20
+    text-gray-300 hover:text-red-500 font-bold
+    transition z-20 
   " (click)="deleteProperty(); $event.stopPropagation()">
-    ✕
+    <span class="material-icons">delete</span>
   </button>
 
   <span class="material-icons !text-5xl z-10">{{ icon }}</span>

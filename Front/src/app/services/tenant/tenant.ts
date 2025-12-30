@@ -46,4 +46,43 @@ export class Tenant {
     return data || [];
   }
 
+  /**
+   * Elimina un inquilino en la tabla "tenants" y limpia referencias en properties si existen
+   */
+  async deleteTenant(id: number): Promise<{ error?: PostgrestError }> {
+    try {
+      // Limpiar tenant_id en properties (si hay coincidencias, se actualizarán; si no, no pasa nada)
+      const { error: errorUpdate } = await this.db.client
+        .from('properties')
+        .update({ tenant_id: null })
+        .eq('tenant_id', id);
+
+      if (errorUpdate) {
+        console.error('Error al limpiar tenant_id en properties:', errorUpdate.message);
+        return { error: errorUpdate };
+      }
+
+      console.log('Se limpiaron tenant_id en properties correctamente (si existían)');
+
+      // Eliminar el tenant
+      const { error: errorDelete } = await this.db.client
+        .from('tenants')
+        .delete()
+        .eq('id', id);
+
+      if (errorDelete) {
+        console.error('Error al eliminar tenant:', errorDelete.message);
+        return { error: errorDelete };
+      }
+
+      console.log('Tenant eliminado correctamente');
+      return {};
+
+    } catch (err: any) {
+      console.error('Error inesperado al eliminar tenant:', err.message);
+      return { error: { message: err.message } as PostgrestError };
+    }
+  }
+
+
 }

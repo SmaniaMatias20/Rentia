@@ -1,18 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardTenant } from './components/card-tenant/card-tenant';
 import { FormTenant } from './components/form-tenant/form-tenant';
 import { Tenant } from '../../services/tenant/tenant';
 import { Auth } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
+import { Toast } from '../../components/toast/toast';
 
 @Component({
   selector: 'app-tenants',
-  imports: [CardTenant, FormTenant, Spinner],
+  imports: [CardTenant, FormTenant, Spinner, Toast],
   templateUrl: './tenants.html',
   styleUrl: './tenants.css',
 })
 export class Tenants {
+  @ViewChild('toast') toast!: Toast;
   loading = false;
   formTenant = false;
   tenants: any[] = [];
@@ -57,6 +59,18 @@ export class Tenants {
 
   openFormTenant() {
     this.formTenant = true;
+  }
+
+  async removeTenant(id: number) {
+    try {
+      console.log('Eliminando inquilino:', id);
+      await this.tenant.deleteTenant(id);
+      this.loadTenants();
+      this.toast.showToast('Inquilino eliminado correctamente', 'success');
+    } catch (error) {
+      console.error('Error al eliminar tenant:', error);
+      this.toast.showToast('Error al eliminar inquilino', 'error');
+    }
   }
 
 }

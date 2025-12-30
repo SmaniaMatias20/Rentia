@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -14,7 +14,10 @@ export class CardTenant {
   @Input() title!: string;
   @Input() bgColor: string = 'bg-blue-600';
   @Input() backgroundImage: string = '';
-  @Input() url!: string;         // url
+  @Input() url!: string;
+  @Input() tenant!: any;
+
+  @Output() delete = new EventEmitter<number>(); // <-- emitir id al padre
 
 
   constructor(private router: Router) { }
@@ -23,6 +26,11 @@ export class CardTenant {
     if (this.url) {
       this.router.navigateByUrl(this.url);
     }
+  }
+
+  deleteTenant() {
+    console.log('Eliminando inquilino:', this.tenant.id);
+    this.delete.emit(this.tenant.id); // <-- emitir el id al padre
   }
 
 }

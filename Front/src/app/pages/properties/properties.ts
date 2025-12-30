@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardProperty } from './components/card-property/card-property';
 import { FormProperty } from './components/form-property/form-property';
 import { Property } from '../../services/property/property';
 import { Auth } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
+import { Toast } from '../../components/toast/toast';
 
 
 @Component({
@@ -14,6 +15,7 @@ import { Spinner } from '../../components/spinner/spinner';
   styleUrl: './properties.css',
 })
 export class Properties {
+  @ViewChild('toast') toast!: Toast;
   properties: any[] = [];
   loading = false;
   user: any;
@@ -65,9 +67,15 @@ export class Properties {
   }
 
   async removeProperty(id: number) {
-    console.log('Eliminando propiedad:', id);
-    await this.property.deleteProperty(id);
-    this.loadProperties();
+    try {
+      console.log('Eliminando propiedad:', id);
+      await this.property.deleteProperty(id);
+      this.loadProperties();
+      this.toast.showToast('Propiedad eliminada correctamente', 'success');
+    } catch (error) {
+      console.error('Error al eliminar propiedad:', error);
+      this.toast.showToast('Error al eliminar propiedad', 'error');
+    }
   }
 
 
