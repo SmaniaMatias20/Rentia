@@ -6,7 +6,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 @Injectable({
   providedIn: 'root',
 })
-export class Property {
+export class PropertyService {
 
   constructor(private db: Database, private router: Router) { }
 
@@ -62,6 +62,20 @@ export class Property {
 
     console.log('Propiedad eliminada correctamente');
     return {};
+  }
+
+  async getProperty(id: string | null): Promise<any> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .select('*')
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error al obtener propiedad:', error.message);
+      return {};
+    }
+
+    return data[0] || {};
   }
 
 }

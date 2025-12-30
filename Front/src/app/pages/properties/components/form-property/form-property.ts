@@ -2,7 +2,7 @@ import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Toast } from '../../../../components/toast/toast';
 import { Auth } from '../../../../services/auth/auth';
-import { Property } from '../../../../services/property/property';
+import { PropertyService } from '../../../../services/property/property';
 
 
 @Component({
@@ -21,14 +21,14 @@ export class FormProperty {
   constructor(
     private fb: FormBuilder,
     private auth: Auth,
-    private property: Property,
+    private property: PropertyService,
   ) {
     // Inicializamos el formulario reactivo
     this.propertyForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       address: ['', [Validators.required, Validators.minLength(5)]],
       value: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      aditional_costs: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      additional_costs: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
     });
   }
 
