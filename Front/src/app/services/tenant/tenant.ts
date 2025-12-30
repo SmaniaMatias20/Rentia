@@ -6,7 +6,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 @Injectable({
   providedIn: 'root',
 })
-export class Tenant {
+export class TenantService {
 
   constructor(private db: Database, private router: Router) { }
 

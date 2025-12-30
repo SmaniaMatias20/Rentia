@@ -1,7 +1,7 @@
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Toast } from '../../../../components/toast/toast';
-import { Auth } from '../../../../services/auth/auth';
+import { AuthService } from '../../../../services/auth/auth';
 import { PropertyService } from '../../../../services/property/property';
 
 
@@ -20,7 +20,7 @@ export class FormProperty {
 
   constructor(
     private fb: FormBuilder,
-    private auth: Auth,
+    private auth: AuthService,
     private property: PropertyService,
   ) {
     // Inicializamos el formulario reactivo

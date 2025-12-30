@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CardProperty } from './components/card-property/card-property';
 import { FormProperty } from './components/form-property/form-property';
 import { PropertyService } from '../../services/property/property';
-import { Auth } from '../../services/auth/auth';
+import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
 
@@ -21,7 +21,7 @@ export class Properties {
   user: any;
   formProperty = false;
 
-  constructor(private router: Router, private property: PropertyService, private auth: Auth) {
+  constructor(private router: Router, private property: PropertyService, private auth: AuthService) {
     this.user = this.auth.getCurrentUser();
   }
 

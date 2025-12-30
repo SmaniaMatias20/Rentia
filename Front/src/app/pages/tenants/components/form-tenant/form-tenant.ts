@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Auth } from '../../../../services/auth/auth';
-import { Tenant } from '../../../../services/tenant/tenant';
+import { AuthService } from '../../../../services/auth/auth';
+import { TenantService } from '../../../../services/tenant/tenant';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Toast } from '../../../../components/toast/toast';
 
@@ -20,8 +20,8 @@ export class FormTenant {
 
   constructor(
     private fb: FormBuilder,
-    private auth: Auth,
-    private tenant: Tenant,
+    private auth: AuthService,
+    private tenant: TenantService,
   ) {
     // Inicializamos el formulario reactivo
     this.tenantForm = this.fb.group({

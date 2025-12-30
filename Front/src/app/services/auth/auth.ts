@@ -6,7 +6,7 @@ import { AuthError, Session, User, PostgrestError } from '@supabase/supabase-js'
 @Injectable({
   providedIn: 'root',
 })
-export class Auth {
+export class AuthService {
   constructor(private db: Database, private router: Router) { }
 
   /**

@@ -7,7 +7,7 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
-import { Auth } from '../../../../services/auth/auth';
+import { AuthService } from '../../../../services/auth/auth';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +18,7 @@ import { Auth } from '../../../../services/auth/auth';
 export class Register {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private auth: Auth) {
+  constructor(private fb: FormBuilder, private auth: AuthService) {
     this.registerForm = this.fb.group({
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),

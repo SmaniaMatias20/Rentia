@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth } from '../../services/auth/auth';
+import { AuthService } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +11,7 @@ import { Auth } from '../../services/auth/auth';
 export class Navbar {
   user: any = null; // inicializar como null
 
-  constructor(private router: Router, private auth: Auth) { }
+  constructor(private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
     // 🔹 Obtener usuario async al iniciar el componente

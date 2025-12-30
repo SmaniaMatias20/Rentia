@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CardTenant } from './components/card-tenant/card-tenant';
 import { FormTenant } from './components/form-tenant/form-tenant';
-import { Tenant } from '../../services/tenant/tenant';
-import { Auth } from '../../services/auth/auth';
+import { TenantService } from '../../services/tenant/tenant';
+import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
 
@@ -20,7 +20,7 @@ export class Tenants {
   tenants: any[] = [];
   user: any;
 
-  constructor(private router: Router, private tenant: Tenant, private auth: Auth) {
+  constructor(private router: Router, private tenant: TenantService, private auth: AuthService) {
     this.user = this.auth.getCurrentUser();
   }
 
