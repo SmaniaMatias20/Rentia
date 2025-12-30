@@ -13,7 +13,7 @@ export class Property {
   /**
    * Crea una nueva propiedad en la tabla "properties"
    */
-  async createProperty(property: { user_id: string; name: string; address: string; value: string }): Promise<{ error?: PostgrestError }> {
+  async createProperty(property: { user_id: string; name: string; address: string; value: string, additional_costs: number }): Promise<{ error?: PostgrestError }> {
     const { error } = await this.db.client
       .from('properties')
       .insert([property]);

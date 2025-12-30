@@ -44,13 +44,28 @@
 
         <!-- Valor -->
         <div>
-            <input type="text" formControlName="value" placeholder="Valor"
+            <input type="text" formControlName="value" placeholder="Valor del alquiler"
                 class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <div class="min-h-[1.25rem]">
                 @if (value && value.invalid && (value.dirty || value.touched)) {
                 <p class="text-sm text-red-500 mt-1">
                     Valor inválido. Solo números.
+                </p>
+                }
+            </div>
+        </div>
+
+        <!-- Aditional Costs -->
+        <div>
+            <input type="text" formControlName="additional_costs" placeholder="Costos adicionales (ABL, expensas, etc.)"
+                class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <div class="min-h-[1.25rem]">
+                @if (additional_costs && additional_costs.invalid && (additional_costs.dirty ||
+                additional_costs.touched)) {
+                <p class="text-sm text-red-500 mt-1">
+                    Costos adicionales inválidos. Solo números.
                 </p>
                 }
             </div>

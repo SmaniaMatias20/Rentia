@@ -1,5 +1,13 @@
 <div class="max-w-screen bg-black px-4 relative border sm:max-h-screen">
 
+    @if (loading) {
+    <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+        <app-spinner></app-spinner>
+    </div>
+    }
+
+
+    @if (!loading) {
     <!-- Contenedor de botones arriba a la derecha -->
     <div class="absolute top-4 right-4 flex flex-wrap gap-2 z-20">
         <!-- Nueva propiedad -->
@@ -27,6 +35,7 @@
         </button>
     </div>
 
+
     <!-- Contenido principal (cards) -->
     <div class="pt-24">
         <div class="
@@ -50,6 +59,5 @@
     @if (formProperty) {
     <app-form-property (closeForm)="formProperty = false" (createProperty)="onPropertyCreated()"></app-form-property>
     }
-
-
+    }
 </div>

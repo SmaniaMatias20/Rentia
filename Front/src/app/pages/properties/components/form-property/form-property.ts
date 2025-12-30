@@ -27,7 +27,8 @@ export class FormProperty {
     this.propertyForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       address: ['', [Validators.required, Validators.minLength(5)]],
-      value: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // solo números
+      value: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      aditional_costs: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
     });
   }
 
@@ -35,6 +36,7 @@ export class FormProperty {
   get name() { return this.propertyForm.get('name'); }
   get address() { return this.propertyForm.get('address'); }
   get value() { return this.propertyForm.get('value'); }
+  get additional_costs() { return this.propertyForm.get('additional_costs'); }
 
   // Guardar propiedad
   async submit() {
@@ -53,9 +55,9 @@ export class FormProperty {
     }
 
     const user_id = currentUser.id;
-    const { name, address, value } = this.propertyForm.value;
+    const { name, address, value, additional_costs } = this.propertyForm.value;
 
-    const { error } = await this.property.createProperty({ user_id, name, address, value });
+    const { error } = await this.property.createProperty({ user_id, name, address, value, additional_costs });
 
     if (error) {
       this.toast.showToast('Error al guardar la propiedad', 'error');
