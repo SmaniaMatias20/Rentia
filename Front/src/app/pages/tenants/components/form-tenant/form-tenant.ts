@@ -1,19 +1,22 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Auth } from '../../../../services/auth/auth';
 import { Tenant } from '../../../../services/tenant/tenant';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Toast } from '../../../../components/toast/toast';
 
 
 @Component({
   selector: 'app-form-tenant',
   templateUrl: './form-tenant.html',
   styleUrls: ['./form-tenant.css'],
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, Toast],
 })
-export class FormTenant implements OnInit {
+export class FormTenant {
+  @ViewChild('toast') toast!: Toast;
   tenantForm: FormGroup;
   submitting = false;
   @Output() closeForm = new EventEmitter<void>();
+  @Output() createTenant = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +26,7 @@ export class FormTenant implements OnInit {
     // Inicializamos el formulario reactivo
     this.tenantForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      phone: ['', [Validators.pattern(/^\+?\d{7,15}$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       email: ['', [Validators.email]],
     });
   }
@@ -34,9 +37,6 @@ export class FormTenant implements OnInit {
   get phone() { return this.tenantForm.get('phone'); }
   get email() { return this.tenantForm.get('email'); }
 
-  async ngOnInit() {
-    // Podemos cargar datos adicionales si hace falta
-  }
 
   // Helper para acceder a los controles
   get f() {
@@ -54,7 +54,7 @@ export class FormTenant implements OnInit {
 
     const currentUser = await this.auth.getCurrentUser();
     if (!currentUser) {
-      alert('No hay usuario logueado.');
+      this.toast.showToast('No hay usuario logueado', 'error');
       this.submitting = false;
       return;
     }
@@ -65,15 +65,18 @@ export class FormTenant implements OnInit {
     const { error } = await this.tenant.createTenant({ user_id, name, phone, email });
 
     if (error) {
-      alert('Error al crear inquilino');
+      this.toast.showToast('Error al guardar el inquilino');
       this.submitting = false;
       return;
     }
 
-    alert('Inquilino creado correctamente');
+    this.toast.showToast('Inquilino creado correctamente', 'success');
     this.tenantForm.reset();
     this.submitting = false;
-    this.close();
+    setTimeout(() => {
+      this.createTenant.emit();
+      this.close();
+    }, 3000);
   }
 
   close() {

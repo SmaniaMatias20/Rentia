@@ -31,6 +31,8 @@ export class Tenant {
    * Obtiene todos los inquilinos del usuario logueado
    */
   async getTenants(user_id: string): Promise<any[]> {
+    console.log('Obteniendo tenants del usuario:', user_id);
+
     const { data, error } = await this.db.client
       .from('tenants')
       .select('*')

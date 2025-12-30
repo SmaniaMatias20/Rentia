@@ -2,12 +2,17 @@
 <div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
     <!-- Formulario centrado en modo oscuro -->
     <form [formGroup]="tenantForm" (ngSubmit)="submit()"
-        class="bg-gray-700 text-white p-6 rounded-xl shadow-lg w-full max-w-md space-y-4 relative">
+        class="bg-gray-900 text-white p-6 rounded-xl shadow-lg w-full max-w-md space-y-4 relative">
 
         <!-- Botón de cerrar -->
         <button type="button" class="absolute top-2 right-2 text-gray-300 hover:text-white font-bold" (click)="close()">
             ✕
         </button>
+
+        <!-- Icono grande centrado -->
+        <div class="flex justify-center mb-6">
+            <img src="assets/images/rentia.png" alt="Rentia" class="h-40 w-auto" />
+        </div>
 
         <!-- Nombre -->
         <div>
@@ -16,11 +21,12 @@
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (name && name.touched) {
+                @if (name && name.invalid && (name.dirty || name.touched)) {
                 <p class="text-sm text-red-500 mt-1">
                     El nombre es obligatorio y debe tener al menos 3 caracteres.
                 </p>
                 }
+
             </div>
         </div>
 
@@ -31,9 +37,9 @@
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (phone && phone.touched) {
+                @if (phone && phone.invalid && (phone.dirty || phone.touched)) {
                 <p class="text-sm text-red-500 mt-1">
-                    Teléfono inválido. Formato: +123456789
+                    Teléfono inválido. Solo números entre 7 y 15 dígitos.
                 </p>
                 }
             </div>
@@ -46,7 +52,7 @@
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (email && email.touched) {
+                @if (email && email.touched && email.dirty) {
                 <p class="text-sm text-red-500 mt-1">
                     Email inválido
                 </p>
@@ -59,4 +65,7 @@
             Guardar Inquilino
         </button>
     </form>
+
+    <!-- Toast -->
+    <app-toast #toast></app-toast>
 </div>

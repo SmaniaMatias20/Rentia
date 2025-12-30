@@ -1,1 +1,9 @@
-<p>toast works!</p>
+<div class="fixed bottom-4 text-white right-4 px-4 py-2 rounded shadow-lg transition-opacity duration-300" [ngClass]="{
+    'opacity-0': !show,
+    'opacity-100': show,
+    'bg-green-600': type === 'success',
+    'bg-yellow-500': type === 'warning',
+    'bg-red-600': type === 'error'
+  }" [style.pointerEvents]="show ? 'auto' : 'none'">
+    {{ message }}
+</div>

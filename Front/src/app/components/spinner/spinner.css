@@ -1,0 +1,43 @@
+.spinner-peso {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+}
+
+.peso {
+    font-size: 48px;
+    font-weight: bold;
+    color: #4caf50;
+    animation: spinPeso 1.5s linear infinite, pulsePeso 1.5s ease-in-out infinite;
+}
+
+/* Rotación */
+@keyframes spinPeso {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Pulso de tamaño */
+@keyframes pulsePeso {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
