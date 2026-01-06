@@ -1,9 +1,10 @@
-import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Toast } from '../../../../components/toast/toast';
 import { AuthService } from '../../../../services/auth/auth';
 import { PropertyService } from '../../../../services/property/property';
 
+declare var google: any;
 
 @Component({
   selector: 'app-form-property',
@@ -11,10 +12,12 @@ import { PropertyService } from '../../../../services/property/property';
   templateUrl: './form-property.html',
   styleUrls: ['./form-property.css'],
 })
-export class FormProperty {
+export class FormProperty implements AfterViewInit {
   @ViewChild('toast') toast!: Toast;
+  @ViewChild('addressInput') addressInput!: ElementRef;
   propertyForm: FormGroup;
   submitting = false;
+  addressValid = false;
   @Output() closeForm = new EventEmitter<void>();
   @Output() createProperty = new EventEmitter<void>();
 
@@ -40,7 +43,7 @@ export class FormProperty {
 
   // Guardar propiedad
   async submit() {
-    if (this.propertyForm.invalid) {
+    if (this.propertyForm.invalid || !this.addressValid) {
       this.propertyForm.markAllAsTouched();
       return;
     }
@@ -79,4 +82,32 @@ export class FormProperty {
     this.propertyForm.reset();
     this.closeForm.emit();
   }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const autocomplete = new google.maps.places.Autocomplete(
+        this.addressInput.nativeElement,
+        {
+          types: ['address'],
+          componentRestrictions: { country: 'ar' },
+        }
+      );
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+          this.addressValid = false;
+          return;
+        }
+
+        this.addressValid = true;
+        this.propertyForm.patchValue({
+          address: place.formatted_address,
+        });
+      });
+    }, 300);
+  }
+
+
 }

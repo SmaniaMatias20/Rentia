@@ -9,19 +9,19 @@
     <!-- Logo + Nombre -->
     <div class="flex items-center gap-3">
         <img src="assets/images/rentia.png" alt="Rentia" class="h-10 w-auto" />
-        <span class="text-xl font-bold tracking-wide">
+        <span class="text-lg font-bold tracking-wide sm:text-2xl">
             Rentia
         </span>
     </div>
 
     <!-- Usuario + Logout -->
-    <div class="flex items-center gap-6">
+    <div class="flex items-center sm:gap-6 gap-3">
         <!-- Usuario -->
         <div class="flex items-center gap-2">
             <span class="material-icons !text-2xl">
                 person
             </span>
-            <span class="font-medium">
+            <span class="font-medium sm:text-base text-xs">
                 {{ user?.username.substring(0, 1).toUpperCase() + user?.username.substring(1) }}
             </span>
         </div>
@@ -34,7 +34,7 @@
         bg-red-600 hover:bg-red-700
         transition
       ">
-            <span class="material-icons !text-xl">
+            <span class="material-icons sm:!text-xl !text-sm">
                 logout
             </span>
             <span class="hidden sm:inline">
