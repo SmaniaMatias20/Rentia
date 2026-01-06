@@ -8,7 +8,7 @@ import { FormEditProperty } from './components/form-edit-property/form-edit-prop
 
 
 declare var google: any;
-type EditType = 'value' | 'additional_costs' | 'address' | 'tenant';
+type EditType = 'value' | 'additional_costs' | 'address' | 'tenant' | 'name';
 
 @Component({
   selector: 'app-property',

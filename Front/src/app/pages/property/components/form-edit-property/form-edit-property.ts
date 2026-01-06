@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 
-type EditType = 'value' | 'additional_costs' | 'tenant' | 'address';
+type EditType = 'value' | 'additional_costs' | 'tenant' | 'address' | 'name';
 
 @Component({
   selector: 'app-form-edit-property',
