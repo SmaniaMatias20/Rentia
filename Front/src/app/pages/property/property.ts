@@ -1,10 +1,11 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PropertyService } from '../../services/property/property';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { Spinner } from '../../components/spinner/spinner';
 import { environment } from '../../../environments/environment';
 import { FormEditProperty } from './components/form-edit-property/form-edit-property';
+import { Toast } from '../../components/toast/toast';
 
 
 declare var google: any;
@@ -12,7 +13,7 @@ type EditType = 'value' | 'additional_costs' | 'address' | 'tenant' | 'name';
 
 @Component({
   selector: 'app-property',
-  imports: [NgClass, Spinner, FormEditProperty],
+  imports: [NgClass, Spinner, FormEditProperty, Toast],
   templateUrl: './property.html',
   styleUrl: './property.css',
 })
@@ -24,12 +25,13 @@ export class Property {
   formEditProperty = false;
   editType!: any;
   editValue: any;
+  @ViewChild('toast') toast!: Toast;
+
 
   constructor(
     private propertyService: PropertyService,
     private route: ActivatedRoute,
     private router: Router,
-    private ngZone: NgZone,
   ) { }
 
   async ngOnInit() {
@@ -83,7 +85,7 @@ export class Property {
   }
 
   initMap() {
-    const fallbackPosition = { lat: -34.6037, lng: -58.3816 }; // Buenos Aires
+    const fallbackPosition = { lat: -34.6037, lng: -58.3816 };
 
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
@@ -148,24 +150,26 @@ export class Property {
 
   async onSave(newValue: any) {
     try {
-      // this.loading = true;
+      this.loading = true;
 
-      // await this.propertyService.updateProperty(
-      //   this.propertyData.id,
-      //   { [this.editType]: newValue }
-      // );
+      await this.propertyService.updateProperty(
+        this.propertyData.id,
+        { [this.editType]: newValue }
+      );
 
-      // // actualizar UI sin recargar
-      // this.propertyData[this.editType] = newValue;
+      // actualizar UI sin recargar
+      this.propertyData[this.editType] = newValue;
 
-      // // si se editó la dirección, actualizar mapa
-      // if (this.editType === 'address') {
-      //   this.geocodeAddress(newValue);
-      // }
+      // si se editó la dirección, actualizar mapa
+      if (this.editType === 'address') {
+        this.geocodeAddress(newValue);
+      }
 
       this.closeformEditProperty();
+      this.toast.showToast('Propiedad actualizada correctamente', 'success');
     } catch (error) {
       console.error(error);
+      this.toast.showToast('Error al actualizar la propiedad', 'error');
     } finally {
       this.loading = false;
     }

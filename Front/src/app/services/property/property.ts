@@ -78,4 +78,19 @@ export class PropertyService {
     return data[0] || {};
   }
 
+  async updateProperty(id: string, data: any): Promise<{ error?: PostgrestError }> {
+    const { error } = await this.db.client
+      .from('properties')
+      .update(data)
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error al actualizar propiedad:', error.message);
+      return { error };
+    }
+
+    console.log('Propiedad actualizada correctamente');
+    return {};
+  }
+
 }
