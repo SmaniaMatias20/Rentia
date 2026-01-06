@@ -2,16 +2,17 @@ import { Component, NgZone } from '@angular/core';
 import { PropertyService } from '../../services/property/property';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { DatePipe } from '@angular/common';
 import { Spinner } from '../../components/spinner/spinner';
 import { environment } from '../../../environments/environment';
+import { FormEditProperty } from './components/form-edit-property/form-edit-property';
 
 
 declare var google: any;
+type EditType = 'value' | 'additional_costs' | 'address' | 'tenant';
 
 @Component({
   selector: 'app-property',
-  imports: [NgClass, DatePipe, Spinner],
+  imports: [NgClass, Spinner, FormEditProperty],
   templateUrl: './property.html',
   styleUrl: './property.css',
 })
@@ -20,6 +21,9 @@ export class Property {
   propertyData: any;
   map!: any;
   marker!: any;
+  formEditProperty = false;
+  editType!: any;
+  editValue: any;
 
   constructor(
     private propertyService: PropertyService,
@@ -131,19 +135,40 @@ export class Property {
     });
   }
 
-  editAditionalCosts() {
-    console.log('Editando extras');
+  openEdit(type: EditType, value: any) {
+    this.editType = type;
+    this.editValue = value;
+    this.formEditProperty = true;
   }
 
-  editValue() {
-    console.log('Editando valor');
+  closeformEditProperty() {
+    this.formEditProperty = false;
   }
 
-  editTenant() {
-    console.log('Editando inquilino');
+
+  async onSave(newValue: any) {
+    try {
+      // this.loading = true;
+
+      // await this.propertyService.updateProperty(
+      //   this.propertyData.id,
+      //   { [this.editType]: newValue }
+      // );
+
+      // // actualizar UI sin recargar
+      // this.propertyData[this.editType] = newValue;
+
+      // // si se editó la dirección, actualizar mapa
+      // if (this.editType === 'address') {
+      //   this.geocodeAddress(newValue);
+      // }
+
+      this.closeformEditProperty();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  editAddress() {
-    console.log('Editando dirección');
-  }
 }

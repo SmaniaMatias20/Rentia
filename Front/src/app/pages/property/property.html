@@ -1,4 +1,4 @@
-<div class="mt-10 w-full px-4 lg:px-12">
+<div class="mt-10 w-full  lg:px-4">
 
     <div class="flex items-center justify-end gap-2 mb-4">
         <!-- Volver al menú -->
@@ -22,7 +22,7 @@
 
     @if (propertyData != null && !loading) {
     <div
-        class="flex flex-col w-full bg-black backdrop-blur border border-white/50 text-white rounded-2xl shadow-xl overflow-hidden">
+        class="flex flex-col w-full bg-black backdrop-blur text-white rounded-2xl shadow-xl overflow-hidden shadow-2xl">
 
         <!-- TOP: Imagen + Info -->
         <div class="flex flex-col lg:flex-row">
@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- Datos -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
 
                     <div class="flex items-center gap-3">
                         <span class="material-icons text-green-400 text-3xl">attach_money</span>
@@ -51,7 +51,7 @@
                         py-2 px-2
                         rounded-lg bg-blue-600 hover:bg-blue-700
                         text-white font-semibold transition cursor-pointer
-                      " (click)="editValue()">
+                      " (click)="openEdit('value', propertyData.value)">
                             <span class="material-icons">edit</span>
                         </button>
                     </div>
@@ -68,7 +68,7 @@
                         py-2 px-2
                         rounded-lg bg-blue-600 hover:bg-blue-700
                         text-white font-semibold transition cursor-pointer
-                      " (click)="editAditionalCosts()">
+                      " (click)="openEdit('additional_costs', propertyData.additional_costs)">
                             <span class="material-icons">edit</span>
                         </button>
                     </div>
@@ -88,7 +88,7 @@
                         py-2 px-2
                         rounded-lg bg-blue-600 hover:bg-blue-700
                         text-white font-semibold transition cursor-pointer
-                      " (click)="editAddress()">
+                      " (click)="openEdit('address', propertyData.address)">
                             <span class="material-icons">edit</span>
                         </button>
                     </div>
@@ -106,7 +106,7 @@
                         py-2 px-2
                         rounded-lg bg-blue-600 hover:bg-blue-700
                         text-white font-semibold transition cursor-pointer
-                      " (click)="editTenant()">
+                      " (click)="openEdit('tenant', propertyData.tenant_id)">
                             <span class="material-icons">edit</span>
                         </button>
                     </div>
@@ -138,4 +138,12 @@
 
     </div>
     }
+
+    @if (formEditProperty) {
+    <app-form-edit-property [type]="editType" [currentValue]="editValue" (save)="onSave($event)"
+        (cancel)="closeformEditProperty()">
+    </app-form-edit-property>
+    }
+
+
 </div>
