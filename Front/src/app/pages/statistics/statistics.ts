@@ -36,8 +36,6 @@ export class Statistics implements AfterViewInit {
   ngAfterViewInit(): void {
     this.createBarChart();
     this.createLineChart();
-    this.createPieChart();
-    this.createDoughnutChart();
   }
 
   goToHome() {
@@ -75,38 +73,4 @@ export class Statistics implements AfterViewInit {
       options: { responsive: true, maintainAspectRatio: false }
     });
   }
-
-  private createPieChart() {
-    new Chart(this.pieChartRef.nativeElement.getContext('2d')!, {
-      type: 'pie',
-      data: {
-        labels: ['Al día', 'Morosos'],
-        datasets: [{
-          data: [18, 7],
-          backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(248, 113, 113, 0.8)'],
-          borderColor: ['white', 'white'],
-          borderWidth: 2
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-  }
-
-  // 4to grafico
-  private createDoughnutChart() {
-    new Chart(this.doughnutChartRef.nativeElement.getContext('2d')!, {
-      type: 'doughnut',
-      data: {
-        labels: ['Al día', 'Morosos'],
-        datasets: [{
-          data: [18, 7],
-          backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(248, 113, 113, 0.8)'],
-          borderColor: ['white', 'white'],
-          borderWidth: 2
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-  }
-
 }
