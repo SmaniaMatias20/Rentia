@@ -7,7 +7,7 @@
         py-2 px-4
         rounded-lg bg-blue-600 hover:bg-blue-700
         disabled:bg-blue-400 disabled:cursor-not-allowed
-        text-white font-semibold transition
+        text-white font-semibold transition cursor-pointer
       " (click)="goToProperties()">
             <span class="material-icons">arrow_back</span>
             Volver al menú
@@ -124,7 +124,7 @@
                 <!-- Badges -->
                 <div class="flex gap-4 mt-8">
                     <span class="px-5 py-2 rounded-full text-sm font-semibold"
-                        [ngClass]="propertyData.tenant_id ? 'bg-green-600' : 'bg-red-600'">
+                        [ngClass]="propertyData.tenant_id ? 'bg-red-600' : 'bg-green-600'">
                         {{ propertyData.tenant_id ? 'Alquilada' : 'Disponible' }}
                     </span>
 

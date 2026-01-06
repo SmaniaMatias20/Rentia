@@ -1,9 +1,9 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth/auth';
 import { TenantService } from '../../../../services/tenant/tenant';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PropertyService } from '../../../../services/property/property';
 import { Toast } from '../../../../components/toast/toast';
-
 
 @Component({
   selector: 'app-form-tenant',
@@ -11,39 +11,43 @@ import { Toast } from '../../../../components/toast/toast';
   styleUrls: ['./form-tenant.css'],
   imports: [ReactiveFormsModule, Toast],
 })
-export class FormTenant {
+export class FormTenant implements OnInit {
   @ViewChild('toast') toast!: Toast;
-  tenantForm: FormGroup;
-  submitting = false;
+
   @Output() closeForm = new EventEmitter<void>();
   @Output() createTenant = new EventEmitter<void>();
+
+  tenantForm: FormGroup;
+  submitting = false;
+
+  properties: any[] = []; // ⬅️ propiedades del usuario
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private tenant: TenantService,
+    private propertyService: PropertyService
   ) {
-    // Inicializamos el formulario reactivo
     this.tenantForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       email: ['', [Validators.email]],
+      property_id: ['', Validators.required],
     });
+
   }
 
-
-  // getter para simplificar el acceso en el template
-  get name() { return this.tenantForm.get('name'); }
-  get phone() { return this.tenantForm.get('phone'); }
-  get email() { return this.tenantForm.get('email'); }
-
-
-  // Helper para acceder a los controles
   get f() {
     return this.tenantForm.controls;
   }
 
-  // Guardar inquilino
+  async ngOnInit() {
+    const currentUser = await this.auth.getCurrentUser();
+    if (!currentUser) return;
+
+    this.properties = await this.propertyService.getProperties(currentUser.id);
+  }
+
   async submit() {
     if (this.tenantForm.invalid) {
       this.tenantForm.markAllAsTouched();
@@ -59,13 +63,17 @@ export class FormTenant {
       return;
     }
 
-    const user_id = currentUser.id;
-    const { name, phone, email } = this.tenantForm.value;
+    const { name, phone, email, property_id } = this.tenantForm.value;
 
-    const { error } = await this.tenant.createTenant({ user_id, name, phone, email });
+    const { error } = await this.tenant.createTenant({
+      user_id: currentUser.id,
+      name,
+      phone,
+      email,
+    });
 
     if (error) {
-      this.toast.showToast('Error al guardar el inquilino');
+      this.toast.showToast('Error al guardar el inquilino', 'error');
       this.submitting = false;
       return;
     }
@@ -73,15 +81,15 @@ export class FormTenant {
     this.toast.showToast('Inquilino creado correctamente', 'success');
     this.tenantForm.reset();
     this.submitting = false;
+
     setTimeout(() => {
       this.createTenant.emit();
       this.close();
-    }, 3000);
+    }, 2000);
   }
 
   close() {
     this.tenantForm.reset();
     this.closeForm.emit();
   }
-
 }
