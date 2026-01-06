@@ -79,26 +79,42 @@ export class Property {
   }
 
   initMap() {
-    const initialPosition = { lat: -34.6037, lng: -58.3816 }; // Buenos Aires
+    const fallbackPosition = { lat: -34.6037, lng: -58.3816 }; // Buenos Aires
 
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
 
     this.map = new google.maps.Map(mapElement, {
-      center: initialPosition,
+      center: fallbackPosition,
       zoom: 13,
-      disableDefaultUI: true, // opcional (más limpio)
+      disableDefaultUI: true,
     });
 
-    // 📍 marcador inicial
-    this.setMarker(initialPosition);
-
-    // 🖱️ click para mover marcador
-    // this.map.addListener('click', (event: any) => {
-    //   this.ngZone.run(() => this.setMarker(event.latLng));
-    // });
+    // 📍 Si hay dirección, la geocodificamos
+    if (this.propertyData?.address) {
+      this.geocodeAddress(this.propertyData.address);
+    } else {
+      // fallback
+      this.setMarker(fallbackPosition);
+    }
   }
 
+  geocodeAddress(address: string) {
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address }, (results: any, status: any) => {
+      if (status === 'OK' && results[0]) {
+        const location = results[0].geometry.location;
+
+        this.map.setCenter(location);
+        this.map.setZoom(16);
+
+        this.setMarker(location);
+      } else {
+        console.warn('No se pudo geocodificar la dirección:', address);
+      }
+    });
+  }
 
   setMarker(position: any) {
     // Si ya existe un marcador, lo movemos
@@ -115,5 +131,19 @@ export class Property {
     });
   }
 
+  editAditionalCosts() {
+    console.log('Editando extras');
+  }
 
+  editValue() {
+    console.log('Editando valor');
+  }
+
+  editTenant() {
+    console.log('Editando inquilino');
+  }
+
+  editAddress() {
+    console.log('Editando dirección');
+  }
 }

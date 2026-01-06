@@ -35,10 +35,6 @@
                         <span class="material-icons text-blue-400 text-3xl">home</span>
                         {{ propertyData.name }}
                     </h2>
-                    <p class="text-base text-gray-400 flex items-center gap-1">
-                        <span class="material-icons text-base">place</span>
-                        {{ propertyData.address }}
-                    </p>
                 </div>
 
                 <!-- Datos -->
@@ -48,26 +44,53 @@
                         <span class="material-icons text-green-400 text-3xl">attach_money</span>
                         <div>
                             <p class="text-gray-400 text-sm">Valor del alquiler</p>
-                            <p class="text-lg font-semibold">${{ propertyData.value }}</p>
+                            <p class="text-lg font-semibold">${{ propertyData.value ? propertyData.value : '0' }}</p>
                         </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="editValue()">
+                            <span class="material-icons">edit</span>
+                        </button>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <span class="material-icons text-yellow-400 text-3xl">payments</span>
                         <div>
-                            <p class="text-gray-400 text-sm">Extras</p>
-                            <p class="text-lg font-semibold">${{ propertyData.additional_costs }}</p>
+                            <p class="text-gray-400 text-sm">Extras (Expensas, ABL, etc)</p>
+                            <p class="text-lg font-semibold">${{ propertyData.additional_costs ?
+                                propertyData.additional_costs : '0' }}</p>
                         </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="editAditionalCosts()">
+                            <span class="material-icons">edit</span>
+                        </button>
                     </div>
 
+
+
                     <div class="flex items-center gap-3">
-                        <span class="material-icons text-purple-400 text-3xl">calendar_today</span>
+                        <span class="material-icons text-purple-400 text-3xl">place</span>
                         <div>
-                            <p class="text-gray-400 text-sm">Creada</p>
+                            <p class="text-gray-400 text-sm">Dirección</p>
                             <p class="text-lg font-semibold">
-                                {{ propertyData.created_at | date:'shortDate' }}
+                                {{ propertyData.address ? propertyData.address.slice(0, 20) : 'No se ha encontrado' }}
                             </p>
                         </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="editAddress()">
+                            <span class="material-icons">edit</span>
+                        </button>
                     </div>
 
                     <div class="flex items-center gap-3">
@@ -78,6 +101,14 @@
                                 {{ propertyData.tenant_id ? 'Asignado' : 'Ninguno' }}
                             </p>
                         </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="editTenant()">
+                            <span class="material-icons">edit</span>
+                        </button>
                     </div>
 
                 </div>
