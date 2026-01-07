@@ -15,7 +15,8 @@ export class AuthService {
   async signUp(
     username: string,
     email: string,
-    password: string
+    password: string,
+    role: string
   ): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
     // 1️⃣ Crear usuario en Supabase Auth
     const { data: authData, error: authError } = await this.db.client.auth.signUp({
@@ -28,7 +29,7 @@ export class AuthService {
     // 2️⃣ Crear perfil en tabla "users"
     const { error: profileError } = await this.db.client
       .from('users')
-      .insert([{ id: authData.user?.id, username, email }]);
+      .insert([{ id: authData.user?.id, username, email, role }])
 
     if (profileError) return { error: profileError };
 

@@ -24,6 +24,7 @@ export class Register {
     this.registerForm = this.fb.group({
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
+      role: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       confirmPassword: new FormControl('', [Validators.required])
     });
@@ -36,7 +37,7 @@ export class Register {
     }
     console.log(this.registerForm.value);
 
-    this.auth.signUp(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password)
+    this.auth.signUp(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.role)
       .then(({ user }) => {
         if (user) {
           console.log('Registro exitoso:', user.email);
