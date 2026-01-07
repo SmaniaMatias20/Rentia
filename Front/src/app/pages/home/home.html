@@ -1,5 +1,14 @@
 <div class="max-w-screen bg-black px-4
          flex items-center justify-center border">
+
+  @if (loading) {
+  <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+    <app-spinner></app-spinner>
+  </div>
+  }
+
+
+  @if (!this.loading && this.currentUser) {
   <div class="
       grid
       grid-cols-1
@@ -30,4 +39,5 @@
 
 
   </div>
+  }
 </div>
