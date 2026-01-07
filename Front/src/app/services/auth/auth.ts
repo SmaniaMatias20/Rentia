@@ -35,7 +35,6 @@ export class AuthService {
 
     this.router.navigate(['/home']);
     return { user: authData.user ?? undefined };
-
   }
 
 

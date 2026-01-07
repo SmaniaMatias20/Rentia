@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Database } from '../database/database';
-import { PostgrestError } from '@supabase/supabase-js';
+import { AuthError, Session, User, PostgrestError } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
@@ -13,17 +13,22 @@ export class TenantService {
   /**
    * Crea un nuevo inquilino en la tabla "tenants"
    */
-  async createTenant(tenant: { user_id: string; name: string; phone: string; email: string }): Promise<{ error?: PostgrestError }> {
-    const { error } = await this.db.client
-      .from('tenants')
-      .insert([tenant]);
+  async createTenant(tenant: { username: string; phone: string; email: string, role: string }): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
 
-    if (error) {
-      console.error('Error al crear tenant:', error.message);
-      return { error };
-    }
+    const { data: authData, error: authError } = await this.db.client.auth.signUp({
+      email: tenant.email,
+      password: '123456789',
+    });
 
-    console.log('Tenant creado correctamente');
+    if (authError) return { error: authError };
+
+    // 2️⃣ Crear perfil en tabla "users"
+    const { error: profileError } = await this.db.client
+      .from('users')
+      .insert([{ id: authData.user?.id, username: tenant.username, email: tenant.email, role: tenant.role, phone: tenant.phone }])
+
+    if (profileError) return { error: profileError };
+
     return {};
   }
 

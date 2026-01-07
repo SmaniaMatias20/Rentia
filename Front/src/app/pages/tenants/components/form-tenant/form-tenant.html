@@ -16,12 +16,12 @@
 
         <!-- Nombre -->
         <div>
-            <input type="text" formControlName="name" placeholder="Nombre"
+            <input type="text" formControlName="username" placeholder="Nombre"
                 class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (f['name'].invalid && (f['name'].dirty || f['name'].touched)) {
+                @if (f['username'].invalid && (f['username'].dirty || f['username'].touched)) {
                 <p class="text-red-500 text-sm">
                     El nombre es obligatorio (mínimo 3 caracteres)
                 </p>
