@@ -41,12 +41,21 @@
         </div>
 
         <!-- Contraseña -->
-        <div>
-            <input type="password" formControlName="password" placeholder="Contraseña" class="w-full px-4 py-2 rounded-lg border
+        <div class="relative">
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña"
+                class="w-full px-4 py-2 pr-12 rounded-lg border
                border-gray-300 dark:border-gray-700
                bg-white dark:bg-gray-800
                text-gray-800 dark:text-gray-100
                focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <button type="button" (click)="togglePassword()" class="absolute right-3 top-6 -translate-y-1/2
+               text-gray-500 hover:text-gray-300 focus:outline-none">
+
+                <span class="material-icons">
+                    {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+            </button>
 
             <div class="min-h-[1.25rem]">
                 @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
@@ -57,13 +66,23 @@
             </div>
         </div>
 
+
         <!-- Confirmación -->
-        <div>
-            <input type="password" formControlName="confirmPassword" placeholder="Confirmar contraseña" class="w-full px-4 py-2 rounded-lg border
+        <div class="relative">
+            <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
+                placeholder="Confirmar contraseña" class="w-full px-4 py-2 pr-12 rounded-lg border
                border-gray-300 dark:border-gray-700
                bg-white dark:bg-gray-800
                text-gray-800 dark:text-gray-100
                focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <button type="button" (click)="toggleConfirmPassword()" class="absolute right-3 top-6 -translate-y-1/2
+               text-gray-500 hover:text-gray-300 focus:outline-none">
+
+                <span class="material-icons">
+                    {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
+                </span>
+            </button>
 
             <div class="min-h-[1.25rem]">
                 @if (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched) {
@@ -73,6 +92,7 @@
                 }
             </div>
         </div>
+
 
         <!-- Botón -->
         <button type="submit" [disabled]="registerForm.invalid" class="w-full py-2 rounded-lg bg-green-600 hover:bg-green-700

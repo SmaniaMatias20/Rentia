@@ -17,6 +17,8 @@ import { AuthService } from '../../../../services/auth/auth';
 })
 export class Register {
   registerForm: FormGroup;
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.registerForm = this.fb.group({
@@ -45,6 +47,14 @@ export class Register {
       .catch((error) => {
         console.error('Error al registrarse:', error.message);
       });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
 }

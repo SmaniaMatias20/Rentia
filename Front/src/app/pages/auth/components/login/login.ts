@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../services/auth/auth';
+import { Toast } from '../../../../components/toast/toast';
 import {
   ReactiveFormsModule,
   FormGroup,
@@ -7,17 +9,18 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
-import { AuthService } from '../../../../services/auth/auth';
 
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Toast],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   loginForm: FormGroup;
+  showPassword = false;
+  @ViewChild('toast') toast!: Toast;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.loginForm = this.fb.group({
@@ -28,24 +31,30 @@ export class Login {
 
 
   onSubmit() {
-    if (!this.loginForm.valid) {
-      alert('Completá todos los campos');
-      return;
+    try {
+      if (!this.loginForm.valid) {
+        alert('Completá todos los campos');
+        return;
+      }
+
+      this.auth.signIn(this.loginForm.value.username, this.loginForm.value.password)
+        .then(({ session }) => {
+          if (session) {
+            this.toast.showToast('Sesión iniciada', 'success');
+          } else {
+            this.toast.showToast('Usuario o contraseña incorrectos', 'error');
+          }
+        })
+        .catch((error) => {
+          console.error('Error al iniciar sesión:', error.message);
+        });
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
     }
-    console.log(this.loginForm.value);
+  }
 
-    this.auth.signIn(this.loginForm.value.username, this.loginForm.value.password)
-      .then(({ session }) => {
-        if (session) {
-          console.log('Login exitoso:', session.user.email);
-        } else {
-          console.error('Error al iniciar sesión:');
-        }
-      })
-      .catch((error) => {
-        console.error('Error al iniciar sesión:', error.message);
-      });
-
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
 }
