@@ -33,8 +33,18 @@
 
             <!-- ADDRESS -->
             @if (type === 'address') {
-            <input type="text" formControlName="value" placeholder="Nueva dirección"
-                class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <div>
+                <input #addressInput type="text" formControlName="address" placeholder="Dirección" class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded
+               focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="min-h-[1.25rem]">
+                    @if (address && address.invalid && (address.dirty || address.touched)) {
+                    <p class="text-sm text-red-500 mt-1">
+                        La dirección es obligatoria y debe tener al menos 5 caracteres.
+                    </p>
+                    }
+                </div>
+            </div>
             }
 
             <!-- NAME -->
