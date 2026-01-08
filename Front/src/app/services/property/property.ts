@@ -109,4 +109,61 @@ export class PropertyService {
     return {};
   }
 
+  async getQuantityOfPropertiesByUser(user_id: string): Promise<number> {
+    const { count, error } = await this.db.client
+      .from('properties')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user_id);
+
+    if (error) {
+      console.error('Error al obtener la cantidad de propiedades:', error.message);
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
+  async getQuantityOfPropertiesWithoutTenantByUser(
+    user_id: string
+  ): Promise<number> {
+    const { count, error } = await this.db.client
+      .from('properties')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user_id)
+      .is('tenant_id', null); // ✅ sin inquilino
+
+    if (error) {
+      console.error(
+        'Error al obtener la cantidad de propiedades sin inquilino:',
+        error.message
+      );
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
+  async getQuantityOfPropertiesWithTenantByUser(
+    user_id: string
+  ): Promise<number> {
+    const { count, error } = await this.db.client
+      .from('properties')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user_id)
+      .not('tenant_id', 'is', null); // ✅ con inquilino
+
+    if (error) {
+      console.error(
+        'Error al obtener la cantidad de propiedades con inquilino:',
+        error.message
+      );
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
+
+
+
 }
