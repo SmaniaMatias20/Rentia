@@ -17,10 +17,11 @@
   <button class="
       absolute top-2 right-2
       text-gray-300 hover:text-red-500
-      transition z-20
-    " (click)="deleteProperty(); $event.stopPropagation()">
+      transition z-20 cursor-pointer
+    " (click)="openConfirmModal = true; $event.stopPropagation()">
     <span class="material-icons">delete</span>
   </button>
+
 
   <!-- Contenido -->
   <div class="z-10 flex items-center gap-2 text-center">
@@ -33,3 +34,10 @@
     </h1>
   </div>
 </div>
+
+
+@if(openConfirmModal) {
+<app-modal-confirm (confirm)="deleteProperty(); openConfirmModal = false;" (cancel)="openConfirmModal = false"
+  message="¿Estás seguro que quieres eliminar esta propiedad?">
+</app-modal-confirm>
+}

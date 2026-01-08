@@ -123,7 +123,8 @@
                         <div>
                             <p class="text-gray-400 text-sm">Tipo</p>
                             <p class="text-lg font-semibold">
-                                {{ propertyData.type ? propertyData.type : 'Sin información' }}
+                                {{ propertyData.type ? propertyData.type.slice(0,1).toUpperCase() +
+                                propertyData.type.slice(1) : 'Sin información' }}
                             </p>
                         </div>
                         <button class="

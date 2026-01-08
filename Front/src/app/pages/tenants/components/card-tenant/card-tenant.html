@@ -18,7 +18,7 @@
       absolute top-2 right-2
       text-gray-300 hover:text-red-500
       transition z-20 cursor-pointer
-    " (click)="deleteTenant(); $event.stopPropagation()">
+    " (click)="openConfirmModal = true">
     <span class="material-icons">delete</span>
   </button>
 
@@ -32,4 +32,12 @@
       {{ title }}
     </h1>
   </div>
+
 </div>
+
+<!-- Confirm modal -->
+@if (openConfirmModal) {
+<app-modal-confirm (confirm)="deleteTenant(); openConfirmModal = false;" (cancel)="openConfirmModal = false"
+  message="¿Estás seguro que quieres eliminar este inquilino?">
+</app-modal-confirm>
+}

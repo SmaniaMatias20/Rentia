@@ -1,30 +1,29 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth';
+import { ModalConfirm } from '../modal-confirm/modal-confirm';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [ModalConfirm],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  user: any = null; // inicializar como null
+  user: any = null;
+  openConfirmModal = false;
 
   constructor(private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
-    // 🔹 Obtener usuario async al iniciar el componente
     this.loadUser();
   }
 
   async loadUser() {
     this.user = await this.auth.getCurrentUser();
-    console.log(this.user);
   }
 
   async logout() {
-    console.log('Logout');
     await this.auth.signOut();
     this.user = null;
   }
