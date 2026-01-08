@@ -3,49 +3,51 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PropertyService } from '../../services/property/property';
 import { AuthService } from '../../services/auth/auth';
-
+import { Spinner } from '../../components/spinner/spinner';
+import { PaymentService } from '../../services/payment/payment';
+import { FormPayment } from './components/form-payment/form-payment';
 
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Spinner, FormPayment],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
 export class Payments {
+  loading = false;
   properties: any[] = [];
   currentUser: any;
+  selectedProperty: any | null = null;
+  selectedYear: string | null = null;
+  months: any[] = [];
+  years = Array.from({ length: 12 }, (_, i) => 2026 + i);
+  payments: any[] = [];
 
-  constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService) { }
+  constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService) { }
 
   async ngOnInit() {
     try {
+      this.loading = true;
       this.currentUser = await this.authService.getCurrentUser();
       this.properties = await this.propertyService.getProperties(this.currentUser.id);
-      console.log(this.properties);
-
+      this.loading = false;
     } catch (error) {
       console.error(error);
+      this.loading = false;
     }
 
-
   }
-
-  selectedProperty: any | null = null;
-  selectedYear: string | null = null;
-
-  months: any[] = [];
-
-  years = Array.from({ length: 12 }, (_, i) => 2026 + i);
 
   onPropertyChange(propertyId: string) {
     this.selectedProperty = this.properties.find(p => p.id === propertyId) || null;
     this.generateMonths();
   }
 
-  onYearChange(year: string) {
+  async onYearChange(year: string) {
     this.selectedYear = year;
+    this.payments = await this.paymentService.getPayments(this.selectedProperty.id, this.selectedYear);
     this.generateMonths();
   }
 
