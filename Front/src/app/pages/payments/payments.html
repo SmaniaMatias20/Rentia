@@ -1,27 +1,87 @@
-<div class="max-w-screen bg-black px-4 relative border">
+<div class="max-w-screen bg-black px-4 relative min-h-screen">
 
-    <div class="
-    absolute top-4 right-4 z-20
-    flex flex-col gap-2
-    sm:flex-row sm:gap-3
-  ">
-        <!-- Volver al menú -->
-        <button class="
-      flex items-center justify-center gap-1
-      py-2 px-4
-      w-full sm:w-auto
-      rounded-lg bg-blue-600 hover:bg-blue-700
-      disabled:bg-blue-400 disabled:cursor-not-allowed
-      text-white font-semibold transition cursor-pointer
-    " (click)="goToHome()">
-            <span class="material-icons">arrow_back</span>
-            Volver al menú
+  <!-- Botón volver -->
+  <div class="absolute top-4 right-4 z-20
+               flex flex-col gap-2 sm:flex-row sm:gap-3">
+
+    <button class="flex items-center justify-center gap-1
+                   py-2 px-4 w-full sm:w-auto
+                   rounded-lg bg-blue-600 hover:bg-blue-700
+                   text-white font-semibold transition cursor-pointer" (click)="goToHome()">
+      <span class="material-icons">arrow_back</span>
+      Volver al menú
+    </button>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="pt-20 max-w-screen mx-auto space-y-10">
+
+    <!-- Selector de propiedad -->
+    <div>
+      <h2 class="text-xl font-semibold text-white mb-3">
+        Seleccionar propiedad
+      </h2>
+
+      <select #propertySelect class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg
+           focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="onPropertyChange(propertySelect.value)">
+
+        <option value="">-- Elegir propiedad --</option>
+
+        @for (property of properties; track property.id) {
+        <option [value]="property.id">
+          {{ property.name }} – {{ property.address }}
+        </option>
+        }
+      </select>
+
+      <!-- Selector de año -->
+      <select #yearSelect class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg
+             focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="onYearChange(yearSelect.value)">
+
+        <option value="">-- Elegir año --</option>
+
+        @for (year of years; track year) {
+        <option [value]="year">
+          {{ year }}
+        </option>
+        }
+      </select>
+    </div>
+
+
+    <!-- Resumen -->
+
+    <!-- Grilla de meses -->
+    @if (selectedProperty) {
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+
+      @for (month of months; track month.key) {
+      <div class="border rounded-xl p-4 flex flex-col gap-3 transition" [ngClass]="{
+                    'bg-green-900/40 border-green-500': month.paid,
+                    'bg-red-900/40 border-red-500': !month.paid
+                }">
+
+        <h4 class="text-lg font-semibold text-white">
+          {{ month.label }}
+        </h4>
+
+        <span class="text-sm font-semibold" [ngClass]="{
+                        'text-green-400': month.paid,
+                        'text-red-400': !month.paid
+                    }">
+          {{ month.paid ? 'Pagado' : 'Pendiente' }}
+        </span>
+
+        <button class="mt-auto px-3 py-2 rounded-lg text-sm font-semibold transition cursor-pointer" [ngClass]="{
+                        'bg-green-600 hover:bg-green-700': !month.paid,
+                        'bg-red-600 hover:bg-red-700': month.paid
+                    }" (click)="togglePayment(month)">
+          {{ month.paid ? 'Marcar impago' : 'Marcar pagado' }}
         </button>
+      </div>
+      }
     </div>
+    }
 
-    <!-- Aquí va el resto del contenido del div -->
-    <div class="pt-12">
-        <!-- Tu contenido principal, por ejemplo las cards -->
-    </div>
-
+  </div>
 </div>
