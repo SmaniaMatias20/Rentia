@@ -1,67 +1,83 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { PropertyService } from '../../services/property/property';
+import { AuthService } from '../../services/auth/auth';
 
-interface Property {
-  id: string;
-  name: string;
-  address: string;
-}
 
-interface MonthPayment {
-  key: string;
-  label: string;
-  paid: boolean;
-}
 
 @Component({
   selector: 'app-payments',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './payments.html',
-  styleUrl: './payments.css',
+  styleUrls: ['./payments.css'],
 })
 export class Payments {
+  properties: any[] = [];
+  currentUser: any;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService) { }
 
-  properties: Property[] = [
-    { id: '1', name: 'Departamento Centro', address: 'Av. Corrientes 123' },
-    { id: '2', name: 'Casa Norte', address: 'Belgrano 456' },
-  ];
+  async ngOnInit() {
+    try {
+      this.currentUser = await this.authService.getCurrentUser();
+      this.properties = await this.propertyService.getProperties(this.currentUser.id);
+      console.log(this.properties);
 
-  selectedProperty: Property | null = null;
+    } catch (error) {
+      console.error(error);
+    }
+
+
+  }
+
+  selectedProperty: any | null = null;
   selectedYear: string | null = null;
 
-  months: MonthPayment[] = [
-    { key: '2026-01', label: 'Enero 2026', paid: true },
-    { key: '2026-02', label: 'Febrero 2026', paid: false },
-    { key: '2026-03', label: 'Marzo 2026', paid: false },
-    { key: '2026-04', label: 'Abril 2026', paid: true },
-    { key: '2026-05', label: 'Mayo 2026', paid: false },
-    { key: '2026-06', label: 'Junio 2026', paid: false },
-    { key: '2026-07', label: 'Julio 2026', paid: true },
-    { key: '2026-08', label: 'Agosto 2026', paid: false },
-    { key: '2026-09', label: 'Septiembre 2026', paid: false },
-    { key: '2026-10', label: 'Octubre 2026', paid: true },
-    { key: '2026-11', label: 'Noviembre 2026', paid: false },
-    { key: '2026-12', label: 'Diciembre 2026', paid: false },
-  ];
+  months: any[] = [];
 
   years = Array.from({ length: 12 }, (_, i) => 2026 + i);
 
   onPropertyChange(propertyId: string) {
-    this.selectedProperty =
-      this.properties.find(p => p.id === propertyId) || null;
+    this.selectedProperty = this.properties.find(p => p.id === propertyId) || null;
+    this.generateMonths();
   }
 
   onYearChange(year: string) {
     this.selectedYear = year;
+    this.generateMonths();
   }
 
-  togglePayment(month: MonthPayment) {
+  togglePayment(month: any) {
     month.paid = !month.paid;
   }
+
+  goToHome() {
+    this.router.navigateByUrl('/home');
+  }
+
+  // Método para generar meses dinámicamente según el año seleccionado
+  private generateMonths() {
+    if (!this.selectedYear || !this.selectedProperty) {
+      this.months = [];
+      return;
+    }
+
+    const monthNames = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    this.months = monthNames.map((name, index) => ({
+      key: `${this.selectedYear}-${String(index + 1).padStart(2, '0')}`,
+      label: `${name} ${this.selectedYear}`,
+      paid: false,
+      totalRent: this.selectedProperty.value || 0,
+      additionalCosts: this.selectedProperty.additional_costs || 0,
+    }));
+  }
+
 
   get paidCount() {
     return this.months.filter(m => m.paid).length;
@@ -69,9 +85,5 @@ export class Payments {
 
   get unpaidCount() {
     return this.months.filter(m => !m.paid).length;
-  }
-
-  goToHome() {
-    this.router.navigateByUrl('/home');
   }
 }

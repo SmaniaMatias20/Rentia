@@ -17,71 +17,86 @@
   <div class="pt-20 max-w-screen mx-auto space-y-10">
 
     <!-- Selector de propiedad -->
-    <div>
-      <h2 class="text-xl font-semibold text-white mb-3">
-        Seleccionar propiedad
-      </h2>
+    <div class="flex gap-4">
+      <div>
+        <h2 class="text-xl font-semibold text-white mb-3">
+          Seleccionar propiedad
+        </h2>
 
-      <select #propertySelect class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg
-           focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="onPropertyChange(propertySelect.value)">
+        <select #propertySelect class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg
+             focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="onPropertyChange(propertySelect.value)">
 
-        <option value="">-- Elegir propiedad --</option>
+          <option value="">Propiedades...</option>
 
-        @for (property of properties; track property.id) {
-        <option [value]="property.id">
-          {{ property.name }} – {{ property.address }}
-        </option>
-        }
-      </select>
+          @for (property of properties; track property.id) {
+          <option [value]="property.id">
+            {{ property.name }} – {{ property.address }}
+          </option>
+          }
+        </select>
 
-      <!-- Selector de año -->
-      <select #yearSelect class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg
-             focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="onYearChange(yearSelect.value)">
 
-        <option value="">-- Elegir año --</option>
+      </div>
+      <div>
 
-        @for (year of years; track year) {
-        <option [value]="year">
-          {{ year }}
-        </option>
-        }
-      </select>
+        <h2 class="text-xl font-semibold text-white mb-3">
+          Seleccionar año
+        </h2>
+
+        <!-- Selector de año -->
+        <select #yearSelect class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg
+               focus:outline-none focus:ring-2 focus:ring-blue-500" (change)="onYearChange(yearSelect.value)">
+
+          <option value="">Años...</option>
+
+          @for (year of years; track year) {
+          <option [value]="year">
+            {{ year }}
+          </option>
+          }
+        </select>
+      </div>
     </div>
 
-
-    <!-- Resumen -->
-
     <!-- Grilla de meses -->
-    @if (selectedProperty) {
+    @if (selectedProperty && selectedYear) {
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-
       @for (month of months; track month.key) {
       <div class="border rounded-xl p-4 flex flex-col gap-3 transition" [ngClass]="{
-                    'bg-green-900/40 border-green-500': month.paid,
-                    'bg-red-900/40 border-red-500': !month.paid
-                }">
+  'bg-green-900/40 border-green-500': month.paid,
+  'bg-red-900/40 border-red-500': !month.paid
+}">
+        <h4 class="text-lg font-semibold text-white">{{ month.label }}</h4>
 
-        <h4 class="text-lg font-semibold text-white">
-          {{ month.label }}
-        </h4>
+        <span class="text-sm font-semibold text-white">
+          Alquiler: ${{ month.totalRent | number:'1.0-0' }}
+        </span>
+        <span class="text-sm font-semibold text-white">
+          Extras: ${{ month.additionalCosts | number:'1.0-0' }}
+        </span>
+        <span class="text-sm font-semibold text-white">
+          Pagado: ${{ 0| number:'1.0-0' }}
+        </span>
 
         <span class="text-sm font-semibold" [ngClass]="{
-                        'text-green-400': month.paid,
-                        'text-red-400': !month.paid
-                    }">
+    'text-green-400': month.paid,
+    'text-red-400': !month.paid
+  }">
           {{ month.paid ? 'Pagado' : 'Pendiente' }}
         </span>
 
         <button class="mt-auto px-3 py-2 rounded-lg text-sm font-semibold transition cursor-pointer" [ngClass]="{
-                        'bg-green-600 hover:bg-green-700': !month.paid,
-                        'bg-red-600 hover:bg-red-700': month.paid
-                    }" (click)="togglePayment(month)">
+    'bg-green-600 hover:bg-green-700': !month.paid,
+    'bg-red-600 hover:bg-red-700': month.paid
+  }" (click)="togglePayment(month)">
           {{ month.paid ? 'Marcar impago' : 'Marcar pagado' }}
         </button>
       </div>
+
       }
     </div>
     }
+
 
   </div>
 </div>
