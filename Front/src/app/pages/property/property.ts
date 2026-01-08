@@ -6,6 +6,7 @@ import { Spinner } from '../../components/spinner/spinner';
 import { environment } from '../../../environments/environment';
 import { FormEditProperty } from './components/form-edit-property/form-edit-property';
 import { Toast } from '../../components/toast/toast';
+import { TenantService } from '../../services/tenant/tenant';
 
 
 declare var google: any;
@@ -25,6 +26,7 @@ export class Property {
   formEditProperty = false;
   editType!: any;
   editValue: any;
+  tenant: any;
   @ViewChild('toast') toast!: Toast;
 
 
@@ -32,6 +34,7 @@ export class Property {
     private propertyService: PropertyService,
     private route: ActivatedRoute,
     private router: Router,
+    private tenantService: TenantService,
   ) { }
 
   async ngOnInit() {
@@ -40,6 +43,7 @@ export class Property {
 
       const id = this.route.snapshot.paramMap.get('id');
       this.propertyData = await this.propertyService.getProperty(id);
+      this.tenant = await this.tenantService.getTenants(this.propertyData.tenant_id);
 
       await this.loadMapScript();
 
@@ -174,5 +178,4 @@ export class Property {
       this.loading = false;
     }
   }
-
 }
