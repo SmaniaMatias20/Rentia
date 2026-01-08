@@ -171,10 +171,12 @@ export class Property {
       // actualizar UI sin recargar
       this.propertyData[this.editType] = newValue;
 
-      // si se editó la dirección, actualizar mapa
-      if (this.editType === 'address') {
-        this.geocodeAddress(newValue);
-      }
+      await this.loadMapScript();
+
+      // ⏱️ esperar a que Angular pinte el DOM
+      setTimeout(() => {
+        this.initMap();
+      }, 0);
 
       this.closeformEditProperty();
       this.toast.showToast('Propiedad actualizada correctamente', 'success');
