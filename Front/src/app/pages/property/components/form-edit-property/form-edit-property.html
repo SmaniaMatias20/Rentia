@@ -7,8 +7,8 @@
 
         <h2 class="text-xl font-semibold mb-4">
             {{ type === 'value' ? 'Valor del alquiler' : type === 'additional_costs' ? 'Extras (Expensas, ABL, etc)' :
-            type === 'address' ? 'Dirección' : type === 'tenant' ? 'Inquilino' : type === 'name' ? 'Nombre' :
-            'inquilino' }}
+            type === 'address' ? 'Dirección' : type === 'tenant' ? 'Inquilino' : type === 'name' ? 'Nombre' : type ===
+            'rooms' ? 'Ambientes' : 'Tipo' }}
         </h2>
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
@@ -41,6 +41,20 @@
             @if (type === 'name') {
             <input type="text" formControlName="value" placeholder="Nuevo nombre"
                 class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            }
+
+            <!-- ROOMS -->
+            @if (type === 'rooms') {
+            <input type="number" formControlName="value" placeholder="Nuevos ambientes"
+                class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            }
+
+            <!-- TYPE -->
+            @if (type === 'type') {
+            <select formControlName="value" class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700">
+                <option value="casa">Casa</option>
+                <option value="departamento">Departamento</option>
+            </select>
             }
 
             <div class="flex justify-end gap-2 pt-4">

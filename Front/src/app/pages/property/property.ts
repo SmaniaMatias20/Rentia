@@ -10,7 +10,7 @@ import { TenantService } from '../../services/tenant/tenant';
 
 
 declare var google: any;
-type EditType = 'value' | 'additional_costs' | 'address' | 'tenant' | 'name';
+type EditType = 'value' | 'additional_costs' | 'address' | 'tenant' | 'name' | 'rooms' | 'type';
 
 @Component({
   selector: 'app-property',
@@ -43,7 +43,14 @@ export class Property {
 
       const id = this.route.snapshot.paramMap.get('id');
       this.propertyData = await this.propertyService.getProperty(id);
-      this.tenant = await this.tenantService.getTenants(this.propertyData.tenant_id);
+
+
+      // ✅ SOLO si hay inquilino
+      if (this.propertyData?.tenant_id) {
+        this.tenant = await this.tenantService.getTenant(this.propertyData.tenant_id);
+      } else {
+        this.tenant = null;
+      }
 
       await this.loadMapScript();
 

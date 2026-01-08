@@ -32,7 +32,6 @@
                 <!-- Header -->
                 <div class="flex gap-4">
                     <h2 class="text-3xl font-bold flex items-center gap-2 mb-2">
-                        <span class="material-icons text-blue-400 text-3xl">home</span>
                         {{ propertyData.name }}
                     </h2>
                     <button class="
@@ -81,8 +80,6 @@
                         </button>
                     </div>
 
-
-
                     <div class="flex items-center gap-3">
                         <span class="material-icons text-purple-400 text-3xl">place</span>
                         <div>
@@ -101,15 +98,61 @@
                         </button>
                     </div>
 
+                    <!-- Ambientes -->
+                    <div class="flex items-center gap-3">
+                        <span class="material-icons text-green-400 text-3xl">bed</span>
+                        <div>
+                            <p class="text-gray-400 text-sm">Ambientes</p>
+                            <p class="text-lg font-semibold">
+                                {{ propertyData.rooms ? propertyData.rooms : 'Sin información' }}
+                            </p>
+                        </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="openEdit('rooms', propertyData.rooms)">
+                            <span class="material-icons">edit</span>
+                        </button>
+                    </div>
+
+                    <!-- Tipo (casa o departamento) -->
+                    <div class="flex items-center gap-3">
+                        <span class="material-icons text-green-400 text-3xl">home</span>
+                        <div>
+                            <p class="text-gray-400 text-sm">Tipo</p>
+                            <p class="text-lg font-semibold">
+                                {{ propertyData.type ? propertyData.type : 'Sin información' }}
+                            </p>
+                        </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="openEdit('type', propertyData.type)">
+                            <span class="material-icons">edit</span>
+                        </button>
+                    </div>
+
                     <div class="flex items-center gap-3">
                         <span class="material-icons text-cyan-400 text-3xl">person</span>
                         <div>
                             <p class="text-gray-400 text-sm">Inquilino</p>
+
+                            @if (tenant?.length) {
                             <p class="text-lg font-semibold">
-                                {{ tenant ? tenant[0].username : 'Ninguno' }}
+                                {{ tenant[0].username }}
                             </p>
+                            } @else {
+                            <p class="text-lg font-semibold">
+                                Ninguno
+                            </p>
+                            }
                         </div>
                     </div>
+
 
                 </div>
 

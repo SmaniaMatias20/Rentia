@@ -58,15 +58,57 @@ export class TenantService {
    * Obtiene todos los inquilinos del usuario logueado
    */
   async getTenants(user_id: string): Promise<any[]> {
-    console.log('Obteniendo tenants del usuario:', user_id);
+    try {
+      // 1️⃣ Obtener tenant_id desde properties del usuario
+      const { data: properties, error: propertiesError } = await this.db.client
+        .from('properties')
+        .select('tenant_id')
+        .eq('user_id', user_id)
+        .not('tenant_id', 'is', null); // solo propiedades con inquilino
 
+      if (propertiesError) {
+        console.error('Error al obtener propiedades:', propertiesError.message);
+        return [];
+      }
+
+      if (!properties || properties.length === 0) {
+        return [];
+      }
+
+      // 2️⃣ Extraer tenant_ids únicos
+      const tenantIds = [...new Set(
+        properties.map(p => p.tenant_id)
+      )];
+
+      // 3️⃣ Buscar tenants en users
+      const { data: tenants, error: tenantsError } = await this.db.client
+        .from('users')
+        .select('*')
+        .in('id', tenantIds)
+        .eq('role', 'tenant');
+
+      if (tenantsError) {
+        console.error('Error al obtener tenants:', tenantsError.message);
+        return [];
+      }
+
+      return tenants || [];
+
+    } catch (err) {
+      console.error('Error inesperado:', err);
+      return [];
+    }
+  }
+
+
+  async getTenant(id: string): Promise<any> {
     const { data, error } = await this.db.client
       .from('users')
       .select('*')
-      .eq('role', 'tenant')
+      .eq('id', id);
 
     if (error) {
-      console.error('Error al obtener tenants:', error.message);
+      console.error('Error al obtener tenant:', error.message);
       return [];
     }
 
