@@ -128,5 +128,20 @@ export class TenantService {
     }
   }
 
+  async getQuantityOfTenantsByUser(user_id: string): Promise<number> {
+    const { count, error } = await this.db.client
+      .from('users')
+      .select('id', { count: 'exact', head: true })
+      .eq('owner_id', user_id)
+      .eq('role', 'tenant'); // opcional pero recomendado
+
+    if (error) {
+      console.error('Error al obtener la cantidad de tenants:', error.message);
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
 
 }

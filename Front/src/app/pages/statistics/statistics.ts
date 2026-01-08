@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PropertyService } from '../../services/property/property';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
+import { TenantService } from '../../services/tenant/tenant';
 
 @Component({
   selector: 'app-statistics',
@@ -18,8 +19,13 @@ export class Statistics {
   quantityOfPropertiesWithTenantByUser: number = 0;
   percentageOfPropertiesWithTenantByUser: number = 0;
   percentageOfPropertiesWithoutTenantByUser: number = 0;
+  quantityOfTenants: number = 0;
+  totalRent: number = 0;
+  averageRent: number = 0;
+  highestRent: number = 0;
+  lowestRent: number = 0;
 
-  constructor(private router: Router, private propertyService: PropertyService, private auth: AuthService) {
+  constructor(private router: Router, private propertyService: PropertyService, private auth: AuthService, private tenantService: TenantService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -30,6 +36,11 @@ export class Statistics {
       this.quantityOfPropertiesByUser = await this.propertyService.getQuantityOfPropertiesByUser(this.currentUser.id);
       this.quantityOfPropertiesWithoutTenantByUser = await this.propertyService.getQuantityOfPropertiesWithoutTenantByUser(this.currentUser.id);
       this.quantityOfPropertiesWithTenantByUser = await this.propertyService.getQuantityOfPropertiesWithTenantByUser(this.currentUser.id);
+      this.quantityOfTenants = await this.tenantService.getQuantityOfTenantsByUser(this.currentUser.id);
+      this.totalRent = await this.propertyService.getTotalRentByUser(this.currentUser.id);
+      this.averageRent = this.totalRent / this.quantityOfPropertiesByUser;
+      this.highestRent = await this.propertyService.getHighestRentByUser(this.currentUser.id);
+      this.lowestRent = await this.propertyService.getLowestRentByUser(this.currentUser.id);
 
       this.calculatePercentageOfPropertiesWithTenantByUser();
       this.calculatePercentageOfPropertiesWithoutTenantByUser();

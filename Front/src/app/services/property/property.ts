@@ -163,7 +163,53 @@ export class PropertyService {
     return count ?? 0;
   }
 
+  async getTotalRentByUser(user_id: string): Promise<number> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .select('value')
+      .eq('user_id', user_id);
 
+    if (error) {
+      console.error('Error al obtener el total de alquileres:', error.message);
+      return 0;
+    }
+
+    return (
+      data?.reduce((total, property) => total + (property.value ?? 0), 0) ?? 0
+    );
+  }
+
+  async getHighestRentByUser(user_id: string): Promise<number> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .select('value')
+      .eq('user_id', user_id)
+      .order('value', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.error('Error al obtener el mayor alquiler:', error.message);
+      return 0;
+    }
+
+    return data?.[0]?.value ?? 0;
+  }
+
+  async getLowestRentByUser(user_id: string): Promise<number> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .select('value')
+      .eq('user_id', user_id)
+      .order('value', { ascending: true })
+      .limit(1);
+
+    if (error) {
+      console.error('Error al obtener el menor alquiler:', error.message);
+      return 0;
+    }
+
+    return data?.[0]?.value ?? 0;
+  }
 
 
 }

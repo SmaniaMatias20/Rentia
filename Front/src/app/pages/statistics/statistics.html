@@ -58,7 +58,7 @@
                 <span class="material-icons text-purple-500 text-3xl">groups</span>
                 <span class="text-sm text-gray-400">Inquilinos</span>
             </div>
-            <p class="text-3xl font-bold mt-4 text-white">14</p>
+            <p class="text-3xl font-bold mt-4 text-white"> {{quantityOfTenants}} </p>
             <p class="text-sm text-gray-400 mt-1">Activos</p>
         </div>
 
@@ -68,8 +68,8 @@
                 <span class="material-icons text-emerald-500 text-3xl">attach_money</span>
                 <span class="text-sm text-gray-400">Ingresos</span>
             </div>
-            <p class="text-3xl font-bold mt-4 text-white">$2.450.000</p>
-            <p class="text-sm text-gray-400 mt-1">Mensuales</p>
+            <p class="text-3xl font-bold mt-4 text-white"> ${{totalRent}} </p>
+            <p class="text-sm text-gray-400 mt-1">Mensuales (solo alquileres)</p>
         </div>
 
         <!-- Promedio alquiler -->
@@ -78,8 +78,8 @@
                 <span class="material-icons text-yellow-500 text-3xl">trending_up</span>
                 <span class="text-sm text-gray-400">Promedio</span>
             </div>
-            <p class="text-3xl font-bold mt-4 text-white">$175.000</p>
-            <p class="text-sm text-gray-400 mt-1">Por propiedad</p>
+            <p class="text-3xl font-bold mt-4 text-white"> ${{averageRent ? averageRent.toFixed(2) : 0}} </p>
+            <p class="text-sm text-gray-400 mt-1">Por propiedad (solo alquileres)</p>
         </div>
 
         <!-- Cantidad de dueda total -->
@@ -97,7 +97,7 @@
                 <span class="material-icons text-purple-500 text-3xl">arrow_upward</span>
                 <span class="text-sm text-gray-400">Máximo</span>
             </div>
-            <p class="text-3xl font-bold mt-4 text-white">$320.000</p>
+            <p class="text-3xl font-bold mt-4 text-white"> ${{highestRent}} </p>
             <p class="text-sm text-gray-400 mt-1">Alquiler más alto</p>
         </div>
 
@@ -106,7 +106,7 @@
                 <span class="material-icons text-indigo-500 text-3xl">arrow_downward</span>
                 <span class="text-sm text-gray-400">Mínimo</span>
             </div>
-            <p class="text-3xl font-bold mt-4 text-white">$100.000</p>
+            <p class="text-3xl font-bold mt-4 text-white"> ${{lowestRent}} </p>
             <p class="text-sm text-gray-400 mt-1">Alquiler más bajo</p>
         </div>
 
