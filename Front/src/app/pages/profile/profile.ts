@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
-  imports: [Spinner, Toast],
+  imports: [Spinner, Toast, DatePipe],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

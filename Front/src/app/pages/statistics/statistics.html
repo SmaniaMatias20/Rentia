@@ -1,4 +1,4 @@
-<div class="relative bg-black text-white py-8 min-h-screen w-full overflow-hidden">
+<div class="max-w-screen bg-black relative border sm:max-h-screen">
 
     <!-- Botón volver -->
     <div class="absolute top-4 right-4 flex gap-2 z-20">
@@ -6,27 +6,107 @@
         flex items-center gap-1
         py-2 px-4
         rounded-lg bg-blue-600 hover:bg-blue-700
-        text-white font-semibold transition
+        text-white font-semibold transition cursor-pointer
       " (click)="goToHome()">
             <span class="material-icons">arrow_back</span>
             Volver al menú
         </button>
     </div>
 
-    <!-- Contenedor de gráficos -->
-    <div class="
-      mx-auto mt-20 p-4
-      flex flex-col gap-6
-      lg:flex-row
-      max-w-7xl
-    ">
-        <div class="w-full lg:w-1/2">
-            <canvas #barChart class="w-full h-[350px] rounded-lg bg-white"></canvas>
+    <!-- Cards de métricas -->
+    <div class="max-w-screen mx-auto mt-20 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Total propiedades -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-blue-500 text-3xl">home</span>
+                <span class="text-sm text-gray-400">Propiedades</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">18</p>
+            <p class="text-sm text-gray-400 mt-1">Total registradas</p>
         </div>
 
-        <div class="w-full lg:w-1/2">
-            <canvas #lineChart class="w-full h-[350px] rounded-lg bg-white"></canvas>
+        <!-- Ocupadas -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-green-500 text-3xl">check_circle</span>
+                <span class="text-sm text-gray-400">Ocupadas</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">14</p>
+            <p class="text-sm text-green-400 mt-1">78% de ocupación</p>
         </div>
+
+        <!-- Desocupadas -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-red-500 text-3xl">remove_circle</span>
+                <span class="text-sm text-gray-400">Desocupadas</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">4</p>
+            <p class="text-sm text-red-400 mt-1">22% disponibles</p>
+        </div>
+
+        <!-- Inquilinos -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-purple-500 text-3xl">groups</span>
+                <span class="text-sm text-gray-400">Inquilinos</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">14</p>
+            <p class="text-sm text-gray-400 mt-1">Activos</p>
+        </div>
+
+        <!-- Total alquileres -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-emerald-500 text-3xl">attach_money</span>
+                <span class="text-sm text-gray-400">Ingresos</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">$2.450.000</p>
+            <p class="text-sm text-gray-400 mt-1">Mensuales</p>
+        </div>
+
+        <!-- Promedio alquiler -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-yellow-500 text-3xl">trending_up</span>
+                <span class="text-sm text-gray-400">Promedio</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">$175.000</p>
+            <p class="text-sm text-gray-400 mt-1">Por propiedad</p>
+        </div>
+
+        <!-- Cantidad de dueda total -->
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-red-500 text-3xl">attach_money</span>
+                <span class="text-sm text-gray-400">Deuda</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">$175.000</p>
+            <p class="text-sm text-gray-400 mt-1">Total (todos los inquilinos)</p>
+        </div>
+
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-purple-500 text-3xl">arrow_upward</span>
+                <span class="text-sm text-gray-400">Máximo</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">$320.000</p>
+            <p class="text-sm text-gray-400 mt-1">Alquiler más alto</p>
+        </div>
+
+        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <span class="material-icons text-indigo-500 text-3xl">arrow_downward</span>
+                <span class="text-sm text-gray-400">Mínimo</span>
+            </div>
+            <p class="text-3xl font-bold mt-4 text-white">$100.000</p>
+            <p class="text-sm text-gray-400 mt-1">Alquiler más bajo</p>
+        </div>
+
+
+
+
+
     </div>
-
 </div>
