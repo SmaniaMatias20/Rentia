@@ -36,6 +36,8 @@ export class Tenant {
 
       const id = this.route.snapshot.paramMap.get('id');
       this.tenantData = await this.tenantService.getTenant(id || '');
+      console.log(this.tenantData);
+
 
       this.loading = false;
     } catch (error) {
@@ -44,7 +46,7 @@ export class Tenant {
     }
   }
 
-  goBack() {
+  goToTenants() {
     this.router.navigateByUrl('/tenants');
   }
 

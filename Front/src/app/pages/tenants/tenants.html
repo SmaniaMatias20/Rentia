@@ -54,8 +54,8 @@
   ">
             @for (tenant of tenants; track tenant.id) {
             <app-card-tenant icon="person" title="{{tenant.username}}" bgColor="bg-green-600"
-                backgroundImage="url('assets/images/tenant.jpg')" [tenant]="tenant"
-                (delete)="removeTenant($event)"></app-card-tenant>
+                backgroundImage="url('assets/images/tenant.jpg')" [tenant]="tenant" (delete)="removeTenant($event)"
+                url="/tenants/{{tenant.id}}"></app-card-tenant>
             }
         </div>
     </div>

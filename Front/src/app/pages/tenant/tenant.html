@@ -1,1 +1,133 @@
-<p>tenant works!</p>
+<div class="mt-10 w-full lg:px-4">
+
+  <!-- Botón volver -->
+  <div class="flex items-center justify-end gap-2 mb-4">
+    <button class="
+        flex items-center gap-1
+        py-2 px-4
+        rounded-lg bg-blue-600 hover:bg-blue-700
+        disabled:bg-blue-400 disabled:cursor-not-allowed
+        text-white font-semibold transition cursor-pointer
+      " (click)="goToTenants()">
+      <span class="material-icons">arrow_back</span>
+      Volver
+    </button>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+  <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+    <app-spinner></app-spinner>
+  </div>
+  }
+
+  <!-- Contenido -->
+  @if (tenantData != null && !loading) {
+  <div class="flex flex-col w-full bg-black backdrop-blur text-white rounded-2xl shadow-xl overflow-hidden shadow-2xl">
+
+    <!-- TOP: Avatar + Info -->
+    <div class="flex flex-col lg:flex-row">
+
+      <!-- Avatar -->
+      <div class="lg:w-1/3 flex items-center justify-center p-8">
+        <img [src]="tenantData.image_url || 'assets/user-placeholder.png'" alt="Inquilino"
+          class="w-40 h-40 rounded-full object-cover border-4 border-blue-600 shadow-lg" />
+      </div>
+
+      <!-- Información -->
+      <div class="flex-1 p-8 flex flex-col justify-between">
+
+        <!-- Header -->
+        <div class="flex gap-4 items-center">
+          <h2 class="text-3xl font-bold">
+            {{ tenantData.username }}
+          </h2>
+          <button class="
+                flex items-center gap-1
+                py-2 px-2
+                rounded-lg bg-blue-600 hover:bg-blue-700
+                text-white font-semibold transition cursor-pointer
+              " (click)="openEdit('username', tenantData.username)">
+            <span class="material-icons">edit</span>
+          </button>
+        </div>
+
+        <!-- Datos -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+          <!-- Email -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-cyan-400 text-3xl">email</span>
+            <div>
+              <p class="text-gray-400 text-sm">Email</p>
+              <p class="text-lg font-semibold">
+                {{ tenantData.email || 'Sin información' }}
+              </p>
+            </div>
+            <button class="
+                  flex items-center gap-1
+                  py-2 px-2
+                  rounded-lg bg-blue-600 hover:bg-blue-700
+                  text-white font-semibold transition cursor-pointer
+                " (click)="openEdit('email', tenantData.email)">
+              <span class="material-icons">edit</span>
+            </button>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-green-400 text-3xl">phone</span>
+            <div>
+              <p class="text-gray-400 text-sm">Teléfono</p>
+              <p class="text-lg font-semibold">
+                {{ tenantData.phone || 'Sin información' }}
+              </p>
+            </div>
+            <button class="
+                  flex items-center gap-1
+                  py-2 px-2
+                  rounded-lg bg-blue-600 hover:bg-blue-700
+                  text-white font-semibold transition cursor-pointer
+                " (click)="openEdit('phone', tenantData.phone)">
+              <span class="material-icons">edit</span>
+            </button>
+          </div>
+
+          <!-- Rol -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-purple-400 text-3xl">badge</span>
+            <div>
+              <p class="text-gray-400 text-sm">Rol</p>
+              <p class="text-lg font-semibold capitalize">
+                {{ tenantData.role == 'tenant' ? 'Inquilino' : 'Propietario' }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Badges -->
+        <div class="flex gap-4 mt-8">
+          <span class="px-5 py-2 rounded-full text-sm font-semibold"
+            [ngClass]="tenantData.is_enabled ? 'bg-green-600' : 'bg-red-600'">
+            {{ tenantData.is_enabled ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  }
+
+  <!-- Modal edición -->
+  <!-- @if (formEditTenant) {
+  <app-form-edit-tenant [type]="editType" [currentValue]="editValue" (save)="onSave($event)"
+    (cancel)="closeFormEditTenant()">
+  </app-form-edit-tenant>
+  } -->
+
+  <!-- Toast -->
+  <app-toast #toast></app-toast>
+
+</div>

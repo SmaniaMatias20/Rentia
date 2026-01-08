@@ -86,12 +86,13 @@ export class TenantService {
       .select('*')
       .eq('id', id);
 
+
     if (error) {
       console.error('Error al obtener tenant:', error.message);
       return [];
     }
 
-    return data || [];
+    return data[0] || [];
   }
 
   /**

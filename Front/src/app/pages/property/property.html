@@ -10,7 +10,7 @@
         text-white font-semibold transition cursor-pointer
       " (click)="goToProperties()">
             <span class="material-icons">arrow_back</span>
-            Volver al menú
+            Volver
         </button>
     </div>
 
@@ -142,9 +142,9 @@
                         <div>
                             <p class="text-gray-400 text-sm">Inquilino</p>
 
-                            @if (tenant?.length) {
+                            @if (tenant) {
                             <p class="text-lg font-semibold">
-                                {{ tenant[0].username }}
+                                {{ tenant.username }}
                             </p>
                             } @else {
                             <p class="text-lg font-semibold">
