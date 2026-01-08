@@ -24,7 +24,7 @@
   <div class="
       max-w-screen mx-auto h-full
       grid grid-cols-1 lg:grid-cols-3 gap-6
-      pt-10
+      pt-20
     ">
 
     <!-- PERFIL USUARIO -->
@@ -55,18 +55,22 @@
       <div class="mt-6 w-full space-y-4 text-sm">
         <div class="flex items-center gap-3 text-gray-300">
           <span class="material-icons text-blue-400">email</span>
-          <span>{{ currentUser.email }}</span>
+          <span>{{ currentUser.email ? currentUser.email : 'Sin información' }}</span>
         </div>
 
         <div class="flex items-center gap-3 text-gray-300">
           <span class="material-icons text-blue-400">badge</span>
-          <span>Rol del sistema</span>
+          <span>{{ currentUser.is_enabled ? 'Activo' : 'Inactivo' }}</span>
         </div>
-
 
         <div class="flex items-center gap-3 text-gray-300">
           <span class="material-icons text-blue-400">calendar_today</span>
           <span>{{ currentUser.created_at | date: 'dd/MM/yyyy' }}</span>
+        </div>
+
+        <div class="flex items-center gap-3 text-gray-300">
+          <span class="material-icons text-blue-400">phone</span>
+          <span>{{ currentUser.phone ? currentUser.phone : 'Sin información' }}</span>
         </div>
       </div>
     </div>

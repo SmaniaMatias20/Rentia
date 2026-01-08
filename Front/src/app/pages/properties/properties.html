@@ -1,21 +1,21 @@
-<div class="max-w-screen bg-black px-4 relative border sm:max-h-screen">
+<div class="min-h-[calc(100vh-4rem)] w-screen bg-black px-4 relative border">
 
-    @if (loading) {
-    <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-        <app-spinner></app-spinner>
-    </div>
-    }
+  @if (loading) {
+  <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+    <app-spinner></app-spinner>
+  </div>
+  }
 
 
-    @if (!loading) {
-    <!-- Contenedor de botones arriba a la derecha -->
-    <div class="
+  @if (!loading) {
+  <!-- Contenedor de botones arriba a la derecha -->
+  <div class="
     absolute top-4 right-4 z-20
     flex flex-col gap-2
     sm:flex-row sm:gap-3
   ">
-        <!-- Nueva propiedad -->
-        <button class="
+    <!-- Nueva propiedad -->
+    <button class="
       flex items-center justify-center gap-1
       py-2 px-4
       w-full sm:w-auto
@@ -23,12 +23,12 @@
       disabled:bg-green-400 disabled:cursor-not-allowed
       text-white font-semibold transition cursor-pointer
     " (click)="goToNewProperty()">
-            <span class="material-icons">add</span>
-            Nueva propiedad
-        </button>
+      <span class="material-icons">add</span>
+      Nueva propiedad
+    </button>
 
-        <!-- Volver al menú -->
-        <button class="
+    <!-- Volver al menú -->
+    <button class="
       flex items-center justify-center gap-1
       py-2 px-4
       w-full sm:w-auto
@@ -36,36 +36,38 @@
       disabled:bg-blue-400 disabled:cursor-not-allowed
       text-white font-semibold transition cursor-pointer
     " (click)="goToHome()">
-            <span class="material-icons">arrow_back</span>
-            Volver al menú
-        </button>
+      <span class="material-icons">arrow_back</span>
+      Volver al menú
+    </button>
+  </div>
+
+  <!-- Contenido principal (cards) -->
+  <div class="pt-24">
+    <div class="
+    grid
+    grid-cols-1
+    sm:grid-cols-2
+    lg:grid-cols-3
+    gap-6
+    w-full
+    max-w-screen
+    mx-auto
+    p-4
+  ">
+
+      @for (property of properties; track property.id) {
+      <app-card-property icon="home" title="{{property.name}}" bgColor="bg-green-600" [property]="property"
+        backgroundImage="url('assets/images/property.webp')" (delete)="removeProperty($event)"
+        url="/properties/{{property.id}}">
+      </app-card-property>
+
+      }
     </div>
+  </div>
 
-    <!-- Contenido principal (cards) -->
-    <div class="pt-24">
-        <div class="
-        grid
-        grid-cols-1
-
-        lg:grid-cols-3
-        gap-6
-        place-items-center
-        w-full
-        p-4
-      ">
-            @for (property of properties; track property.id) {
-            <app-card-property icon="home" title="{{property.name}}" bgColor="bg-green-600" [property]="property"
-                backgroundImage="url('assets/images/property.webp')" (delete)="removeProperty($event)"
-                url="/properties/{{property.id}}">
-            </app-card-property>
-
-            }
-        </div>
-    </div>
-
-    <!-- Formulario para crear nueva propiedad -->
-    @if (formProperty) {
-    <app-form-property (closeForm)=" formProperty=false" (createProperty)="onPropertyCreated()"></app-form-property>
-    }
-    }
+  <!-- Formulario para crear nueva propiedad -->
+  @if (formProperty) {
+  <app-form-property (closeForm)=" formProperty=false" (createProperty)="onPropertyCreated()"></app-form-property>
+  }
+  }
 </div>

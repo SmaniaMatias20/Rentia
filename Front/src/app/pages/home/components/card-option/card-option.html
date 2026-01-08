@@ -1,15 +1,25 @@
 <div class="
-    sm:w-128 sm:h-64 w-96 h-40
+    w-full
+    h-44 sm:h-52 lg:h-64
     rounded-xl p-6
     text-white shadow-lg
-    flex items-center justify-center gap-2
+    flex items-center justify-center gap-3
     cursor-pointer
-    transition hover:scale-[1.03]
-    relative
+    transition-transform duration-300 hover:scale-[1.03]
+    relative overflow-hidden
   " [ngClass]="bgColor" [style.backgroundImage]="backgroundImage" [style.backgroundSize]="'cover'"
-    [style.backgroundPosition]="'center'" [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
-    <div class="absolute inset-0 bg-black/30 rounded-xl z-0"></div>
+  [style.backgroundPosition]="'center'" [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black/40 z-0"></div>
 
-    <span class="material-icons !text-5xl z-10">{{ icon }}</span>
-    <h1 class="font-semibold text-center text-4xl text-white drop-shadow-xl z-10">{{ title }}</h1>
+  <!-- Contenido -->
+  <div class="z-10 flex items-center gap-2 text-center">
+    <span class="material-icons text-5xl drop-shadow-xl">
+      {{ icon }}
+    </span>
+
+    <h1 class="font-semibold text-xl sm:text-2xl lg:text-3xl drop-shadow-xl">
+      {{ title }}
+    </h1>
+  </div>
 </div>
