@@ -30,7 +30,7 @@ export class FormTenant implements OnInit {
   ) {
     this.tenantForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
+      phone: ['', [Validators.pattern(/^\d{7,15}$/)]],
       email: ['', [Validators.email]],
       role: ['tenant'],
       property_id: ['', Validators.required],
@@ -71,6 +71,7 @@ export class FormTenant implements OnInit {
       phone,
       email,
       role,
+      property_id
     });
 
     if (error) {

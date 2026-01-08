@@ -13,24 +13,46 @@ export class TenantService {
   /**
    * Crea un nuevo inquilino en la tabla "tenants"
    */
-  async createTenant(tenant: { username: string; phone: string; email: string, role: string }): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
+  async createTenant(
+    tenant: {
+      username: string;
+      phone: string;
+      email: string;
+      role: string;
+      property_id: string;
+    }
+  ): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
 
-    const { data: authData, error: authError } = await this.db.client.auth.signUp({
-      email: tenant.email,
-      password: '123456789',
-    });
-
-    if (authError) return { error: authError };
-
-    // 2️⃣ Crear perfil en tabla "users"
-    const { error: profileError } = await this.db.client
+    // 1️⃣ Crear usuario en tabla users y obtener el id
+    const { data: userData, error: profileError } = await this.db.client
       .from('users')
-      .insert([{ id: authData.user?.id, username: tenant.username, email: tenant.email, role: tenant.role, phone: tenant.phone }])
+      .insert([
+        {
+          username: tenant.username,
+          email: tenant.email,
+          role: tenant.role,
+          phone: tenant.phone,
+        }
+      ])
+      .select()
+      .single(); // 👈 importante para obtener un solo objeto
 
     if (profileError) return { error: profileError };
 
-    return {};
+    // 2️⃣ Usar el id del nuevo inquilino
+    const tenantId = userData.id;
+
+    // 3️⃣ Actualizar la propiedad
+    const { error: propertyError } = await this.db.client
+      .from('properties')
+      .update({ tenant_id: tenantId })
+      .eq('id', tenant.property_id);
+
+    if (propertyError) return { error: propertyError };
+
+    return { user: userData };
   }
+
 
   /**
    * Obtiene todos los inquilinos del usuario logueado
@@ -39,9 +61,9 @@ export class TenantService {
     console.log('Obteniendo tenants del usuario:', user_id);
 
     const { data, error } = await this.db.client
-      .from('tenants')
+      .from('users')
       .select('*')
-      .eq('user_id', user_id);
+      .eq('role', 'tenant')
 
     if (error) {
       console.error('Error al obtener tenants:', error.message);
@@ -67,11 +89,9 @@ export class TenantService {
         return { error: errorUpdate };
       }
 
-      console.log('Se limpiaron tenant_id en properties correctamente (si existían)');
-
       // Eliminar el tenant
       const { error: errorDelete } = await this.db.client
-        .from('tenants')
+        .from('users')
         .delete()
         .eq('id', id);
 
@@ -80,9 +100,7 @@ export class TenantService {
         return { error: errorDelete };
       }
 
-      console.log('Tenant eliminado correctamente');
       return {};
-
     } catch (err: any) {
       console.error('Error inesperado al eliminar tenant:', err.message);
       return { error: { message: err.message } as PostgrestError };
