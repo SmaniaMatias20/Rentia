@@ -38,6 +38,18 @@ export class FormEditProperty implements OnInit {
       case 'tenant':
         return [Validators.required];
 
+      case 'rooms':
+        return [Validators.required, Validators.pattern(/^\d+$/)];
+
+      case 'type':
+        return [Validators.required];
+
+      case 'address':
+        return [Validators.required];
+
+      case 'name':
+        return [Validators.required];
+
       default:
         return [];
     }

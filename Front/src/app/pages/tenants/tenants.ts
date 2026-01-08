@@ -44,7 +44,7 @@ export class Tenants {
 
   async loadTenants() {
     this.loading = true;
-    this.tenants = await this.tenant.getTenants(this.user.id);
+    this.tenants = await this.tenant.getTenantsByUser(this.user.id);
     this.loading = false;
   }
 
@@ -63,7 +63,6 @@ export class Tenants {
 
   async removeTenant(id: number) {
     try {
-      console.log('Eliminando inquilino:', id);
       await this.tenant.deleteTenant(id);
       this.loadTenants();
       this.toast.showToast('Inquilino eliminado correctamente', 'success');

@@ -46,7 +46,7 @@ export class FormTenant implements OnInit {
     const currentUser = await this.auth.getCurrentUser();
     if (!currentUser) return;
 
-    this.properties = await this.propertyService.getProperties(currentUser.id);
+    this.properties = await this.propertyService.getPropertiesWithoutTenant(currentUser.id);
   }
 
   async submit() {
@@ -71,7 +71,8 @@ export class FormTenant implements OnInit {
       phone,
       email,
       role,
-      property_id
+      property_id,
+      owner_id: currentUser.id
     });
 
     if (error) {

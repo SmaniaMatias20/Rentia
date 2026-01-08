@@ -68,7 +68,6 @@ export class Properties {
 
   async removeProperty(id: number) {
     try {
-      console.log('Eliminando propiedad:', id);
       await this.property.deleteProperty(id);
       this.loadProperties();
       this.toast.showToast('Propiedad eliminada correctamente', 'success');

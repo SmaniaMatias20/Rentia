@@ -20,6 +20,7 @@ export class TenantService {
       email: string;
       role: string;
       property_id: string;
+      owner_id: string;
     }
   ): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
 
@@ -32,6 +33,7 @@ export class TenantService {
           email: tenant.email,
           role: tenant.role,
           phone: tenant.phone,
+          owner_id: tenant.owner_id
         }
       ])
       .select()
@@ -57,49 +59,26 @@ export class TenantService {
   /**
    * Obtiene todos los inquilinos del usuario logueado
    */
-  async getTenants(user_id: string): Promise<any[]> {
+  async getTenantsByUser(user_id: string): Promise<any[]> {
     try {
-      // 1️⃣ Obtener tenant_id desde properties del usuario
-      const { data: properties, error: propertiesError } = await this.db.client
-        .from('properties')
-        .select('tenant_id')
-        .eq('user_id', user_id)
-        .not('tenant_id', 'is', null); // solo propiedades con inquilino
-
-      if (propertiesError) {
-        console.error('Error al obtener propiedades:', propertiesError.message);
-        return [];
-      }
-
-      if (!properties || properties.length === 0) {
-        return [];
-      }
-
-      // 2️⃣ Extraer tenant_ids únicos
-      const tenantIds = [...new Set(
-        properties.map(p => p.tenant_id)
-      )];
-
-      // 3️⃣ Buscar tenants en users
-      const { data: tenants, error: tenantsError } = await this.db.client
+      const { data, error } = await this.db.client
         .from('users')
         .select('*')
-        .in('id', tenantIds)
-        .eq('role', 'tenant');
+        .eq('owner_id', user_id)
+        .eq('role', 'tenant'); // opcional pero recomendado
 
-      if (tenantsError) {
-        console.error('Error al obtener tenants:', tenantsError.message);
+      if (error) {
+        console.error('Error al obtener tenants:', error.message);
         return [];
       }
 
-      return tenants || [];
+      return data || [];
 
     } catch (err) {
       console.error('Error inesperado:', err);
       return [];
     }
   }
-
 
   async getTenant(id: string): Promise<any> {
     const { data, error } = await this.db.client

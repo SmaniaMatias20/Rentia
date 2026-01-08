@@ -46,6 +46,22 @@ export class PropertyService {
     return data || [];
   }
 
+  async getPropertiesWithoutTenant(user_id: string): Promise<any[]> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .select('*')
+      .eq('user_id', user_id)
+      .is('tenant_id', null); // ✅ solo propiedades sin inquilino
+
+    if (error) {
+      console.error('Error al obtener propiedades:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+
   /**
    * Elimina una propiedad en la tabla "properties"
    */
