@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Toast } from '../../../../components/toast/toast';
 import { AuthService } from '../../../../services/auth/auth';
 import { PropertyService } from '../../../../services/property/property';
+import { environment } from '../../../../../../src/environments/environment';
 
 declare var google: any;
 
@@ -84,30 +85,63 @@ export class FormProperty implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      const autocomplete = new google.maps.places.Autocomplete(
-        this.addressInput.nativeElement,
-        {
-          types: ['address'],
-          componentRestrictions: { country: 'ar' },
-        }
-      );
+    this.loadGoogleMaps()
+      .then(() => {
+        const input: HTMLInputElement = this.addressInput.nativeElement;
 
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-
-        if (!place.geometry) {
-          this.addressValid = false;
+        // ✅ Verifica que exista google.maps.places
+        if (!(window as any).google?.maps?.places) {
+          console.error('Google Maps Places API no cargó correctamente.');
           return;
         }
 
-        this.addressValid = true;
-        this.propertyForm.patchValue({
-          address: place.formatted_address,
+        // Usamos siempre el Autocomplete clásico
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+          types: ['address'],
+          componentRestrictions: { country: 'ar' },
         });
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+
+          if (!place.geometry) {
+            this.addressValid = false;
+            return;
+          }
+
+          this.addressValid = true;
+          this.propertyForm.patchValue({
+            address: place.formatted_address,
+          });
+        });
+      })
+      .catch(err => {
+        console.error('Error cargando Google Maps:', err);
       });
-    }, 300);
   }
+
+
+  loadGoogleMaps(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if ((window as any).google?.maps?.places) {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.apiMaps}&libraries=places&loading=async`;
+      script.async = true;
+      script.defer = true;
+
+      script.onload = () => resolve();
+      script.onerror = () => reject('Google Maps failed to load');
+
+      document.body.appendChild(script);
+    });
+  }
+
+
+
 
 
 }

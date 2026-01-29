@@ -35,20 +35,32 @@ export class Register {
       alert('Completá todos los campos');
       return;
     }
-    console.log(this.registerForm.value);
 
-    this.auth.signUp(this.registerForm.value.username, this.registerForm.value.email, this.registerForm.value.password, this.registerForm.value.role)
-      .then(({ user }) => {
+    console.log('Datos enviados:', this.registerForm.value);
+
+    this.auth.signUp(
+      this.registerForm.value.username,
+      this.registerForm.value.email,
+      this.registerForm.value.password,
+      this.registerForm.value.role
+    )
+      .then(({ user, error }) => {
+        if (error) {
+          console.error('Error al registrarse:', error);
+          return;
+        }
+
         if (user) {
           console.log('Registro exitoso:', user.email);
         } else {
-          console.error('Error al registrarse:');
+          console.error('Registro falló sin error explícito');
         }
       })
       .catch((error) => {
-        console.error('Error al registrarse:', error.message);
+        console.error('Error inesperado:', error);
       });
   }
+
 
   togglePassword() {
     this.showPassword = !this.showPassword;

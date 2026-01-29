@@ -37,21 +37,31 @@ export class Login {
         return;
       }
 
-      this.auth.signIn(this.loginForm.value.username, this.loginForm.value.password)
-        .then(({ session }) => {
-          if (session) {
-            this.toast.showToast('Sesión iniciada', 'success');
-          } else {
+      this.auth.signIn(
+        this.loginForm.value.username,
+        this.loginForm.value.password
+      )
+        .then(({ user, error }) => {
+
+          if (error) {
             this.toast.showToast('Usuario o contraseña incorrectos', 'error');
+            return;
           }
+
+          if (user) {
+            this.toast.showToast('Sesión iniciada', 'success');
+          }
+
         })
         .catch((error) => {
           console.error('Error al iniciar sesión:', error.message);
         });
+
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }
   }
+
 
   togglePassword() {
     this.showPassword = !this.showPassword;

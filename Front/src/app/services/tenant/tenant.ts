@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Database } from '../database/database';
-import { AuthError, Session, User, PostgrestError } from '@supabase/supabase-js';
+import { AuthError, User, PostgrestError } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,21 @@ export class TenantService {
       property_id: string;
       owner_id: string;
     }
-  ): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
+  ): Promise<{ user?: User; error?: AuthError | PostgrestError | any }> {
+
+    // 1️⃣ Validar si ya existe usuario/email
+    const { data: existingUser } = await this.db.client
+      .from('users')
+      .select('id')
+      .or(`username.eq.${tenant.username},email.eq.${tenant.email}`)
+      .maybeSingle();
+
+    if (existingUser) {
+      return { error: { message: 'Usuario o email ya existe' } };
+    }
+
+    // 2️⃣ Hashear password
+    const password_hash = await bcrypt.hash("1234", 10);
 
     // 1️⃣ Crear usuario en tabla users y obtener el id
     const { data: userData, error: profileError } = await this.db.client
@@ -33,7 +48,8 @@ export class TenantService {
           email: tenant.email,
           role: tenant.role,
           phone: tenant.phone,
-          owner_id: tenant.owner_id
+          owner_id: tenant.owner_id,
+          password: password_hash
         }
       ])
       .select()

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Database } from '../database/database';
 import { AuthError, Session, User, PostgrestError } from '@supabase/supabase-js';
+import bcrypt from 'bcryptjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,90 +18,96 @@ export class AuthService {
     email: string,
     password: string,
     role: string
-  ): Promise<{ user?: User; error?: AuthError | PostgrestError }> {
-    // 1️⃣ Crear usuario en Supabase Auth
-    const { data: authData, error: authError } = await this.db.client.auth.signUp({
-      email,
-      password,
-    });
+  ): Promise<{ user?: any; error?: any }> {
 
-    if (authError) return { error: authError };
-
-    // 2️⃣ Crear perfil en tabla "users"
-    const { error: profileError } = await this.db.client
+    // 1️⃣ Validar si ya existe usuario/email
+    const { data: existingUser } = await this.db.client
       .from('users')
-      .insert([{ id: authData.user?.id, username, email, role }])
+      .select('id')
+      .or(`username.eq.${username},email.eq.${email}`)
+      .maybeSingle();
 
-    if (profileError) return { error: profileError };
+    if (existingUser) {
+      return { error: { message: 'Usuario o email ya existe' } };
+    }
+
+    // 2️⃣ Hashear password
+    const password_hash = await bcrypt.hash(password, 10);
+
+    // 3️⃣ Insertar usuario en public.users
+    const { data, error } = await this.db.client
+      .from('users')
+      .insert([{
+        username,
+        email,
+        password: password_hash,
+        role,
+      }])
+      .select()
+      .single();
+
+    if (error) return { error };
+
+    // 4️⃣ Guardar sesión local (IMPORTANTE)
+    localStorage.setItem('user', JSON.stringify(data));
 
     this.router.navigate(['/home']);
-    return { user: authData.user ?? undefined };
+    return { user: data };
   }
 
 
   /**
    * Inicio de sesión con username y password
    */
-  async signIn(username: string, password: string): Promise<{ session?: Session; error?: AuthError | PostgrestError }> {
-    // 1️⃣ Buscar email asociado al username en tabla "users"
-    const { data: users, error: fetchError } = await this.db.client
+  async signIn(
+    username: string,
+    password: string
+  ): Promise<{ user?: any; error?: any }> {
+
+    console.log(username, password);
+
+    // 1️⃣ Buscar usuario en public.users
+    const { data: user, error } = await this.db.client
       .from('users')
-      .select('id, username, email')
+      .select('*')
       .eq('username', username)
       .single();
 
-    if (fetchError || !users) {
-      console.error('Username no encontrado:', fetchError?.message);
-      return { error: fetchError };
+    if (error || !user) {
+      return { error: { message: 'Usuario no encontrado' } };
     }
 
-    const email = users.email;
+    // 3️⃣ Comparar password
+    const validPassword = await bcrypt.compare(password, user.password);
 
-    // 2️⃣ Login con email y password
-    const { data: sessionData, error: loginError } = await this.db.client.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (loginError) {
-      console.error('Error al iniciar sesión:', loginError.message);
-      return { error: loginError };
+    if (!validPassword) {
+      return { error: { message: 'Contraseña incorrecta' } };
     }
+
+    // 4️⃣ Guardar sesión local
+    localStorage.setItem('user', JSON.stringify(user));
 
     this.router.navigate(['/home']);
-    return { session: sessionData.session };
+    return { user };
   }
+
 
   /**
    * Logout
    */
-  async signOut(): Promise<void> {
-    const { error } = await this.db.client.auth.signOut();
-    if (error) console.error('Error al cerrar sesión:', error.message);
+  async signOut() {
+    localStorage.removeItem('user');
     this.router.navigate(['/']);
   }
 
   /**
    * Obtiene el usuario actual logueado con todos los datos de la tabla "users"
    */
-  async getCurrentUser(): Promise<any | null> {
-    // 1️⃣ Obtener el user id desde Supabase Auth
-    const { data: authData, error: authError } = await this.db.client.auth.getUser();
-    if (authError || !authData.user) return null;
-
-    const userId = authData.user.id;
-
-    // 2️⃣ Buscar usuario en la tabla "users" por su id
-    const { data: user, error: fetchError } = await this.db.client
-      .from('users')
-      .select('*') // devuelve todos los campos: username, role, active, image_url, etc.
-      .eq('id', userId)
-      .single();
-
-    if (fetchError || !user) return null;
-
-    return user;
+  getCurrentUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
+
 
 
 }
