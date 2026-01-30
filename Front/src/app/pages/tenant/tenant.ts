@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { FormEditTenant } from './components/form-edit-tenant/form-edit-tenant';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
 import { TenantService } from '../../services/tenant/tenant';
@@ -15,7 +15,7 @@ type EditType = 'username' | 'email' | 'phone';
 
 @Component({
   selector: 'app-tenant',
-  imports: [NgClass, Spinner, Toast, FormsModule, CreateComment, ShowComment],
+  imports: [NgClass, Spinner, Toast, FormsModule, CreateComment, ShowComment, FormEditTenant],
   templateUrl: './tenant.html',
   styleUrl: './tenant.css',
 })
@@ -111,6 +111,17 @@ export class Tenant {
     } catch (error) {
       console.error('Error al mostrar comentario:', error);
       this.toast.showToast('Error al mostrar comentario', 'error');
+    }
+  }
+
+  async onSaveEdit(newValue: any) {
+    try {
+      // await this.tenantService.updateTenant(this.tenantData.id, newValue);
+      this.toast.showToast('Datos actualizados correctamente', 'success');
+      this.closeFormEditTenant();
+    } catch (error) {
+      console.error('Error al actualizar datos:', error);
+      this.toast.showToast('Error al actualizar datos', 'error');
     }
   }
 

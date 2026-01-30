@@ -138,11 +138,11 @@
   }
 
   <!-- Modal edición -->
-  <!-- @if (formEditTenant) {
-  <app-form-edit-tenant [type]="editType" [currentValue]="editValue" (save)="onSave($event)"
+  @if (formEditTenant) {
+  <app-form-edit-tenant [type]="editType" [currentValue]="editValue" (save)="onSaveEdit($event)"
     (cancel)="closeFormEditTenant()">
   </app-form-edit-tenant>
-  } -->
+  }
 
   <!-- Toast -->
   <app-toast #toast></app-toast>
