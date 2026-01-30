@@ -174,13 +174,14 @@ export class TenantService {
     return data || [];
   }
 
-  async saveComment(tenantId: string, comment: string): Promise<any> {
+  async saveComment(tenantId: string, comment: string, ownerId: string): Promise<any> {
     const { error } = await this.db.client
       .from('comments')
       .insert([
         {
+          owner_id: ownerId,
           tenant_id: tenantId,
-          comment: comment
+          content: comment
         }
       ])
       .single();

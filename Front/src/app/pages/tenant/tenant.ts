@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
 import { TenantService } from '../../services/tenant/tenant';
+import { AuthService } from '../../services/auth/auth';
 
 import { CreateComment } from './components/create-comment/create-comment';
 import { ShowComment } from './components/show-comment/show-comment';
@@ -26,13 +27,15 @@ export class Tenant {
   formEditTenant = false;
   editType!: EditType;
   editValue: any;
+  user: any;
 
   @ViewChild('toast') toast!: Toast;
 
   constructor(
     private tenantService: TenantService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   async ngOnInit() {
@@ -41,6 +44,8 @@ export class Tenant {
 
       const id = this.route.snapshot.paramMap.get('id') || '';
       this.tenantData = await this.tenantService.getTenant(id);
+      this.user = await this.authService.getCurrentUser();
+
 
       // 👉 Traer comentarios del inquilino
       this.comments = await this.tenantService.getCommentsByTenant(id);
@@ -69,10 +74,9 @@ export class Tenant {
   async onSaveComment(newComment: any) {
     try {
       this.loading = true;
-      console.log('Comentario guardado:', newComment);
 
       // 👉 Guardar comentario en el backend
-      await this.tenantService.saveComment(this.tenantData.id, newComment);
+      await this.tenantService.saveComment(this.tenantData.id, newComment, this.user.id);
 
       // 🔁 Actualizar la lista local de comentarios para reflejarlo inmediatamente
       this.comments.push(newComment);

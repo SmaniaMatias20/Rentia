@@ -10,6 +10,6 @@ import { CommonModule } from '@angular/common';
 })
 export class ShowComment {
 
-  @Input() comment: string = '';  // Comentario a mostrar
+  @Input() comment: any;  // Comentario a mostrar
 
 }

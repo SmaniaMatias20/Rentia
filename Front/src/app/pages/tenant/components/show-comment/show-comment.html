@@ -1,3 +1,4 @@
-<div class="bg-gray-700 p-3 rounded-lg border-l-4 border-blue-500 text-white">
-    {{ comment }}
+<div class="bg-gray-700 p-3 rounded-lg border-l-4 border-blue-500 text-white flex justify-between items-start">
+    <span>{{ comment.content }}</span>
+    <span class="text-sm text-gray-300">{{ comment.created_at | date: 'short' }}</span>
 </div>
