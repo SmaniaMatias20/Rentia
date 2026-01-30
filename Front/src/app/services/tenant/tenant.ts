@@ -127,6 +127,19 @@ export class TenantService {
         return { error: errorUpdate };
       }
 
+
+      // Eliminar comentarios del tenant
+      const { error: errorDeleteComments } = await this.db.client
+        .from('comments')
+        .delete()
+        .eq('tenant_id', id);
+
+      if (errorDeleteComments) {
+        console.error('Error al eliminar comentarios del tenant:', errorDeleteComments.message);
+        return { error: errorDeleteComments };
+      }
+
+
       // Eliminar el tenant
       const { error: errorDelete } = await this.db.client
         .from('users')
@@ -192,6 +205,54 @@ export class TenantService {
     }
 
     return {};
+  }
+
+  async deleteComment(id: string): Promise<{ error?: PostgrestError }> {
+    try {
+      const { error } = await this.db.client
+        .from('comments')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error al eliminar comentario:', error.message);
+        return { error };
+      }
+
+      return {};
+    } catch (err: any) {
+      console.error('Error inesperado al eliminar comentario:', err.message);
+      return { error: { message: err.message } as PostgrestError };
+    }
+  }
+
+  async showComment(id: string): Promise<{ error?: PostgrestError }> {
+    try {
+      // 1️⃣ Obtener el valor actual
+      const { data, error: selectError } = await this.db.client
+        .from('comments')
+        .select('show')
+        .eq('id', id)
+        .single();
+
+      if (selectError) return { error: selectError };
+
+      // 2️⃣ Alternar el valor
+      const newShowValue = !data.show;
+
+      // 3️⃣ Actualizar el registro
+      const { error: updateError } = await this.db.client
+        .from('comments')
+        .update({ show: newShowValue })
+        .eq('id', id);
+
+      if (updateError) return { error: updateError };
+
+      return {};
+    } catch (err: any) {
+      console.error('Error inesperado al mostrar comentario:', err.message);
+      return { error: { message: err.message } as PostgrestError };
+    }
   }
 
 

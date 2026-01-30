@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,6 +10,20 @@ import { CommonModule } from '@angular/common';
 })
 export class ShowComment {
 
-  @Input() comment: any;  // Comentario a mostrar
+  @Input() comment: any;
+  @Output() delete = new EventEmitter<any>();
+  @Output() toggle = new EventEmitter<any>();
+
+  constructor() { }
+
+  // Borrar comentario
+  async deleteComment(id: string) {
+    this.delete.emit(id);
+  }
+
+  // Mostrar o no mostrar comentario
+  async toggleComment(id: string) {
+    this.toggle.emit(id);
+  }
 
 }

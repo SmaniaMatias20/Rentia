@@ -46,7 +46,6 @@ export class Tenant {
       this.tenantData = await this.tenantService.getTenant(id);
       this.user = await this.authService.getCurrentUser();
 
-
       // 👉 Traer comentarios del inquilino
       this.comments = await this.tenantService.getCommentsByTenant(id);
 
@@ -82,6 +81,9 @@ export class Tenant {
       this.comments.push(newComment);
 
       this.toast.showToast('Comentario guardado correctamente', 'success');
+
+      // 🔁 Actualizar la lista local de comentarios para reflejarlo inmediatamente
+      this.comments = await this.tenantService.getCommentsByTenant(this.tenantData.id);
     } catch (error) {
       console.error(error);
       this.toast.showToast('Error al guardar el comentario', 'error');
@@ -89,4 +91,27 @@ export class Tenant {
       this.loading = false;
     }
   }
+
+  async onDeleteComment(id: string) {
+    try {
+      await this.tenantService.deleteComment(id);
+      this.comments = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+      this.toast.showToast('Comentario eliminado correctamente', 'success');
+    } catch (error) {
+      console.error('Error al eliminar comentario:', error);
+      this.toast.showToast('Error al eliminar comentario', 'error');
+    }
+  }
+
+  async onToggleComment(id: string) {
+    try {
+      await this.tenantService.showComment(id);
+      this.comments = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+      this.toast.showToast('Comentario actualizado correctamente', 'success');
+    } catch (error) {
+      console.error('Error al mostrar comentario:', error);
+      this.toast.showToast('Error al mostrar comentario', 'error');
+    }
+  }
+
 }

@@ -125,7 +125,8 @@
     <!-- Comentarios -->
     <div class="flex flex-col gap-4 mt-6">
       @for (comment of comments; track comment) {
-      <app-show-comment [comment]="comment"></app-show-comment>
+      <app-show-comment [comment]="comment" (delete)="onDeleteComment($event)"
+        (toggle)="onToggleComment($event)"></app-show-comment>
       }
       @empty {
       <p class="text-gray-400">No hay comentarios para este inquilino.</p>
