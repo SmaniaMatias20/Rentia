@@ -160,5 +160,38 @@ export class TenantService {
     return count ?? 0;
   }
 
+  async getCommentsByTenant(tenantId: string): Promise<string[]> {
+    const { data, error } = await this.db.client
+      .from('comments')
+      .select('*')
+      .eq('tenant_id', tenantId);
+
+    if (error) {
+      console.error('Error al obtener comentarios:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  async saveComment(tenantId: string, comment: string): Promise<any> {
+    const { error } = await this.db.client
+      .from('comments')
+      .insert([
+        {
+          tenant_id: tenantId,
+          comment: comment
+        }
+      ])
+      .single();
+
+    if (error) {
+      console.error('Error al guardar comentario:', error.message);
+      return { error };
+    }
+
+    return {};
+  }
+
 
 }

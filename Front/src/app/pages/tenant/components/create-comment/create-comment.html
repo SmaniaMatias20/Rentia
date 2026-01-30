@@ -1,0 +1,14 @@
+<div class="flex flex-col gap-4 w-full mt-6 p-4 bg-gray-800 rounded-xl shadow-md text-white">
+
+    <label class="font-semibold text-lg">Escribir comentario sobre el inquilino:</label>
+
+    <textarea [(ngModel)]="comment" rows="5"
+        class="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-white"
+        placeholder="Escribe aquí tus observaciones...">
+  </textarea>
+
+    <button (click)="onSave()"
+        class="self-end px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
+        Guardar
+    </button>
+</div>
