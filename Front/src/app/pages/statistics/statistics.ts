@@ -32,14 +32,23 @@ export class Statistics {
     this.loading = true;
 
     try {
+      // Obtener el usuario actual
       this.currentUser = await this.auth.getCurrentUser();
+      // Obtener la cantidad de propiedades por usuario
       this.quantityOfPropertiesByUser = await this.propertyService.getQuantityOfPropertiesByUser(this.currentUser.id);
-      this.quantityOfPropertiesWithoutTenantByUser = await this.propertyService.getQuantityOfPropertiesWithoutTenantByUser(this.currentUser.id);
+      // Obtener la cantidad de propiedades con inquilino 
       this.quantityOfPropertiesWithTenantByUser = await this.propertyService.getQuantityOfPropertiesWithTenantByUser(this.currentUser.id);
+      // Obtener la cantidad de propiedades sin inquilino
+      this.quantityOfPropertiesWithoutTenantByUser = this.quantityOfPropertiesByUser - this.quantityOfPropertiesWithTenantByUser;
+      // Obtener la cantidad de inquilinos por usuario
       this.quantityOfTenants = await this.tenantService.getQuantityOfTenantsByUser(this.currentUser.id);
+      // Obtener el total de alquileres por usuario
       this.totalRent = await this.propertyService.getTotalRentByUser(this.currentUser.id);
+      // Obtener el promedio de alquiler por usuario
       this.averageRent = this.totalRent / this.quantityOfPropertiesByUser;
+      // Obtener el máximo de alquiler por usuario
       this.highestRent = await this.propertyService.getHighestRentByUser(this.currentUser.id);
+      // Obtener el mínimo de alquiler por usuario
       this.lowestRent = await this.propertyService.getLowestRentByUser(this.currentUser.id);
 
       this.calculatePercentageOfPropertiesWithTenantByUser();

@@ -5,10 +5,10 @@
             <tr>
                 <th class="px-4 py-3 text-left">Propiedad</th>
                 <th class="px-4 py-3 text-left">Inquilino</th>
-                <th class="px-4 py-3 text-left">Monto base</th>
+                <th class="px-4 py-3 text-left">Valor base</th>
                 <th class="px-4 py-3 text-left">% Aumento</th>
-                <th class="px-4 py-3 text-left">Monto actualizado</th>
                 <th class="px-4 py-3 text-left">Frecuencia</th>
+                <th class="px-4 py-3 text-left">Valor actualizado</th>
                 <th class="px-4 py-3 text-left">Desde</th>
                 <th class="px-4 py-3 text-left">Hasta</th>
                 <th class="px-4 py-3 text-left">Estado</th>
@@ -41,14 +41,15 @@
                     {{ contract.increase_percentage }}%
                 </td>
 
-                <!-- Monto actualizado -->
-                <td class="px-4 py-3 font-semibold">
-                    ${{ calculateCurrentRent(contract) }}
-                </td>
 
                 <!-- Frecuencia -->
                 <td class="px-4 py-3">
                     {{ formatFrequency(contract.increase_frequency) }}
+                </td>
+
+                <!-- Monto actualizado -->
+                <td class="px-4 py-3 font-semibold">
+                    ${{ calculateCurrentRent(contract) }}
                 </td>
 
                 <!-- Fechas -->
@@ -69,15 +70,15 @@
                     }
                 </td>
 
-                <!-- Eliminar -->
-                <td class="px-4 py-3 text-center">
-                    <button class="
-                    bg-red-600 hover:bg-red-700
-                    text-white font-semibold transition cursor-pointer
-                    rounded-lg px-4 py-2 text-sm" (click)="this.deleteContract.emit(contract)">
-                        Eliminar
+                <!-- Eliminar contrato -->
+                <td class="px-4 py-3">
+                    <button
+                        class="bg-red-600 hover:bg-red-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center"
+                        (click)="deleteContract.emit(contract)" title="Eliminar contrato">
+                        <span class="material-icons text-lg">delete</span>
                     </button>
                 </td>
+
 
             </tr>
             }
