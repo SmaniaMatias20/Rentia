@@ -1,13 +1,16 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-table-contracts',
+  imports: [NgClass],
   templateUrl: './table-contracts.html',
   styleUrl: './table-contracts.css',
 })
 export class TableContracts {
   @Output() deleteContract = new EventEmitter<any>();
   @Input() contracts: any[] = [];
+  currentDate: Date = new Date();
 
   formatFrequency(freq: string) {
     const map: any = {
@@ -42,6 +45,21 @@ export class TableContracts {
 
     return Math.round(base * Math.pow(1 + percent, Math.max(periods, 0)));
   }
+
+  isExpiringSoon(contract: any): boolean {
+    if (!contract.valid_to) return false;
+
+    const now = new Date();
+    const end = new Date(contract.valid_to);
+
+    const diffMs = end.getTime() - now.getTime();
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+    // 3 meses exactos ≈ 90 días
+    return diffDays <= 90 && diffDays >= 0;
+  }
+
+
 
 
 

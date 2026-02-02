@@ -18,8 +18,11 @@
 
         <tbody>
             @for (contract of contracts; track contract.id) {
+            <tr class="border-t border-gray-800 transition" [ngClass]="{
+    'hover:bg-gray-800': !isExpiringSoon(contract),
+    'bg-yellow-500/60 hover:bg-yellow-500/70': isExpiringSoon(contract)
+  }">
 
-            <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
 
                 <!-- Propiedad -->
                 <td class="px-4 py-3">
@@ -61,14 +64,20 @@
                     {{ formatDate(contract.valid_to) }}
                 </td>
 
-                <!-- Estado -->
                 <td class="px-4 py-3">
                     @if (contract.status) {
-                    <span class="bg-green-600 px-2 py-1 rounded text-xs">Activo</span>
+                    <span class="px-2 py-1 rounded text-xs" [ngClass]="isExpiringSoon(contract) 
+        ? 'bg-yellow-500 text-black' 
+        : 'bg-green-600 text-white'">
+                        {{ isExpiringSoon(contract) ? 'Por vencer' : 'Activo' }}
+                    </span>
                     } @else {
-                    <span class="bg-red-600 px-2 py-1 rounded text-xs">Finalizado</span>
+                    <span class="bg-red-600 px-2 py-1 rounded text-xs text-white">
+                        Finalizado
+                    </span>
                     }
                 </td>
+
 
                 <!-- Eliminar contrato -->
                 <td class="px-4 py-3">
