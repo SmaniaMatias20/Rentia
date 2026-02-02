@@ -1,0 +1,100 @@
+<div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+
+    <form [formGroup]="contractForm" (ngSubmit)="submit()"
+        class="bg-gray-900 text-white p-6 rounded-xl shadow-lg w-full max-w-md space-y-4 relative">
+
+        <!-- Cerrar -->
+        <button type="button" class="absolute top-2 right-2 text-gray-300 hover:text-white font-bold cursor-pointer"
+            (click)="close()">
+            ✕
+        </button>
+
+        <!-- Logo -->
+        <div class="flex justify-center mb-4">
+            <img src="assets/images/rentia.png" class="h-32 w-auto" />
+        </div>
+
+        <!-- Propiedad -->
+        <div>
+            <select formControlName="property_id" class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
+                <option value="">Seleccionar propiedad</option>
+                @for (property of properties; track property.id) {
+                <option [value]="property.id">{{ property.title }}</option>
+                }
+            </select>
+
+            @if (f['property_id'].invalid && f['property_id'].touched) {
+            <p class="text-red-500 text-sm">Seleccioná una propiedad</p>
+            }
+        </div>
+
+        <!-- Inquilino -->
+        <div>
+            <select formControlName="tenant_id" class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
+                <option value="">Seleccionar inquilino</option>
+                @for (tenant of tenants; track tenant.id) {
+                <option [value]="tenant.id">{{ tenant.username }}</option>
+                }
+            </select>
+
+            @if (f['tenant_id'].invalid && f['tenant_id'].touched) {
+            <p class="text-red-500 text-sm">Seleccioná un inquilino</p>
+            }
+        </div>
+
+        <!-- Precio -->
+        <div>
+            <input type="number" formControlName="rent_amount" placeholder="Monto del alquiler"
+                class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
+
+            @if (f['rent_amount'].invalid && f['rent_amount'].touched) {
+            <p class="text-red-500 text-sm">Monto inválido</p>
+            }
+        </div>
+
+        <!-- Moneda -->
+        <div>
+            <select formControlName="currency" class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
+                <option value="ARS">ARS</option>
+                <option value="USD">USD</option>
+            </select>
+        </div>
+
+        <!-- % Aumento -->
+        <div>
+            <input type="number" formControlName="increase_percentage" placeholder="% Aumento"
+                class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
+
+            @if (f['increase_percentage'].invalid && f['increase_percentage'].touched) {
+            <p class="text-red-500 text-sm">Porcentaje inválido</p>
+            }
+        </div>
+
+        <!-- Frecuencia -->
+        <div>
+            <select formControlName="increase_frequency"
+                class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
+                <option value="monthly">Mensual</option>
+                <option value="quarterly">Trimestral</option>
+                <option value="yearly">Anual</option>
+            </select>
+        </div>
+
+        <!-- Fechas -->
+        <div class="grid grid-cols-2 gap-3">
+            <input type="date" formControlName="valid_from"
+                class="bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
+
+            <input type="date" formControlName="valid_to"
+                class="bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
+        </div>
+
+        <!-- Guardar -->
+        <button type="submit" [disabled]="submitting" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded w-full">
+            {{ submitting ? 'Guardando...' : 'Guardar Contrato' }}
+        </button>
+
+    </form>
+
+    <app-toast #toast></app-toast>
+</div>

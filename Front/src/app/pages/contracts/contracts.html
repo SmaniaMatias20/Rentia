@@ -29,4 +29,11 @@
             Volver al menú
         </button>
     </div>
+
+    <!-- Formulario para crear nuevo contrato -->
+    @if (formContract) {
+    <app-form-contract (closeForm)="formContract = false"></app-form-contract>
+    }
+
+    <app-toast #toast></app-toast>
 </div>
