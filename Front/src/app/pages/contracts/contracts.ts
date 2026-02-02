@@ -5,10 +5,11 @@ import { ContractService } from '../../services/contract/contract';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
+import { TableContracts } from './components/table-contracts/table-contracts';
 
 @Component({
   selector: 'app-contracts',
-  imports: [FormContract, Spinner, Toast],
+  imports: [FormContract, Spinner, Toast, TableContracts],
   templateUrl: './contracts.html',
   styleUrl: './contracts.css',
 })

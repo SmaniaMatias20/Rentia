@@ -1,1 +1,82 @@
-<p>table-contracts works!</p>
+<div class="bg-gray-900 text-white rounded-xl shadow-lg overflow-hidden">
+
+    <table class="w-full text-sm">
+        <thead class="bg-gray-800 text-gray-300">
+            <tr>
+                <th class="px-4 py-3 text-left">Propiedad</th>
+                <th class="px-4 py-3 text-left">Inquilino</th>
+                <th class="px-4 py-3 text-left">Monto base</th>
+                <th class="px-4 py-3 text-left">% Aumento</th>
+                <th class="px-4 py-3 text-left">Monto actualizado</th>
+                <th class="px-4 py-3 text-left">Frecuencia</th>
+                <th class="px-4 py-3 text-left">Desde</th>
+                <th class="px-4 py-3 text-left">Hasta</th>
+                <th class="px-4 py-3 text-left">Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (contract of contracts; track contract.id) {
+
+            <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
+
+                <!-- Propiedad -->
+                <td class="px-4 py-3">
+                    {{ contract.property_id }}
+                </td>
+
+                <!-- Inquilino -->
+                <td class="px-4 py-3">
+                    {{ contract.tenant_id }}
+                </td>
+
+                <!-- Monto base -->
+                <td class="px-4 py-3 font-semibold">
+                    ${{ contract.rent_amount }}
+                </td>
+
+                <!-- % -->
+                <td class="px-4 py-3">
+                    {{ contract.increase_percentage }}%
+                </td>
+
+                <!-- Monto actualizado -->
+                <td class="px-4 py-3 font-semibold">
+                    ${{ calculateCurrentRent(contract) }}
+                </td>
+
+                <!-- Frecuencia -->
+                <td class="px-4 py-3">
+                    {{ formatFrequency(contract.increase_frequency) }}
+                </td>
+
+                <!-- Fechas -->
+                <td class="px-4 py-3">
+                    {{ formatDate(contract.valid_from) }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ formatDate(contract.valid_to) }}
+                </td>
+
+                <!-- Estado -->
+                <td class="px-4 py-3">
+                    @if (contract.status) {
+                    <span class="bg-green-600 px-2 py-1 rounded text-xs">Activo</span>
+                    } @else {
+                    <span class="bg-red-600 px-2 py-1 rounded text-xs">Finalizado</span>
+                    }
+                </td>
+
+            </tr>
+            }
+        </tbody>
+
+    </table>
+
+    @if (contracts.length === 0) {
+    <p class="text-center text-gray-400 py-6">
+        No hay contratos cargados
+    </p>
+    }
+</div>

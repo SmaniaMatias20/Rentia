@@ -35,5 +35,19 @@
     <app-form-contract (closeForm)="formContract = false"></app-form-contract>
     }
 
+    <!-- Tabla de contratos -->
+    @if (contracts.length > 0) {
+    <div class="pt-24">
+        <div class="
+    gap-6
+    w-full
+    max-w-screen
+    mx-auto
+  ">
+            <app-table-contracts [contracts]="contracts"></app-table-contracts>
+        </div>
+    </div>
+    }
+
     <app-toast #toast></app-toast>
 </div>
