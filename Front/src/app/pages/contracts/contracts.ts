@@ -33,7 +33,6 @@ export class Contracts {
       if (!this.currentUser) return;
       this.loading = true;
       this.contracts = await this.contract.getContractsByUser(this.currentUser.id);
-      console.log('contratos', this.contracts);
       this.toast.showToast('Contratos cargados correctamente', 'success');
       this.loading = false;
     } catch (error) {

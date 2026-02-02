@@ -1,5 +1,13 @@
 <div class="min-h-[calc(100vh-4rem)] w-screen bg-black px-4 relative border">
 
+    <!-- Spinner -->
+    @if (loading) {
+    <div class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+        <app-spinner></app-spinner>
+    </div>
+    }
+
+    @if (!loading) {
     <!-- Contenedor de botones arriba a la derecha -->
     <div class="absolute top-4 right-4 z-20
     flex flex-col gap-2
@@ -47,6 +55,8 @@
             <app-table-contracts [contracts]="contracts"></app-table-contracts>
         </div>
     </div>
+    }
+
     }
 
     <app-toast #toast></app-toast>
