@@ -21,7 +21,6 @@
 
     <!-- Opciones OWNER -->
     @if (currentUser.role === 'owner') {
-
     <app-card-option icon="home" title="Propiedades" bgColor="bg-green-600"
       backgroundImage="url('assets/images/properties.jpg')" url="/properties" />
 
@@ -30,6 +29,9 @@
 
     <app-card-option icon="analytics" title="Estadísticas" bgColor="bg-sky-600"
       backgroundImage="url('assets/images/statistics.webp')" url="/statistics" />
+
+    <app-card-option icon="article" title="Contratos" bgColor="bg-purple-600"
+      backgroundImage="url('assets/images/settings.png')" url="/contracts" />
     }
 
     <!-- Opciones comunes -->

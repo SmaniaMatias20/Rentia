@@ -154,6 +154,30 @@
                         </div>
                     </div>
 
+                    <!-- Contract Valid From -->
+                    <div class="flex items-center gap-3">
+                        <span class="material-icons text-green-400 text-3xl">date_range</span>
+                        <div>
+                            <p class="text-gray-400 text-sm">Contrato válido desde</p>
+                            <p class="text-lg font-semibold">
+                                {{ propertyData.contract_valid_from ? propertyData.contract_valid_from : 'Sin
+                                información' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Contract Valid To -->
+                    <div class="flex items-center gap-3">
+                        <span class="material-icons text-green-400 text-3xl">date_range</span>
+                        <div>
+                            <p class="text-gray-400 text-sm">Contrato válido hasta</p>
+                            <p class="text-lg font-semibold">
+                                {{ propertyData.contract_valid_to ? propertyData.contract_valid_to : 'Sin información'
+                                }}
+                            </p>
+                        </div>
+                    </div>
+
 
                 </div>
 
