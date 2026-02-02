@@ -40,7 +40,7 @@
 
     <!-- Formulario para crear nuevo contrato -->
     @if (formContract) {
-    <app-form-contract (closeForm)="formContract = false"></app-form-contract>
+    <app-form-contract (closeForm)="formContract = false" (createContract)="onCreateContract()"></app-form-contract>
     }
 
     <!-- Tabla de contratos -->
@@ -52,7 +52,8 @@
     max-w-screen
     mx-auto
   ">
-            <app-table-contracts [contracts]="contracts"></app-table-contracts>
+            <app-table-contracts [contracts]="contracts"
+                (deleteContract)="onDeleteContract($event)"></app-table-contracts>
         </div>
     </div>
     }

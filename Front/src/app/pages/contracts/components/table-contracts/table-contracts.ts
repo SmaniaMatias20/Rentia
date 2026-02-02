@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-table-contracts',
@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './table-contracts.css',
 })
 export class TableContracts {
-
+  @Output() deleteContract = new EventEmitter<any>();
   @Input() contracts: any[] = [];
 
   formatFrequency(freq: string) {
@@ -42,5 +42,7 @@ export class TableContracts {
 
     return Math.round(base * Math.pow(1 + percent, Math.max(periods, 0)));
   }
+
+
 
 }

@@ -22,10 +22,12 @@
                 <option [value]="property.id">{{ property.name }}</option>
                 }
             </select>
+            <div class="min-h-[1.25rem]">
+                @if (f['property_id'].invalid && f['property_id'].touched) {
+                <p class="text-red-500 text-sm">Seleccioná una propiedad</p>
+                }
+            </div>
 
-            @if (f['property_id'].invalid && f['property_id'].touched) {
-            <p class="text-red-500 text-sm">Seleccioná una propiedad</p>
-            }
         </div>
 
         <!-- Inquilino -->
@@ -37,9 +39,11 @@
                 }
             </select>
 
-            @if (f['tenant_id'].invalid && f['tenant_id'].touched) {
-            <p class="text-red-500 text-sm">Seleccioná un inquilino</p>
-            }
+            <div class="min-h-[1.25rem]">
+                @if (f['tenant_id'].invalid && f['tenant_id'].touched) {
+                <p class="text-red-500 text-sm">Seleccioná un inquilino</p>
+                }
+            </div>
         </div>
 
         <!-- Precio -->
@@ -47,9 +51,11 @@
             <input type="number" formControlName="rent_amount" placeholder="Monto del alquiler"
                 class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
 
-            @if (f['rent_amount'].invalid && f['rent_amount'].touched) {
-            <p class="text-red-500 text-sm">Monto inválido</p>
-            }
+            <div class="min-h-[1.25rem]">
+                @if (f['rent_amount'].invalid && f['rent_amount'].touched) {
+                <p class="text-red-500 text-sm">Monto inválido</p>
+                }
+            </div>
         </div>
 
         <!-- Moneda -->
@@ -65,9 +71,11 @@
             <input type="number" formControlName="increase_percentage" placeholder="% Aumento"
                 class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
 
-            @if (f['increase_percentage'].invalid && f['increase_percentage'].touched) {
-            <p class="text-red-500 text-sm">Porcentaje inválido</p>
-            }
+            <div class="min-h-[1.25rem]">
+                @if (f['increase_percentage'].invalid && f['increase_percentage'].touched) {
+                <p class="text-red-500 text-sm">Porcentaje inválido</p>
+                }
+            </div>
         </div>
 
         <!-- Frecuencia -->
@@ -87,6 +95,12 @@
 
             <input type="date" formControlName="valid_to"
                 class="bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
+
+            <div class="min-h-[1.25rem]">
+                @if (contractForm.errors?.['invalidDateRange']) {
+                <p class="text-red-500 text-sm">Fecha de fin invalida</p>
+                }
+            </div>
         </div>
 
         <!-- Guardar -->

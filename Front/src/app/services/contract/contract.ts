@@ -106,6 +106,21 @@ export class ContractService {
     return data;
   }
 
+  async deleteContract(id: string): Promise<{ error?: PostgrestError | { message: string } }> {
+    const { error } = await this.db.client
+      .from('contracts')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error al eliminar contrato:', error.message);
+      return { error };
+    }
+
+    console.log('Contrato eliminado correctamente');
+    return {};
+  }
+
 
 
 

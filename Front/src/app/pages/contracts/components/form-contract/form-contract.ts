@@ -41,8 +41,11 @@ export class FormContract implements OnInit {
       increase_percentage: ['', [Validators.required, Validators.min(0)]],
       increase_frequency: ['quarterly', Validators.required],
       valid_from: ['', Validators.required],
-      valid_to: [''],
+      valid_to: ['']
+    }, {
+      validators: this.dateRangeValidator
     });
+
   }
 
   get f() {
@@ -91,4 +94,16 @@ export class FormContract implements OnInit {
     this.contractForm.reset();
     this.closeForm.emit();
   }
+
+  dateRangeValidator(group: FormGroup) {
+    const from = group.get('valid_from')?.value;
+    const to = group.get('valid_to')?.value;
+
+    if (!from || !to) return null;
+
+    return new Date(from) > new Date(to)
+      ? { invalidDateRange: true }
+      : null;
+  }
+
 }
