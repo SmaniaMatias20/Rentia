@@ -20,21 +20,23 @@ export class TenantService {
       phone: string;
       email: string;
       role: string;
-      property_id: string;
       owner_id: string;
     }
   ): Promise<{ user?: User; error?: AuthError | PostgrestError | any }> {
+
 
     // 1️⃣ Validar si ya existe usuario/email
     const { data: existingUser } = await this.db.client
       .from('users')
       .select('id')
-      .or(`username.eq.${tenant.username},email.eq.${tenant.email}`)
+      .or(`username.eq.${tenant.username}`)
       .maybeSingle();
 
     if (existingUser) {
+      console.log('tenant', tenant);
       return { error: { message: 'Usuario o email ya existe' } };
     }
+
 
     // 2️⃣ Hashear password
     const password_hash = await bcrypt.hash("1234", 10);
@@ -56,17 +58,6 @@ export class TenantService {
       .single(); // 👈 importante para obtener un solo objeto
 
     if (profileError) return { error: profileError };
-
-    // 2️⃣ Usar el id del nuevo inquilino
-    const tenantId = userData.id;
-
-    // 3️⃣ Actualizar la propiedad
-    const { error: propertyError } = await this.db.client
-      .from('properties')
-      .update({ tenant_id: tenantId })
-      .eq('id', tenant.property_id);
-
-    if (propertyError) return { error: propertyError };
 
     return { user: userData };
   }

@@ -33,7 +33,6 @@ export class FormTenant implements OnInit {
       phone: ['', [Validators.pattern(/^\d{7,15}$/)]],
       email: ['', [Validators.email]],
       role: ['tenant'],
-      property_id: ['', Validators.required],
     });
 
   }
@@ -64,14 +63,13 @@ export class FormTenant implements OnInit {
       return;
     }
 
-    const { username, phone, email, property_id, role } = this.tenantForm.value;
+    const { username, phone, email, role } = this.tenantForm.value;
 
     const { error } = await this.tenant.createTenant({
       username,
       phone,
       email,
       role,
-      property_id,
       owner_id: currentUser.id
     });
 
