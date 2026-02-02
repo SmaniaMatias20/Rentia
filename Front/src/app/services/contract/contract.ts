@@ -31,8 +31,6 @@ export class ContractService {
    * Obtiene todos los contratos del usuario logueado
    */
   async getContractsByUser(user_id: string): Promise<any[]> {
-    console.log('Obteniendo contratos del usuario:', user_id);
-
     const { data, error } = await this.db.client
       .from('contracts')
       .select('*')
@@ -43,8 +41,34 @@ export class ContractService {
       return [];
     }
 
+    const properties: any = await this.db.client
+      .from('properties')
+      .select('name')
+      .eq('id', data.map(contract => contract.property_id))
+      .maybeSingle();
+
+    data.forEach(contract => {
+      contract.property_name = properties ? properties.data.name : 'Sin información';
+    });
+
+
+    // con el tenant_id se puede obtener el nombre del inquilino
+    const tenants: any = await this.db.client
+      .from('users')
+      .select('username')
+      .eq('id', data.map(contract => contract.tenant_id))
+      .maybeSingle();
+
+
+    console.log('contratos', tenants);
+    data.forEach(contract => {
+      contract.tenant_name = tenants ? tenants.data.username : 'Sin información';
+    });
+
     return data || [];
   }
+
+
 
 
 }
