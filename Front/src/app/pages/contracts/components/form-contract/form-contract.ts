@@ -67,7 +67,12 @@ export class FormContract implements OnInit {
 
     try {
       this.contractForm.value.owner_id = this.currentUser.id;
-      await this.contractService.createContract(this.contractForm.value);
+      const response = await this.contractService.createContract(this.contractForm.value);
+
+      if (response.error && response.error.message) {
+        this.toast.showToast(response.error.message, 'error');
+        return;
+      }
 
       this.toast.showToast('Contrato creado correctamente', 'success');
       this.contractForm.reset();

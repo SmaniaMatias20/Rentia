@@ -10,10 +10,43 @@ export class ContractService {
 
   constructor(private db: Database, private router: Router) { }
 
-  /**
-   * Crea un nuevo contrato en la tabla "contracts"
-   */
-  async createContract(contract: { property_id: string, tenant_id: string, rent_amount: number, currency: string, increase_percentage: number, increase_frequency: string, valid_from: string, valid_to: string, owner_id: string }): Promise<{ error?: PostgrestError }> {
+  async createContract(contract: {
+    property_id: string,
+    tenant_id: string,
+    rent_amount: number,
+    currency: string,
+    increase_percentage: number,
+    increase_frequency: string,
+    valid_from: string,
+    valid_to: string,
+    owner_id: string
+  }): Promise<{ error?: PostgrestError | { message: string } }> {
+
+    // 1️⃣ Buscar contratos existentes que se crucen
+    const { data: conflicts, error: conflictError } = await this.db.client
+      .from('contracts')
+      .select('id, valid_from, valid_to')
+      .eq('property_id', contract.property_id)
+      .or(
+        `and(valid_from.lte.${contract.valid_to},valid_to.gte.${contract.valid_from}),and(valid_from.lte.${contract.valid_to},valid_to.is.null)`
+      );
+
+    if (conflictError) {
+      console.error('Error verificando conflictos:', conflictError.message);
+      return { error: conflictError };
+    }
+
+    // 2️⃣ Si hay contratos cruzados → BLOQUEAR
+    if (conflicts && conflicts.length > 0) {
+      console.log('contrato', conflicts);
+      return {
+        error: {
+          message: 'Ya existe un contrato para esta propiedad dentro de ese rango de fechas'
+        } as any
+      };
+    }
+
+    // 3️⃣ Insertar contrato si no hay conflicto
     const { error } = await this.db.client
       .from('contracts')
       .insert([contract]);
@@ -27,9 +60,6 @@ export class ContractService {
     return {};
   }
 
-  /**
-   * Obtiene todos los contratos del usuario logueado
-   */
   async getContractsByUser(user_id: string): Promise<any[]> {
     const { data, error } = await this.db.client
       .from('contracts')
@@ -41,31 +71,39 @@ export class ContractService {
       return [];
     }
 
-    const properties: any = await this.db.client
+    if (!data || data.length === 0) return [];
+
+    // 📌 IDs únicos de propiedades
+    const propertyIds = [...new Set(data.map(c => c.property_id))];
+
+    // 📌 Obtener propiedades
+    const { data: properties } = await this.db.client
       .from('properties')
-      .select('name')
-      .eq('id', data.map(contract => contract.property_id))
-      .maybeSingle();
+      .select('id, name')
+      .in('id', propertyIds);
 
-    data.forEach(contract => {
-      contract.property_name = properties ? properties.data.name : 'Sin información';
-    });
+    // 📌 IDs únicos de inquilinos
+    const tenantIds = [...new Set(data.map(c => c.tenant_id))];
 
-
-    // con el tenant_id se puede obtener el nombre del inquilino
-    const tenants: any = await this.db.client
+    // 📌 Obtener tenants
+    const { data: tenants } = await this.db.client
       .from('users')
-      .select('username')
-      .eq('id', data.map(contract => contract.tenant_id))
-      .maybeSingle();
+      .select('id, username')
+      .in('id', tenantIds);
 
+    // 📌 Crear mapas para lookup rápido
+    const propertyMap = new Map(properties?.map(p => [p.id, p.name]));
+    const tenantMap = new Map(tenants?.map(t => [t.id, t.username]));
 
-    console.log('contratos', tenants);
+    // 📌 Asignar nombres a cada contrato
     data.forEach(contract => {
-      contract.tenant_name = tenants ? tenants.data.username : 'Sin información';
+      contract.property_name = propertyMap.get(contract.property_id) ?? 'Sin información';
+      contract.tenant_name = tenantMap.get(contract.tenant_id) ?? 'Sin información';
     });
 
-    return data || [];
+    console.log('contratos', data);
+
+    return data;
   }
 
 

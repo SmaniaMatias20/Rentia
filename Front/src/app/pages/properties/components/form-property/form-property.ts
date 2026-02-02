@@ -31,16 +31,12 @@ export class FormProperty implements AfterViewInit {
     this.propertyForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       address: ['', [Validators.required, Validators.minLength(5)]],
-      value: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-      additional_costs: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
     });
   }
 
   // Getters para acceder a los controles desde el template
   get name() { return this.propertyForm.get('name'); }
   get address() { return this.propertyForm.get('address'); }
-  get value() { return this.propertyForm.get('value'); }
-  get additional_costs() { return this.propertyForm.get('additional_costs'); }
 
   // Guardar propiedad
   async submit() {
@@ -59,9 +55,9 @@ export class FormProperty implements AfterViewInit {
     }
 
     const user_id = currentUser.id;
-    const { name, address, value, additional_costs } = this.propertyForm.value;
+    const { name, address } = this.propertyForm.value;
 
-    const { error } = await this.property.createProperty({ user_id, name, address, value, additional_costs });
+    const { error } = await this.property.createProperty({ user_id, name, address });
 
     if (error) {
       this.toast.showToast('Error al guardar la propiedad', 'error');
