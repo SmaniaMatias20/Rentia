@@ -36,8 +36,6 @@ export class Register {
       return;
     }
 
-    console.log('Datos enviados:', this.registerForm.value);
-
     this.auth.signUp(
       this.registerForm.value.username,
       this.registerForm.value.email,

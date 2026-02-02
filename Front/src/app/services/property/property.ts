@@ -23,7 +23,6 @@ export class PropertyService {
       return { error };
     }
 
-    console.log('Propiedad creada correctamente');
     return {};
   }
 
@@ -31,8 +30,6 @@ export class PropertyService {
    * Obtiene todas las propiedades del usuario logueado
    */
   async getProperties(user_id: string): Promise<any[]> {
-    console.log('Obteniendo propiedades del usuario:', user_id);
-
     const { data, error } = await this.db.client
       .from('properties')
       .select('*')
@@ -76,7 +73,6 @@ export class PropertyService {
       return { error };
     }
 
-    console.log('Propiedad eliminada correctamente');
     return {};
   }
 
@@ -105,7 +101,6 @@ export class PropertyService {
       return { error };
     }
 
-    console.log('Propiedad actualizada correctamente');
     return {};
   }
 

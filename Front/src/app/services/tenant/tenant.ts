@@ -33,7 +33,6 @@ export class TenantService {
       .maybeSingle();
 
     if (existingUser) {
-      console.log('tenant', tenant);
       return { error: { message: 'Usuario o email ya existe' } };
     }
 
@@ -62,6 +61,24 @@ export class TenantService {
     return { user: userData };
   }
 
+  async updateTenant(tenantId: string, data: any): Promise<{ error?: PostgrestError }> {
+    try {
+      const { error } = await this.db.client
+        .from('users')
+        .update(data) // 👈 actualizar datos
+        .eq('id', tenantId);
+
+      if (error) {
+        console.error('Error al actualizar tenant:', error.message);
+        return { error };
+      }
+
+      return {};
+    } catch (err: any) {
+      console.error('Error inesperado al actualizar tenant:', err.message);
+      return { error: { message: err.message } as PostgrestError };
+    }
+  }
 
   /**
    * Obtiene todos los inquilinos del usuario logueado

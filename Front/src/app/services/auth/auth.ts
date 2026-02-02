@@ -63,9 +63,6 @@ export class AuthService {
     username: string,
     password: string
   ): Promise<{ user?: any; error?: any }> {
-
-    console.log(username, password);
-
     // 1️⃣ Buscar usuario en public.users
     const { data: user, error } = await this.db.client
       .from('users')

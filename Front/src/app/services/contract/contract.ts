@@ -38,7 +38,6 @@ export class ContractService {
 
     // 2️⃣ Si hay contratos cruzados → BLOQUEAR
     if (conflicts && conflicts.length > 0) {
-      console.log('contrato', conflicts);
       return {
         error: {
           message: 'Ya existe un contrato para esta propiedad dentro de ese rango de fechas'
@@ -56,7 +55,6 @@ export class ContractService {
       return { error };
     }
 
-    console.log('Contrato creado correctamente');
     return {};
   }
 
@@ -101,8 +99,6 @@ export class ContractService {
       contract.tenant_name = tenantMap.get(contract.tenant_id) ?? 'Sin información';
     });
 
-    console.log('contratos', data);
-
     return data;
   }
 
@@ -117,7 +113,6 @@ export class ContractService {
       return { error };
     }
 
-    console.log('Contrato eliminado correctamente');
     return {};
   }
 

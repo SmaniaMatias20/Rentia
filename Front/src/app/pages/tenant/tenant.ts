@@ -116,12 +116,16 @@ export class Tenant {
 
   async onSaveEdit(newValue: any) {
     try {
-      // await this.tenantService.updateTenant(this.tenantData.id, newValue);
+      await this.tenantService.updateTenant(this.tenantData.id, { [this.editType]: newValue });
       this.toast.showToast('Datos actualizados correctamente', 'success');
       this.closeFormEditTenant();
+
+      this.tenantData[this.editType] = newValue;
     } catch (error) {
       console.error('Error al actualizar datos:', error);
       this.toast.showToast('Error al actualizar datos', 'error');
+    } finally {
+      this.loading = false;
     }
   }
 

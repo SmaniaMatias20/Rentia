@@ -19,8 +19,6 @@ export class CreateComment {
   }
 
   onSave() {
-    // Emitimos el comentario al componente padre
-    console.log('Emittiendo comentario:', this.comment);
     this.saveComment.emit(this.comment);
   }
 }

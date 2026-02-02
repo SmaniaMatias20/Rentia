@@ -24,7 +24,6 @@ export class Profile {
     try {
       this.currentUser = await this.auth.getCurrentUser();
       this.toast.showToast('Datos del usuario obtenidos', 'success');
-      console.log(this.currentUser);
     } catch (error) {
       console.error('Error al obtener usuario:', error);
       this.toast.showToast('Error al obtener tu perfil', 'error');

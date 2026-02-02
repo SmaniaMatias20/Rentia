@@ -28,19 +28,24 @@ export class FormEditTenant implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      username: [
-        this.currentValue?.username || '',
-        [Validators.required, Validators.minLength(3)]
-      ],
-      phone: [
-        this.currentValue?.phone || '',
-        [Validators.required, Validators.pattern(/^[0-9+\s()-]+$/)]
-      ],
-      email: [
-        this.currentValue?.email || '',
-        [Validators.required, Validators.email]
-      ],
+      value: [this.currentValue, this.getValidatorsByType()],
     });
+  }
+
+  private getValidatorsByType() {
+    switch (this.type) {
+      case 'username':
+        return [Validators.required, Validators.minLength(3)];
+
+      case 'phone':
+        return [Validators.pattern(/^\d{7,15}$/)];
+
+      case 'email':
+        return [Validators.email];
+
+      default:
+        return [];
+    }
   }
 
   submit() {
@@ -49,6 +54,6 @@ export class FormEditTenant implements OnInit {
       return;
     }
 
-    this.save.emit(this.form.value);
+    this.save.emit(this.form.value.value);
   }
 }
