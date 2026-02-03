@@ -6,86 +6,147 @@ import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { PaymentService } from '../../services/payment/payment';
 import { FormPayment } from './components/form-payment/form-payment';
-
+import { ContractService } from '../../services/contract/contract';
+import { FormsModule } from '@angular/forms';
+import { CardPayment } from './components/card-payment/card-payment';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule, Spinner, FormPayment],
+  imports: [CommonModule, Spinner, FormPayment, FormsModule, CardPayment],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
 export class Payments {
   loading = false;
   properties: any[] = [];
+  contracts: any[] = [];
   currentUser: any;
   selectedProperty: any | null = null;
   selectedYear: string | null = null;
   months: any[] = [];
   years = Array.from({ length: 12 }, (_, i) => 2026 + i);
   payments: any[] = [];
+  selectedContract: any | null = null;
 
-  constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService) { }
+
+  constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService, private contractService: ContractService) { }
 
   async ngOnInit() {
     try {
       this.loading = true;
       this.currentUser = await this.authService.getCurrentUser();
       this.properties = await this.propertyService.getProperties(this.currentUser.id);
+      this.contracts = await this.contractService.getContractsByUser(this.currentUser.id);
+      console.log(this.contracts);
       this.loading = false;
     } catch (error) {
       console.error(error);
       this.loading = false;
     }
-
-  }
-
-  onPropertyChange(propertyId: string) {
-    this.selectedProperty = this.properties.find(p => p.id === propertyId) || null;
-    this.generateMonths();
-  }
-
-  async onYearChange(year: string) {
-    this.selectedYear = year;
-    this.payments = await this.paymentService.getPayments(this.selectedProperty.id, this.selectedYear);
-    this.generateMonths();
-  }
-
-  togglePayment(month: any) {
-    month.paid = !month.paid;
   }
 
   goToHome() {
     this.router.navigateByUrl('/home');
   }
 
-  // Método para generar meses dinámicamente según el año seleccionado
-  private generateMonths() {
-    if (!this.selectedYear || !this.selectedProperty) {
-      this.months = [];
-      return;
+  openFormPayment() {
+    console.log('openFormPayment');
+  }
+
+  async onContractSelected(contract: any) {
+    if (!contract) return;
+
+    const contractId = contract.id;
+
+    // Traer pagos del contrato
+    const payments = await this.paymentService.getPaymentsByContract(contractId);
+
+    // Generar cards por mes
+    this.months = this.generateMonthlyCards(contract, payments);
+  }
+
+
+  generateMonthlyCalendar(start: Date, end: Date): string[] {
+    const months: string[] = [];
+    const date = new Date(start.getFullYear(), start.getMonth(), 1);
+
+    while (date <= end) {
+      // Formatear como "MM/yyyy"
+      months.push(`${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`);
+      date.setMonth(date.getMonth() + 1);
     }
 
-    const monthNames = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
+    return months;
+  }
 
-    this.months = monthNames.map((name, index) => ({
-      key: `${this.selectedYear}-${String(index + 1).padStart(2, '0')}`,
-      label: `${name} ${this.selectedYear}`,
-      paid: false,
-      totalRent: this.selectedProperty.value || 0,
-      additionalCosts: this.selectedProperty.additional_costs || 0,
-    }));
+  generateMonthlyCards(contract: any, payments: any[]): any[] {
+    const months = [];
+    const start = new Date(contract.valid_from);
+    const end = new Date(contract.valid_to);
+
+    const date = new Date(start.getFullYear(), start.getMonth(), 1);
+    let monthIndex = 0; // cantidad de meses desde el inicio del contrato
+
+    while (date <= end) {
+      const monthStr = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
+      // Buscar pago existente
+      const payment = payments.find(p => {
+        const payMonth = new Date(p.rent_month);
+        return payMonth.getFullYear() === date.getFullYear() &&
+          payMonth.getMonth() === date.getMonth();
+      });
+
+      // Calcular total acumulado
+      const total_rent_amount = this.calculateAccumulatedRent(
+        contract.rent_amount,
+        contract.increase_percentage,
+        contract.increase_frequency,
+        monthIndex
+      );
+
+      months.push({
+        rent_month: new Date(date),
+        status: payment ? payment.status : false,
+        rent_amount: contract.rent_amount,
+        total_rent_amount: total_rent_amount,
+        water: payment ? payment.water : false,
+        electricy: payment ? payment.electricy : false,
+        gas: payment ? payment.gas : false,
+        description: payment ? payment.description : ''
+      });
+
+      date.setMonth(date.getMonth() + 1);
+      monthIndex++;
+    }
+
+    return months;
   }
 
 
-  get paidCount() {
-    return this.months.filter(m => m.paid).length;
+  calculateAccumulatedRent(base: number, increase: number, frequency: string, monthIndex: number): number {
+    const inc = increase / 100;
+    let total = base;
+
+    switch (frequency) {
+      case 'monthly':
+        total = base * Math.pow(1 + inc, monthIndex);
+        break;
+      case 'quarterly':
+        const quarterIndex = Math.floor(monthIndex / 3);
+        total = base * Math.pow(1 + inc, quarterIndex);
+        break;
+      case 'annual':
+        const yearIndex = Math.floor(monthIndex / 12);
+        total = base * Math.pow(1 + inc, yearIndex);
+        break;
+    }
+
+    return Math.round(total);
   }
 
-  get unpaidCount() {
-    return this.months.filter(m => !m.paid).length;
-  }
+
+
+
 }

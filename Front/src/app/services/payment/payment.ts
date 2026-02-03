@@ -9,12 +9,11 @@ export class PaymentService {
 
   constructor(private database: Database) { }
 
-  async getPayments(propertyId: string, year: string) {
+  async getPaymentsByContract(contractId: string): Promise<any[]> {
     const { data, error } = await this.database.client
       .from('payments')
       .select('*')
-      .eq('property_id', propertyId)
-      .eq('rent_year', year);
+      .eq('contract_id', contractId);
 
     if (error) {
       console.error('Error al obtener pagos:', error.message);
