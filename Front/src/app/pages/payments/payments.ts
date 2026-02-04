@@ -254,6 +254,7 @@ export class Payments {
 
     try {
       if (!this.paymentMonthEdit.id) {
+        delete this.paymentMonthEdit.id;
         const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
 
         if (error || !data) {

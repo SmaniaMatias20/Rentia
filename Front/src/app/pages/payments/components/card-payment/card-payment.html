@@ -17,42 +17,66 @@
     </div>
 
     <!-- Montos -->
-    <div class="mb-4 grid grid-cols-2 gap-2">
-        <div class="flex gap-4">
-            <span class="text-gray-400 text-sm">Valor abonado:</span>
-            <span class="font-medium">{{ 0 | currency:'ARS':'symbol':'1.0-0' }}</span>
+    <div class="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+
+        <!-- Total -->
+        <div class="bg-gray-800 rounded-lg p-3 flex flex-col gap-1 border border-gray-700">
+            <span class="text-gray-400">Total alquiler</span>
+            <span class="text-green-400 font-semibold text-base">
+                {{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0' }}
+            </span>
         </div>
-        <div class="flex gap-4">
-            <span class="text-gray-400 text-sm">Total alquiler:</span>
-            <span class="font-semibold text-green-400">{{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0'
-                }}</span>
+
+        <!-- Pagado -->
+        <div class="bg-gray-800 rounded-lg p-3 flex flex-col gap-1 border border-gray-700">
+            <span class="text-gray-400">Pagado</span>
+            <span class="text-blue-400 font-semibold text-base">
+                {{ month.rent_amount | currency:'ARS':'symbol':'1.0-0' }}
+            </span>
         </div>
+
+        <!-- Resto -->
+        <div class="bg-gray-800 rounded-lg p-3 flex flex-col gap-1 border" [ngClass]="(month.total_rent_amount - month.rent_amount) > 0 
+        ? 'border-red-600 bg-red-950/40' 
+        : 'border-green-600 bg-green-950/40'">
+
+            <span class="text-gray-400">Resto</span>
+            <span class="font-bold text-base" [ngClass]="(month.total_rent_amount - month.rent_amount) > 0 
+            ? 'text-red-400' 
+            : 'text-green-400'">
+
+                {{ month.total_rent_amount - month.rent_amount | currency:'ARS':'symbol':'1.0-0' }}
+            </span>
+
+        </div>
+
     </div>
+
 
     <!-- Servicios con checkboxes -->
     <div class="mb-4 grid grid-cols-2 gap-3">
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.water"
                 (change)="onCheckboxChange('water', $event.target.checked, month)"
-                class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500" />
+                class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 cursor-pointer" />
             Agua
         </label>
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.electricy"
                 (change)="onCheckboxChange('electricy', $event.target.checked, month)"
-                class="h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500" />
+                class="h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500 cursor-pointer" />
             Electricidad
         </label>
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.gas"
                 (change)="onCheckboxChange('gas', $event.target.checked, month)"
-                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer" />
             Gas
         </label>
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.hoa_fees"
                 (change)="onCheckboxChange('hoa_fees', $event.target.checked, month)"
-                class="h-4 w-4 text-purple-500 border-gray-300 rounded focus:ring-purple-500" />
+                class="h-4 w-4 text-purple-500 border-gray-300 rounded focus:ring-purple-500 cursor-pointer" />
             Expensas/ABL
         </label>
     </div>
