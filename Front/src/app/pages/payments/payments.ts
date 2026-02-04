@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PropertyService } from '../../services/property/property';
@@ -10,11 +10,12 @@ import { ContractService } from '../../services/contract/contract';
 import { FormsModule } from '@angular/forms';
 import { CardPayment } from './components/card-payment/card-payment';
 import { FormNote } from './components/form-note/form-note';
+import { Toast } from '../../components/toast/toast';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote],
+  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
@@ -30,6 +31,8 @@ export class Payments {
   payments: any[] = [];
   selectedContract: any | null = null;
   openFormNote = false;
+  paymentMonthEdit: any | null = null;
+  @ViewChild('toast') toast!: Toast;
 
 
   constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService, private contractService: ContractService) { }
@@ -62,8 +65,10 @@ export class Payments {
     const contractId = contract.id;
 
     // Traer pagos del contrato
+    console.log('onContractSelected', contractId);
     const payments = await this.paymentService.getPaymentsByContract(contractId);
 
+    console.log(payments);
     // Generar cards por mes
     this.months = this.generateMonthlyCards(contract, payments);
   }
@@ -91,8 +96,7 @@ export class Payments {
     let monthIndex = 0; // cantidad de meses desde el inicio del contrato
 
     while (date <= end) {
-      const monthStr = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-
+      console.log(payments);
       // Buscar pago existente
       const payment = payments.find(p => {
         const payMonth = new Date(p.rent_month);
@@ -109,6 +113,7 @@ export class Payments {
       );
 
       months.push({
+        id: payment ? payment.id : null,
         rent_month: new Date(date),
         status: payment ? payment.status : false,
         rent_amount: contract.rent_amount,
@@ -116,7 +121,8 @@ export class Payments {
         water: payment ? payment.water : false,
         electricy: payment ? payment.electricy : false,
         gas: payment ? payment.gas : false,
-        description: payment ? payment.description : ''
+        description: payment ? payment.description : '',
+        contract_id: contract.id
       });
 
       date.setMonth(date.getMonth() + 1);
@@ -152,12 +158,50 @@ export class Payments {
     console.log(event);
   }
 
-  onAddNote() {
+  onAddNote(month: any) {
+    console.log('onAddNote', month);
+    this.paymentMonthEdit = month;
     this.openFormNote = true;
   }
 
-  onSaveNote(note: string) {
-    console.log('onSaveNote');
+  async onSaveNote(note: string) {
+    this.paymentMonthEdit.description = note;
+
+    console.log(this.paymentMonthEdit);
+
+    // Si no existe pago, crear
+    console.log(this.paymentMonthEdit.id);
+    if (!this.paymentMonthEdit.id) {
+      delete this.paymentMonthEdit.id;
+
+      const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+
+      if (error) {
+        console.error('Error al crear pago:', error);
+        this.toast.showToast('Error al crear pago', 'error');
+        return;
+      }
+
+      // ✅ Asignar ID devuelto
+      if (data?.id) {
+        this.paymentMonthEdit.id = data.id;
+      }
+
+      this.toast.showToast('Pago creado correctamente', 'success');
+      this.openFormNote = false;
+      return;
+    }
+
+    // Si existe pago, actualizar
+    const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
+
+    if (error) {
+      console.error('Error al actualizar pago:', error);
+      this.toast.showToast('Error al actualizar pago', 'error');
+      return;
+    }
+
+    this.toast.showToast('Pago actualizado correctamente', 'success');
     this.openFormNote = false;
   }
 }
