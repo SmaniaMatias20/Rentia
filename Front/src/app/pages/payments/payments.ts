@@ -167,27 +167,20 @@ export class Payments {
   async onSaveNote(note: string) {
     this.paymentMonthEdit.description = note;
 
-    console.log(this.paymentMonthEdit);
-
-    // Si no existe pago, crear
-    console.log(this.paymentMonthEdit.id);
     if (!this.paymentMonthEdit.id) {
       delete this.paymentMonthEdit.id;
 
       const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
 
       if (error) {
-        console.error('Error al crear pago:', error);
-        this.toast.showToast('Error al crear pago', 'error');
+        console.error('Error al crear observación:', error);
+        this.toast.showToast('Error al crear observación', 'error');
         return;
       }
 
-      // ✅ Asignar ID devuelto
-      if (data?.id) {
-        this.paymentMonthEdit.id = data.id;
-      }
+      this.paymentMonthEdit.id = data.id;
 
-      this.toast.showToast('Pago creado correctamente', 'success');
+      this.toast.showToast('Observacion creada correctamente', 'success');
       this.openFormNote = false;
       return;
     }
@@ -196,12 +189,12 @@ export class Payments {
     const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
 
     if (error) {
-      console.error('Error al actualizar pago:', error);
-      this.toast.showToast('Error al actualizar pago', 'error');
+      console.error('Error al actualizar observación:', error);
+      this.toast.showToast('Error al actualizar observación', 'error');
       return;
     }
 
-    this.toast.showToast('Pago actualizado correctamente', 'success');
+    this.toast.showToast('Observación actualizada correctamente', 'success');
     this.openFormNote = false;
   }
 }

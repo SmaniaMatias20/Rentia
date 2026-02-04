@@ -1,15 +1,15 @@
 <div class="bg-gray-900 border rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 text-white w-full"
     [ngClass]="{
-        'border-green-600': month.status,
-        'border-red-600': !month.status
+        'border-green-600': month.status == true,
+        'border-red-600': month.status == false
       }">
 
     <!-- Header: Mes y estado -->
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold capitalize">{{ formatRentMonth(month.rent_month) }}</h3>
         <span class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="{
-        'bg-green-600': month.status,
-        'bg-red-600': !month.status
+        'bg-green-600': month.status == true,
+        'bg-red-600': month.status == false || month.status == null
       }">
             {{ month.status ? 'Pagado' : 'Pendiente' }}
         </span>

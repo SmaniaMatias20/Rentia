@@ -23,10 +23,11 @@ export class PaymentService {
     return data || [];
   }
 
-  async createPayment(payment: any): Promise<{ error?: PostgrestError } & { data?: any }> {
+  async createPayment(payment: any): Promise<{ error?: PostgrestError; data?: any }> {
     const { error, data } = await this.database.client
       .from('payments')
       .insert(payment)
+      .select()
       .single();
 
     if (error) {
@@ -36,6 +37,7 @@ export class PaymentService {
 
     return { data };
   }
+
 
   async updatePayment(payment: any): Promise<{ error?: PostgrestError }> {
     const { error } = await this.database.client
