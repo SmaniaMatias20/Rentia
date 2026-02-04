@@ -15,7 +15,7 @@ import { Toast } from '../../components/toast/toast';
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast],
+  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast, FormPayment],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
@@ -31,6 +31,7 @@ export class Payments {
   payments: any[] = [];
   selectedContract: any | null = null;
   openFormNote = false;
+  openFormPayment = false;
   paymentMonthEdit: any | null = null;
   @ViewChild('toast') toast!: Toast;
 
@@ -54,9 +55,6 @@ export class Payments {
     this.router.navigateByUrl('/home');
   }
 
-  openFormPayment() {
-    console.log('openFormPayment');
-  }
 
   async onContractSelected(contract: any) {
     if (!contract) return;
@@ -112,14 +110,15 @@ export class Payments {
         id: payment ? payment.id : null,
         rent_month: new Date(date),
         status: payment ? payment.status : false,
-        rent_amount: contract.rent_amount,
+        rent_amount: payment ? payment.rent_amount : 0,
         total_rent_amount: total_rent_amount,
         water: payment ? payment.water : false,
         electricy: payment ? payment.electricy : false,
         gas: payment ? payment.gas : false,
         hoa_fees: payment ? payment.hoa_fees : false,
         description: payment ? payment.description : '',
-        contract_id: contract.id
+        contract_id: contract.id,
+        payment_method: payment ? payment.payment_method : '',
       });
 
       date.setMonth(date.getMonth() + 1);
@@ -189,7 +188,7 @@ export class Payments {
       this.months[index].id = data.id;
       this.paymentMonthEdit.id = data.id;
 
-      this.toast.showToast('Servicio creado correctamente', 'success');
+      this.toast.showToast('Servicio agregado correctamente', 'success');
       return;
     }
 
@@ -204,12 +203,16 @@ export class Payments {
     this.toast.showToast('Servicio actualizado correctamente', 'success');
   }
 
-
-
   onAddNote(month: any) {
     this.paymentMonthEdit = month;
     this.openFormNote = true;
   }
+
+  onAddPayment(month: any) {
+    this.paymentMonthEdit = month;
+    this.openFormPayment = true;
+  }
+
 
   async onSaveNote(note: string) {
     this.paymentMonthEdit.description = note;
@@ -244,4 +247,44 @@ export class Payments {
     this.toast.showToast('Observación actualizada correctamente', 'success');
     this.openFormNote = false;
   }
+
+  async onSavePayment(payment: any) {
+    this.paymentMonthEdit.rent_amount = payment.rent_amount;
+    this.paymentMonthEdit.payment_method = payment.payment_method;
+
+    try {
+      if (!this.paymentMonthEdit.id) {
+        const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+
+        if (error || !data) {
+          this.toast.showToast('Error al crear pago', 'error');
+          return;
+        }
+
+        this.paymentMonthEdit.id = data.id;
+
+        this.toast.showToast('Pago creado correctamente', 'success');
+        this.openFormPayment = false;
+        return;
+
+      }
+
+      const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
+
+      if (error) {
+        this.toast.showToast('Error al actualizar pago', 'error');
+        return;
+      }
+
+      this.toast.showToast('Pago actualizado correctamente', 'success');
+      this.openFormPayment = false;
+
+    } catch (error) {
+      console.error('Error al guardar pago:', error);
+      this.toast.showToast('Error al guardar pago', 'error');
+    }
+
+  }
+
+
 }

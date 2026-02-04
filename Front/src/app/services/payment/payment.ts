@@ -23,23 +23,7 @@ export class PaymentService {
     return data || [];
   }
 
-  // async createPayment(payment: any): Promise<{ error?: PostgrestError; data?: any }> {
-  //   const { error, data } = await this.database.client
-  //     .from('payments')
-  //     .insert(payment)
-  //     .select()
-  //     .single();
-
-  //   if (error) {
-  //     console.error('Error al crear pago:', error.message);
-  //     return { error };
-  //   }
-
-  //   return { data };
-  // }
   async createPayment(payment: any): Promise<{ error?: PostgrestError; data?: any }> {
-    console.log('createPayment', payment);
-
     const { data, error } = await this.database.client
       .from('payments')
       .insert(payment)
@@ -64,10 +48,7 @@ export class PaymentService {
     return { data: inserted };
   }
 
-
-
   async updatePayment(payment: any): Promise<{ error?: PostgrestError }> {
-    console.log('updatePayment', payment);
     const { error } = await this.database.client
       .from('payments')
       .update(payment)
@@ -80,6 +61,4 @@ export class PaymentService {
 
     return {};
   }
-
-
 }

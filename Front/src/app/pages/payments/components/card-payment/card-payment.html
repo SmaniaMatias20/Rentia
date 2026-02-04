@@ -72,7 +72,7 @@
             class="bg-blue-600 hover:bg-blue-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center w-full h-9">
             <span class="text-sm font-semibold">Agregar observación</span>
         </button>
-        <button
+        <button (click)="onAddPayment.emit(month)"
             class="bg-green-600 hover:bg-green-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center w-full h-9">
             <span class="text-sm font-semibold">Realizar pago</span>
         </button>

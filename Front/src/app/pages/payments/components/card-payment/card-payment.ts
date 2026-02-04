@@ -13,12 +13,11 @@ export class CardPayment {
   @Input() month: any;
   @Output() onCheckbox = new EventEmitter<any>();
   @Output() onAddNote = new EventEmitter<any>();
-
+  @Output() onAddPayment = new EventEmitter<any>();
 
   constructor() {
     console.log(this.month);
   }
-
 
   formatRentMonth(date: Date | string): string {
     const meses = [
@@ -33,8 +32,6 @@ export class CardPayment {
     return `${mes} ${anio}`;
   }
 
-
-
   onCheckboxChange(type: string, value: boolean, month: any) {
     this.onCheckbox.emit({
       type,
@@ -42,8 +39,4 @@ export class CardPayment {
       rent_month: month.rent_month
     });
   }
-
-
-
-
 }

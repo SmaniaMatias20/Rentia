@@ -1,1 +1,52 @@
-<p>form-payment works!</p>
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50">
+
+    <!-- Modal -->
+    <div class="bg-gray-900 text-white w-full max-w-lg rounded-xl shadow-xl p-6 animate-fadeIn">
+
+        <!-- Header -->
+        <h2 class="text-lg font-semibold mb-5">
+            Registrar Pago
+        </h2>
+
+        <!-- Form -->
+        <div class="grid grid-cols-1 gap-4">
+
+            <!-- Monto -->
+            <div>
+                <label class="text-sm text-gray-400 mb-1 block">Monto</label>
+                <input type="number" [(ngModel)]="rent_amount"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Método -->
+            <div>
+                <label class="text-sm text-gray-400 mb-1 block">Método de pago</label>
+                <select [(ngModel)]="payment_method"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Seleccionar...</option>
+                    <option value="cash">Efectivo</option>
+                    <option value="transfer">Transferencia</option>
+                    <option value="card">Tarjeta</option>
+                    <option value="mixed">Mas de un método</option>
+                </select>
+            </div>
+
+
+
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-3 mt-6">
+            <button (click)="close()" class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition">
+                Cancelar
+            </button>
+
+            <button (click)="savePayment()"
+                class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition font-medium">
+                Guardar Pago
+            </button>
+        </div>
+
+    </div>
+</div>

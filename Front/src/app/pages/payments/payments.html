@@ -140,23 +140,27 @@
       </div>
     </div>
 
-
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
       <div *ngFor="let month of months" class="bg-gray-900 rounded-lg p-4 shadow-lg text-white">
-        <app-card-payment [month]="month" (onCheckbox)="onCheckbox($event)"
-          (onAddNote)="onAddNote($event)"></app-card-payment>
+        <app-card-payment [month]="month" (onCheckbox)="onCheckbox($event)" (onAddNote)="onAddNote($event)"
+          (onAddPayment)="onAddPayment($event)"></app-card-payment>
       </div>
     </div>
   </div>
   }
-
   }
-
 
   <!-- Modal de agregar nota -->
   @if (openFormNote) {
   <app-form-note (saveNote)="onSaveNote($event)" (cancel)="openFormNote = false"
     [note]="paymentMonthEdit?.description"></app-form-note>
+  }
+
+  <!-- Modal de agregar pago -->
+  @if (openFormPayment) {
+  <app-form-payment (save)="onSavePayment($event)" (cancel)="openFormPayment = false"
+    [rent_amount]="paymentMonthEdit?.rent_amount"
+    [payment_method]="paymentMonthEdit?.payment_method"></app-form-payment>
   }
 
 </div>
