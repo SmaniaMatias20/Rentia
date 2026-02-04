@@ -10,17 +10,6 @@
   <div class="absolute top-4 right-4 z-20
   flex flex-col gap-2
   sm:flex-row sm:gap-3">
-    <!-- Nueva propiedad -->
-    <button class="
-      flex items-center justify-center gap-1
-      py-2 px-4
-      w-full sm:w-auto text-white font-semibold
-      rounded-lg bg-green-600 hover:bg-green-700
-      disabled:bg-green-400 disabled:cursor-not-allowed cursor-pointer
-      " (click)="openFormPayment()">
-      <span class="material-icons">add</span>
-      Nuevo pago
-    </button>
 
     <!-- Volver al menú -->
     <button class="
@@ -38,7 +27,7 @@
 
   <div class="max-w-md mt-6 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
     <select
-      class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+      class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 overflow-hidden"
       [(ngModel)]="selectedContract" (ngModelChange)="onContractSelected($event)">
       <option [ngValue]="null">Seleccionar contrato...</option>
 
@@ -52,7 +41,13 @@
   </div>
 
   @if (selectedContract) {
-  <app-card-payment [months]="months"></app-card-payment>
+  <div class="max-w-screen bg-black mt-4 rounded-lg shadow-lg">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+      <div *ngFor="let month of months" class="bg-gray-900 border border-gray-700 rounded-lg p-4 shadow-lg text-white">
+        <app-card-payment [month]="month"></app-card-payment>
+      </div>
+    </div>
+  </div>
   }
 
   }

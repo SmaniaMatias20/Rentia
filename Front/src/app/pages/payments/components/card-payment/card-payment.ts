@@ -9,6 +9,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './card-payment.css',
 })
 export class CardPayment {
-  @Input() months: any[] = [];
+  @Input() month: any;
 
 }

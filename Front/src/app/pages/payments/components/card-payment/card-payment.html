@@ -1,43 +1,39 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-    <div *ngFor="let month of months" class="bg-gray-900 border border-gray-700 rounded-lg p-4 shadow-lg text-white">
-        <div class="flex justify-between items-center mb-2">
-            <h3 class="font-semibold">{{ month.rent_month | date:'MMMM yyyy' }}</h3>
-            <span class="px-2 py-1 rounded text-xs font-semibold" [ngClass]="{
+<div class="flex justify-between items-center mb-2">
+    <h3 class="font-semibold">{{ month.rent_month | date:'MMMM yyyy' }}</h3>
+    <span class="px-2 py-1 rounded text-xs font-semibold" [ngClass]="{
           'bg-green-600': month.status,
           'bg-red-600': !month.status
         }">
-                {{ month.status ? 'Pagado' : 'Pendiente' }}
-            </span>
-        </div>
+        {{ month.status ? 'Pagado' : 'Pendiente' }}
+    </span>
+</div>
 
-        <div class="mb-2">
-            <p>Monto base: <span class="font-medium">{{ month.rent_amount | currency:'ARS':'symbol':'1.0-0' }}</span>
-            </p>
-            <p>Total con aumento: <span class="font-medium">{{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0'
-                    }}</span></p>
-        </div>
+<div class="mb-2">
+    <p>Monto base: <span class="font-medium">{{ month.rent_amount | currency:'ARS':'symbol':'1.0-0' }}</span>
+    </p>
+    <p>Total con aumento: <span class="font-medium">{{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0'
+            }}</span></p>
+</div>
 
-        <div class="mb-2 flex flex-col gap-1">
-            <label class="flex items-center gap-2">
-                <input type="checkbox" [checked]="month.water" disabled />
-                Agua
-            </label>
-            <label class="flex items-center gap-2">
-                <input type="checkbox" [checked]="month.electricy" disabled />
-                Electricidad
-            </label>
-            <label class="flex items-center gap-2">
-                <input type="checkbox" [checked]="month.gas" disabled />
-                Gas
-            </label>
-            <label class="flex items-center gap-2">
-                <input type="checkbox" [checked]="month.hoa_fees" disabled />
-                Expensas/ABL
-            </label>
-        </div>
+<div class="mb-2 flex flex-col gap-1">
+    <label class="flex items-center gap-2">
+        <input type="checkbox" [checked]="month.water" disabled />
+        Agua
+    </label>
+    <label class="flex items-center gap-2">
+        <input type="checkbox" [checked]="month.electricy" disabled />
+        Electricidad
+    </label>
+    <label class="flex items-center gap-2">
+        <input type="checkbox" [checked]="month.gas" disabled />
+        Gas
+    </label>
+    <label class="flex items-center gap-2">
+        <input type="checkbox" [checked]="month.hoa_fees" disabled />
+        Expensas/ABL
+    </label>
+</div>
 
-        <div class="text-gray-300 text-sm">
-            <p>{{ month.description || 'Sin observaciones' }}</p>
-        </div>
-    </div>
+<div class="text-gray-300 text-sm">
+    <p>{{ month.description || 'Sin observaciones' }}</p>
 </div>
