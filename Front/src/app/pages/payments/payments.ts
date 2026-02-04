@@ -117,6 +117,7 @@ export class Payments {
         water: payment ? payment.water : false,
         electricy: payment ? payment.electricy : false,
         gas: payment ? payment.gas : false,
+        hoa_fees: payment ? payment.hoa_fees : false,
         description: payment ? payment.description : '',
         contract_id: contract.id
       });
@@ -151,59 +152,59 @@ export class Payments {
   }
 
   async onCheckbox(event: any) {
-    console.log(event);
+    const { type, value, rent_month } = event;
 
-    this.paymentMonthEdit = event.month;
-
-    if (event.type === 'electricy') {
-      this.paymentMonthEdit.electricy = event.value;
+    if (!rent_month) {
+      console.error('Evento inválido:', event);
+      return;
     }
 
-    if (event.type === 'gas') {
-      this.paymentMonthEdit.gas = event.value;
+    const index = this.months.findIndex(m =>
+      new Date(m.rent_month).getTime() === new Date(rent_month).getTime()
+    );
+
+    if (index === -1) {
+      console.error('Mes no encontrado:', rent_month);
+      return;
     }
 
-    if (event.type === 'water') {
-      this.paymentMonthEdit.water = event.value;
-    }
+    // Actualizar propiedad
+    this.months[index][type] = value;
 
-    if (event.type === 'hoa_fees') {
-      this.paymentMonthEdit.hoa_fees = event.value;
-    }
+    // Clonar mes para edición
+    this.paymentMonthEdit = { ...this.months[index] };
 
-    console.log(this.paymentMonthEdit);
-
-    // Enviar al servicio
+    // Crear si no existe
     if (!this.paymentMonthEdit.id) {
-      delete this.paymentMonthEdit.id;
+      const payload = { ...this.paymentMonthEdit };
+      delete payload.id;
 
-      const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+      const { error, data } = await this.paymentService.createPayment(payload);
 
-      if (error) {
-        console.error('Error al crear servicio:', error);
-        this.toast.showToast('Error al crear el servicio', 'error');
+      if (error || !data) {
+        this.toast.showToast('Error al crear servicio', 'error');
         return;
       }
 
+      this.months[index].id = data.id;
       this.paymentMonthEdit.id = data.id;
 
       this.toast.showToast('Servicio creado correctamente', 'success');
-      this.openFormNote = false;
       return;
-
     }
 
-    // Si existe pago, actualizar
+    // Actualizar si existe
     const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
 
     if (error) {
-      console.error('Error al actualizar servicio:', error);
       this.toast.showToast('Error al actualizar servicio', 'error');
       return;
     }
 
     this.toast.showToast('Servicio actualizado correctamente', 'success');
   }
+
+
 
   onAddNote(month: any) {
     this.paymentMonthEdit = month;

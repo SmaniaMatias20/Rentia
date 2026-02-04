@@ -36,17 +36,14 @@ export class CardPayment {
 
 
   onCheckboxChange(type: string, value: boolean, month: any) {
-    console.log(`Servicio: ${type}, Valor: ${value}, Mes: ${month.rent_month}`);
-
-    // Aquí podés actualizar la data local
-    month[type] = value;
-
-    this.onCheckbox.emit({ type, value, month });
-
-    // O llamar a un servicio para guardar el cambio en la base de datos
-    // Ejemplo:
-    // this.paymentService.updateService(month.id, type, value).subscribe(...);
+    this.onCheckbox.emit({
+      type,
+      value,
+      rent_month: month.rent_month
+    });
   }
+
+
 
 
 }
