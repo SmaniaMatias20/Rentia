@@ -9,11 +9,12 @@ import { FormPayment } from './components/form-payment/form-payment';
 import { ContractService } from '../../services/contract/contract';
 import { FormsModule } from '@angular/forms';
 import { CardPayment } from './components/card-payment/card-payment';
+import { FormNote } from './components/form-note/form-note';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule, Spinner, FormPayment, FormsModule, CardPayment],
+  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
@@ -28,6 +29,7 @@ export class Payments {
   years = Array.from({ length: 12 }, (_, i) => 2026 + i);
   payments: any[] = [];
   selectedContract: any | null = null;
+  openFormNote = false;
 
 
   constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService, private contractService: ContractService) { }
@@ -146,7 +148,16 @@ export class Payments {
     return Math.round(total);
   }
 
+  onCheckbox(event: any) {
+    console.log(event);
+  }
 
+  onAddNote() {
+    this.openFormNote = true;
+  }
 
-
+  onSaveNote(note: string) {
+    console.log('onSaveNote');
+    this.openFormNote = false;
+  }
 }

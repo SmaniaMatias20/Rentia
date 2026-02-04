@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class CardPayment {
   @Input() month: any;
   @Output() onCheckbox = new EventEmitter<any>();
+  @Output() onAddNote = new EventEmitter<void>();
 
   constructor() { }
 
