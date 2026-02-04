@@ -25,9 +25,9 @@
     </button>
   </div>
 
-  <div class="max-w-md mt-6 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+  <div class="max-w-md mt-6 shadow-lg overflow-hidden">
     <select
-      class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 overflow-hidden"
+      class="w-full bg-gray-900 border border-gray-700  text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 overflow-hidden"
       [(ngModel)]="selectedContract" (ngModelChange)="onContractSelected($event)">
       <option [ngValue]="null">Seleccionar contrato...</option>
 
@@ -42,8 +42,104 @@
 
   @if (selectedContract) {
   <div class="max-w-screen bg-black mt-4 rounded-lg shadow-lg">
+    <!-- Sección de datos del contrato -->
+    <div class="max-w-screen mx-auto bg-gray-900 text-white rounded-2xl shadow-2xl p-8 mt-8 ">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-3">
+          <span class="material-icons text-blue-400 text-3xl">description</span>
+          <h2 class="text-2xl font-bold">Detalles del Contrato</h2>
+        </div>
+        <span class="text-gray-400 text-sm">
+          Creado: {{ selectedContract.created_at | date:'dd/MM/yy' }}
+        </span>
+      </div>
+
+      <!-- Grid de datos -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Propiedad -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-blue-300 text-3xl">home</span>
+          <div>
+            <div class="text-gray-400 text-sm">Propiedad</div>
+            <div class="text-lg font-semibold">{{ selectedContract.property_name }}</div>
+          </div>
+        </div>
+
+        <!-- Inquilino -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-green-300 text-3xl">person</span>
+          <div>
+            <div class="text-gray-400 text-sm">Inquilino</div>
+            <div class="text-lg font-semibold">{{ selectedContract.tenant_name }}</div>
+          </div>
+        </div>
+
+        <!-- Monto de alquiler -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-yellow-300 text-3xl">attach_money</span>
+          <div>
+            <div class="text-gray-400 text-sm">Valor inicial</div>
+            <div class="text-lg font-semibold">${{ selectedContract.rent_amount | number }}</div>
+          </div>
+        </div>
+
+        <!-- Moneda -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-purple-300 text-3xl">currency_exchange</span>
+          <div>
+            <div class="text-gray-400 text-sm">Moneda</div>
+            <div class="text-lg font-semibold">{{ selectedContract.currency }}</div>
+          </div>
+        </div>
+
+        <!-- Vigencia -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-pink-300 text-3xl">event</span>
+          <div>
+            <div class="text-gray-400 text-sm">Desde (dia-mes-año)</div>
+            <div class="text-lg font-semibold">{{ selectedContract.valid_from | date:'dd/MM/yy' }}</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-pink-300 text-3xl">event_available</span>
+          <div>
+            <div class="text-gray-400 text-sm">Hasta (dia-mes-año)</div>
+            <div class="text-lg font-semibold">{{ selectedContract.valid_to | date:'dd/MM/yy' }}</div>
+          </div>
+        </div>
+
+        <!-- Incremento -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-orange-300 text-3xl">trending_up</span>
+          <div>
+            <div class="text-gray-400 text-sm">Incremento</div>
+            <div class="text-lg font-semibold">{{ selectedContract.increase_percentage }}% {{
+              selectedContract.increase_frequency == 'monthly' ? 'Mensual' : selectedContract.increase_frequency ==
+              'quarterly'
+              ? 'Trimestral' : 'Anual'
+              }} </div>
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4 shadow-md hover:bg-gray-700/70 transition">
+          <span class="material-icons text-green-400 text-3xl">{{ selectedContract.status ? 'toggle_on' : 'toggle_off'
+            }}</span>
+          <div>
+            <div class="text-gray-400 text-sm">Estado</div>
+            <div class="text-lg font-semibold">{{ selectedContract.status ? 'Activo' : 'Inactivo' }}</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-      <div *ngFor="let month of months" class="bg-gray-900 border border-gray-700 rounded-lg p-4 shadow-lg text-white">
+      <div *ngFor="let month of months" class="bg-gray-900 rounded-lg p-4 shadow-lg text-white">
         <app-card-payment [month]="month"></app-card-payment>
       </div>
     </div>

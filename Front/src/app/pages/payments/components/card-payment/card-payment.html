@@ -1,4 +1,4 @@
-<div class="bg-gray-900 border border-gray-700 rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 text-white w-full"
+<div class="bg-gray-900 border rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 text-white w-full"
     [ngClass]="{
         'border-green-600': month.status,
         'border-red-600': !month.status
@@ -62,13 +62,17 @@
         {{ month.description || 'Sin observaciones' }}
     </div>
 
-    <div class="flex justify-end items-center mt-4 gap-2">
+    <div class="flex sm:flex-row flex-col gap-2 justify-end items-center mt-4">
         <button
-            class="bg-blue-600 hover:bg-blue-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center">
+            class="bg-yellow-600 hover:bg-yellow-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center w-full h-9">
+            <span class="text-sm font-semibold">Valor de los servicios</span>
+        </button>
+        <button
+            class="bg-blue-600 hover:bg-blue-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center w-full h-9">
             <span class="text-sm font-semibold">Agregar observación</span>
         </button>
         <button
-            class="bg-green-600 hover:bg-green-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center">
+            class="bg-green-600 hover:bg-green-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center w-full h-9">
             <span class="text-sm font-semibold">Realizar pago</span>
         </button>
     </div>
