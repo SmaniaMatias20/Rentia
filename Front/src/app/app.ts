@@ -3,6 +3,7 @@ import { RouterOutlet, NavigationEnd, Router } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { filter } from 'rxjs';
 
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Navbar],

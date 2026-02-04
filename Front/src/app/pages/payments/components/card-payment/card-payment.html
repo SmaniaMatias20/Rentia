@@ -1,39 +1,76 @@
-<div class="flex justify-between items-center mb-2">
-    <h3 class="font-semibold">{{ month.rent_month | date:'MMMM yyyy' }}</h3>
-    <span class="px-2 py-1 rounded text-xs font-semibold" [ngClass]="{
-          'bg-green-600': month.status,
-          'bg-red-600': !month.status
-        }">
-        {{ month.status ? 'Pagado' : 'Pendiente' }}
-    </span>
-</div>
+<div class="bg-gray-900 border border-gray-700 rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 text-white w-full"
+    [ngClass]="{
+        'border-green-600': month.status,
+        'border-red-600': !month.status
+      }">
 
-<div class="mb-2">
-    <p>Monto base: <span class="font-medium">{{ month.rent_amount | currency:'ARS':'symbol':'1.0-0' }}</span>
-    </p>
-    <p>Total con aumento: <span class="font-medium">{{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0'
-            }}</span></p>
-</div>
+    <!-- Header: Mes y estado -->
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold capitalize">{{ formatRentMonth(month.rent_month) }}</h3>
+        <span class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+        'bg-green-600': month.status,
+        'bg-red-600': !month.status
+      }">
+            {{ month.status ? 'Pagado' : 'Pendiente' }}
+        </span>
+    </div>
 
-<div class="mb-2 flex flex-col gap-1">
-    <label class="flex items-center gap-2">
-        <input type="checkbox" [checked]="month.water" disabled />
-        Agua
-    </label>
-    <label class="flex items-center gap-2">
-        <input type="checkbox" [checked]="month.electricy" disabled />
-        Electricidad
-    </label>
-    <label class="flex items-center gap-2">
-        <input type="checkbox" [checked]="month.gas" disabled />
-        Gas
-    </label>
-    <label class="flex items-center gap-2">
-        <input type="checkbox" [checked]="month.hoa_fees" disabled />
-        Expensas/ABL
-    </label>
-</div>
+    <!-- Montos -->
+    <div class="mb-4 grid grid-cols-2 gap-2">
+        <div class="flex gap-4">
+            <span class="text-gray-400 text-sm">Valor abonado:</span>
+            <span class="font-medium">{{ 0 | currency:'ARS':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="flex gap-4">
+            <span class="text-gray-400 text-sm">Total alquiler:</span>
+            <span class="font-semibold text-green-400">{{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0'
+                }}</span>
+        </div>
+    </div>
 
-<div class="text-gray-300 text-sm">
-    <p>{{ month.description || 'Sin observaciones' }}</p>
+    <!-- Servicios con checkboxes -->
+    <div class="mb-4 grid grid-cols-2 gap-3">
+        <label class="flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="month.water"
+                (change)="onCheckboxChange('water', $event.target.checked, month.rent_month)"
+                class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500" />
+            Agua
+        </label>
+        <label class="flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="month.electricy"
+                (change)="onCheckboxChange('electricy', $event.target.checked, month)"
+                class="h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500" />
+            Electricidad
+        </label>
+        <label class="flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="month.gas"
+                (change)="onCheckboxChange('gas', $event.target.checked, month)"
+                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
+            Gas
+        </label>
+        <label class="flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="month.hoa_fees"
+                (change)="onCheckboxChange('hoa_fees', $event.target.checked, month)"
+                class="h-4 w-4 text-purple-500 border-gray-300 rounded focus:ring-purple-500" />
+            Expensas/ABL
+        </label>
+    </div>
+
+
+    <!-- Descripción -->
+    <div class="text-gray-300 text-sm italic border-t border-gray-700 pt-2">
+        {{ month.description || 'Sin observaciones' }}
+    </div>
+
+    <div class="flex justify-end items-center mt-4 gap-2">
+        <button
+            class="bg-blue-600 hover:bg-blue-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center">
+            <span class="text-sm font-semibold">Agregar observación</span>
+        </button>
+        <button
+            class="bg-green-600 hover:bg-green-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center">
+            <span class="text-sm font-semibold">Realizar pago</span>
+        </button>
+    </div>
+
 </div>
