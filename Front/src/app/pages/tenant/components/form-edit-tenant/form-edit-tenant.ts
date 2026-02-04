@@ -35,13 +35,25 @@ export class FormEditTenant implements OnInit {
   private getValidatorsByType() {
     switch (this.type) {
       case 'username':
-        return [Validators.required, Validators.minLength(3)];
+        return [Validators.required, Validators.minLength(3), Validators.maxLength(20)];
 
       case 'phone':
-        return [Validators.pattern(/^\d{7,15}$/)];
+        return [Validators.pattern(/^\d{7,15}$/), Validators.minLength(7), Validators.maxLength(15)];
 
       case 'email':
-        return [Validators.email];
+        return [Validators.email, Validators.minLength(3), Validators.maxLength(50)];
+
+      case 'firstname':
+        return [Validators.required, Validators.minLength(3), Validators.maxLength(20)];
+
+      case 'lastname':
+        return [Validators.required, Validators.minLength(3), Validators.maxLength(20)];
+
+      case 'document':
+        return [Validators.required, Validators.minLength(3), Validators.maxLength(20)];
+
+      case 'cuit':
+        return [Validators.required, Validators.minLength(3), Validators.maxLength(20)];
 
       default:
         return [];

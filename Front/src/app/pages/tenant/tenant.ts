@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth/auth';
 import { CreateComment } from './components/create-comment/create-comment';
 import { ShowComment } from './components/show-comment/show-comment';
 
-type EditType = 'username' | 'email' | 'phone';
+type EditType = 'username' | 'email' | 'phone' | 'firstname' | 'lastname' | 'document' | 'cuit';
 
 @Component({
   selector: 'app-tenant',
@@ -116,7 +116,20 @@ export class Tenant {
 
   async onSaveEdit(newValue: any) {
     try {
-      await this.tenantService.updateTenant(this.tenantData.id, { [this.editType]: newValue });
+      const { error } = await this.tenantService.updateTenant(this.tenantData.id, { [this.editType]: newValue });
+
+      if (error) {
+        console.error('Error al actualizar datos:', error);
+        if (error.code === '23505') {
+          this.toast.showToast('El nombre de usuario ya existe', 'error');
+          this.closeFormEditTenant();
+          return;
+        }
+        this.toast.showToast('Error al actualizar datos', 'error');
+        this.closeFormEditTenant();
+        return;
+      }
+
       this.toast.showToast('Datos actualizados correctamente', 'success');
       this.closeFormEditTenant();
 

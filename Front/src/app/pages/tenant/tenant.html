@@ -55,6 +55,86 @@
         <!-- Datos -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
 
+          <!-- Nombre -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-cyan-400 text-3xl">person</span>
+            <div>
+              <p class="text-gray-400 text-sm">Nombre</p>
+              <p class="text-lg font-semibold">
+                {{ tenantData.firstname || 'Sin información' }}
+              </p>
+            </div>
+            <button class="
+                  flex items-center gap-1
+                  py-2 px-2
+                  rounded-lg bg-blue-600 hover:bg-blue-700
+                  text-white font-semibold transition cursor-pointer
+                " (click)="openEdit('firstname', tenantData.firstname)">
+              <span class="material-icons">edit</span>
+
+            </button>
+          </div>
+
+          <!-- Apellido -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-cyan-400 text-3xl">person</span>
+            <div>
+              <p class="text-gray-400 text-sm">Apellido</p>
+              <p class="text-lg font-semibold">
+                {{ tenantData.lastname || 'Sin información' }}
+              </p>
+            </div>
+            <button class="
+                  flex items-center gap-1
+                  py-2 px-2
+                  rounded-lg bg-blue-600 hover:bg-blue-700
+                  text-white font-semibold transition cursor-pointer
+                " (click)="openEdit('lastname', tenantData.lastname)">
+              <span class="material-icons">edit</span>
+
+            </button>
+          </div>
+
+          <!-- Documento -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-cyan-400 text-3xl">person</span>
+            <div>
+              <p class="text-gray-400 text-sm">Documento</p>
+              <p class="text-lg font-semibold">
+                {{ tenantData.document || 'Sin información' }}
+              </p>
+            </div>
+            <button class="
+                  flex items-center gap-1
+                  py-2 px-2
+                  rounded-lg bg-blue-600 hover:bg-blue-700
+                  text-white font-semibold transition cursor-pointer
+                " (click)="openEdit('document', tenantData.document)">
+              <span class="material-icons">edit</span>
+
+            </button>
+          </div>
+
+          <!-- CUIT -->
+          <div class="flex items-center gap-3">
+            <span class="material-icons text-cyan-400 text-3xl">person</span>
+            <div>
+              <p class="text-gray-400 text-sm">CUIT</p>
+              <p class="text-lg font-semibold">
+                {{ tenantData.cuit || 'Sin información' }}
+              </p>
+            </div>
+            <button class="
+                  flex items-center gap-1
+                  py-2 px-2
+                  rounded-lg bg-blue-600 hover:bg-blue-700
+                  text-white font-semibold transition cursor-pointer
+                " (click)="openEdit('cuit', tenantData.cuit)">
+              <span class="material-icons">edit</span>
+
+            </button>
+          </div>
+
           <!-- Email -->
           <div class="flex items-center gap-3">
             <span class="material-icons text-cyan-400 text-3xl">email</span>

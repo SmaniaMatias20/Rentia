@@ -61,6 +61,73 @@
             </div>
             }
 
+            <!-- FIRSTNAME -->
+            @if (type === 'firstname') {
+            <div>
+                <input type="text" formControlName="value" placeholder="Nombre"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="min-h-[1.25rem]">
+                    @if (form.get('firstname')?.invalid && (form.get('firstname')?.dirty ||
+                    form.get('firstname')?.touched)) {
+                    <p class="text-sm text-red-500 mt-1">
+                        Nombre inválido
+                    </p>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- LASTNAME -->
+            @if (type === 'lastname') {
+            <div>
+                <input type="text" formControlName="value" placeholder="Apellido"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="min-h-[1.25rem]">
+                    @if (form.get('lastname')?.invalid && (form.get('lastname')?.dirty ||
+                    form.get('lastname')?.touched)) {
+                    <p class="text-sm text-red-500 mt-1">
+                        Apellido inválido
+                    </p>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- DOCUMENT -->
+            @if (type === 'document') {
+            <div>
+                <input type="text" formControlName="value" placeholder="Documento"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="min-h-[1.25rem]">
+                    @if (form.get('document')?.invalid && (form.get('document')?.dirty ||
+                    form.get('document')?.touched)) {
+                    <p class="text-sm text-red-500 mt-1">
+                        Documento inválido
+                    </p>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- CUIT -->
+            @if (type === 'cuit') {
+            <div>
+                <input type="text" formControlName="value" placeholder="CUIT"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="min-h-[1.25rem]">
+                    @if (form.get('cuit')?.invalid && (form.get('cuit')?.dirty || form.get('cuit')?.touched)) {
+                    <p class="text-sm text-red-500 mt-1">
+                        CUIT inválido
+                    </p>
+                    }
+                </div>
+            </div>
+            }
+
             <!-- BOTONES -->
             <div class="flex justify-end gap-2 pt-4">
 
