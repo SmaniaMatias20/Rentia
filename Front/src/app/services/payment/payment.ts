@@ -23,23 +23,51 @@ export class PaymentService {
     return data || [];
   }
 
+  // async createPayment(payment: any): Promise<{ error?: PostgrestError; data?: any }> {
+  //   const { error, data } = await this.database.client
+  //     .from('payments')
+  //     .insert(payment)
+  //     .select()
+  //     .single();
+
+  //   if (error) {
+  //     console.error('Error al crear pago:', error.message);
+  //     return { error };
+  //   }
+
+  //   return { data };
+  // }
   async createPayment(payment: any): Promise<{ error?: PostgrestError; data?: any }> {
-    const { error, data } = await this.database.client
+    console.log('createPayment', payment);
+
+    const { data, error } = await this.database.client
       .from('payments')
       .insert(payment)
-      .select()
-      .single();
+      .select('*'); // pedimos que devuelva filas
 
     if (error) {
       console.error('Error al crear pago:', error.message);
       return { error };
     }
 
-    return { data };
+    // Supabase devuelve array si no usás .single()
+    const inserted = Array.isArray(data) ? data[0] : data;
+
+    if (!inserted) {
+      return {
+        error: {
+          message: 'No se pudo recuperar el pago creado',
+        } as PostgrestError,
+      };
+    }
+
+    return { data: inserted };
   }
 
 
+
   async updatePayment(payment: any): Promise<{ error?: PostgrestError }> {
+    console.log('updatePayment', payment);
     const { error } = await this.database.client
       .from('payments')
       .update(payment)
