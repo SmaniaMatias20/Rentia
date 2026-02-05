@@ -150,58 +150,71 @@ export class Payments {
     return Math.round(total);
   }
 
+  calculateStatus(month: any): boolean {
+    const allServicesChecked =
+      month.water &&
+      month.electricy &&
+      month.gas &&
+      month.hoa_fees;
+
+    const rentCovered =
+      month.rent_amount >= month.total_rent_amount;
+
+    return allServicesChecked && rentCovered;
+  }
+
   async onCheckbox(event: any) {
     const { type, value, rent_month } = event;
-
-    if (!rent_month) {
-      console.error('Evento inválido:', event);
-      return;
-    }
 
     const index = this.months.findIndex(m =>
       new Date(m.rent_month).getTime() === new Date(rent_month).getTime()
     );
 
-    if (index === -1) {
-      console.error('Mes no encontrado:', rent_month);
-      return;
-    }
+    if (index === -1) return;
 
-    // Actualizar propiedad
+    // Actualizar servicio
     this.months[index][type] = value;
 
-    // Clonar mes para edición
+    // Recalcular status
+    this.months[index].status = this.calculateStatus(this.months[index]);
+
+    // 🔥 Forzar cambio de referencia (Angular detecta cambios)
+    this.months = [...this.months];
+
+    // Clonar para backend
     this.paymentMonthEdit = { ...this.months[index] };
 
-    // Crear si no existe
+    // Persistencia
     if (!this.paymentMonthEdit.id) {
       const payload = { ...this.paymentMonthEdit };
       delete payload.id;
 
       const { error, data } = await this.paymentService.createPayment(payload);
 
-      if (error || !data) {
+      if (error) {
+        console.error('Error al crear servicio:', error);
         this.toast.showToast('Error al crear servicio', 'error');
         return;
       }
 
-      this.months[index].id = data.id;
-      this.paymentMonthEdit.id = data.id;
+      if (!error && data) {
+        this.months[index].id = data.id;
+        this.paymentMonthEdit.id = data.id;
+      }
 
       this.toast.showToast('Servicio agregado correctamente', 'success');
       return;
     }
 
-    // Actualizar si existe
-    const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
-
-    if (error) {
+    try {
+      await this.paymentService.updatePayment(this.paymentMonthEdit);
+      this.toast.showToast('Servicio actualizado correctamente', 'success');
+    } catch (error) {
+      console.error('Error al actualizar servicio:', error);
       this.toast.showToast('Error al actualizar servicio', 'error');
-      return;
     }
-
-    this.toast.showToast('Servicio actualizado correctamente', 'success');
   }
+
 
   onAddNote(month: any) {
     this.paymentMonthEdit = month;
