@@ -82,6 +82,20 @@ export class PropertyService {
     return {};
   }
 
+  async toggleProperty(property: any): Promise<any> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .update({ is_enabled: property.is_enabled })
+      .eq('id', property.id);
+
+    if (error) {
+      console.error('Error al cambiar propiedad:', error.message);
+      return { error: error };
+    }
+
+    return {};
+  }
+
   async getProperty(id: string | null): Promise<any> {
     const { data, error } = await this.db.client
       .from('properties')

@@ -57,7 +57,7 @@
 
       @for (property of properties; track property.id) {
       <app-card-property icon="home" title="{{property.name}}" bgColor="bg-green-600" [property]="property"
-        backgroundImage="url('assets/images/property.webp')" (delete)="removeProperty($event)"
+        backgroundImage="url('assets/images/property.webp')" (isEnabled)="isPropertyEnabled($event)"
         url="/properties/{{property.id}}">
       </app-card-property>
 

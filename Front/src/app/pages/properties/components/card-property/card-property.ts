@@ -11,6 +11,7 @@ import { ModalConfirm } from '../../../../components/modal-confirm/modal-confirm
 })
 export class CardProperty {
   openConfirmModal = false;
+  message = '¿Estás seguro que quieres eliminar esta propiedad?';
   @Input() icon!: string;
   @Input() title!: string;
   @Input() bgColor: string = 'bg-blue-600';
@@ -18,7 +19,7 @@ export class CardProperty {
   @Input() url!: string;
   @Input() property!: any;
 
-  @Output() delete = new EventEmitter<number>();
+  @Output() isEnabled = new EventEmitter<void>();
 
   constructor(private router: Router) { }
 
@@ -29,7 +30,20 @@ export class CardProperty {
   }
 
   deleteProperty() {
-    this.delete.emit(this.property.id);
+    this.isEnabled.emit(this.property);
+  }
+
+  openModal(isEnabled: boolean) {
+    if (isEnabled) {
+      this.message = '¿Estás seguro que quieres desactivar esta propiedad?';
+      this.openConfirmModal = true;
+      this.property.is_enabled = false;
+      return;
+    }
+
+    this.message = '¿Estás seguro que quieres activar esta propiedad?';
+    this.openConfirmModal = true;
+    this.property.is_enabled = true;
   }
 
 }

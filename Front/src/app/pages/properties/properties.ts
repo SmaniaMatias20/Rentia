@@ -77,5 +77,16 @@ export class Properties {
     }
   }
 
+  async isPropertyEnabled(property: any) {
+    try {
+      await this.property.toggleProperty(property);
+      this.loadProperties();
+      this.toast.showToast('Propiedad activada correctamente', 'success');
+    } catch (error) {
+      console.error('Error al activar propiedad:', error);
+      this.toast.showToast('Error al activar propiedad', 'error');
+    }
+  }
+
 
 }
