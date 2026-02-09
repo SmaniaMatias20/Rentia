@@ -1,0 +1,18 @@
+<div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
+    <div class="flex items-center justify-between">
+        <span class="material-icons text-3xl" [ngClass]="iconColor">
+            {{ icon }}
+        </span>
+        <span class="text-sm text-gray-400">
+            {{ title }}
+        </span>
+    </div>
+
+    <p class="text-3xl font-bold mt-4 text-white">
+        {{ value }}
+    </p>
+
+    <p class="text-sm mt-1" [ngClass]="descriptionColor || 'text-gray-400'">
+        {{ description }}
+    </p>
+</div>

@@ -10,38 +10,38 @@
   }
 
   @if (!loading) {
-  <div class="absolute top-4 right-4 z-20
-  flex flex-col gap-2
-  sm:flex-row sm:gap-3">
+  <div class="max-w-screen flex justify-between items-center mt-6 gap-4">
+
+    <!-- Select contrato -->
+    <div class="max-w-md w-full">
+      <select
+        class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 overflow-hidden"
+        [(ngModel)]="selectedContract" (ngModelChange)="onContractSelected($event)">
+        <option [ngValue]="null">Seleccionar contrato...</option>
+
+        @for (contract of contracts; track contract.id) {
+        <option [ngValue]="contract">
+          {{ contract.property_name }} - {{ contract.tenant_name }}
+        </option>
+        }
+      </select>
+    </div>
 
     <!-- Volver al menú -->
     <button class="
       flex items-center justify-center gap-1
       py-2 px-4
-      w-full sm:w-auto
       rounded-lg bg-blue-600 hover:bg-blue-700
       disabled:bg-blue-400 disabled:cursor-not-allowed
       text-white font-semibold transition cursor-pointer
-      " (click)="goToHome()">
+      whitespace-nowrap
+    " (click)="goToHome()">
       <span class="material-icons">arrow_back</span>
       Volver al menú
     </button>
-  </div>
-
-  <div class="max-w-md mt-6 shadow-lg overflow-hidden">
-    <select
-      class="w-full bg-gray-900 border border-gray-700  text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 overflow-hidden"
-      [(ngModel)]="selectedContract" (ngModelChange)="onContractSelected($event)">
-      <option [ngValue]="null">Seleccionar contrato...</option>
-
-      @for (contract of contracts; track contract.id) {
-      <option [ngValue]="contract">
-        {{ contract.property_name }} - {{ contract.tenant_name }}
-      </option>
-      }
-    </select>
 
   </div>
+
 
   @if (selectedContract) {
   <div class="max-w-screen bg-black mt-4 rounded-lg shadow-lg">

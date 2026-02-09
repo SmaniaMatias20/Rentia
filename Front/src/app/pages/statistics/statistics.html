@@ -23,119 +23,80 @@
     <div class="max-w-screen mx-auto mt-20 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- Total propiedades -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-blue-500 text-3xl">home</span>
-                <span class="text-sm text-gray-400">Propiedades</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> {{quantityOfPropertiesByUser}} </p>
-            <p class="text-sm text-gray-400 mt-1">Total registradas</p>
-        </div>
+        <app-card-statistic icon="home" title="Propiedades" [value]="quantityOfPropertiesByUser"
+            description="Total registradas" iconColor="text-blue-500" descriptionColor="text-blue-400">
+        </app-card-statistic>
 
         <!-- Ocupadas -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-green-500 text-3xl">check_circle</span>
-                <span class="text-sm text-gray-400">Ocupadas</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> {{quantityOfPropertiesWithTenantByUser}} </p>
-            <p class="text-sm text-green-400 mt-1"> {{percentageOfPropertiesWithTenantByUser}}% de ocupación </p>
-        </div>
+        <app-card-statistic icon="check_circle" title="Ocupadas" [value]="quantityOfPropertiesWithTenantByUser"
+            [description]="percentageOfPropertiesWithTenantByUser + '% de ocupación'" iconColor="text-green-500"
+            descriptionColor="text-green-400">
+        </app-card-statistic>
 
         <!-- Desocupadas -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-red-500 text-3xl">remove_circle</span>
-                <span class="text-sm text-gray-400">Desocupadas</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> {{quantityOfPropertiesWithoutTenantByUser}} </p>
-            <p class="text-sm text-red-400 mt-1"> {{percentageOfPropertiesWithoutTenantByUser}}% disponibles </p>
-        </div>
+        <app-card-statistic icon="remove_circle" title="Desocupadas" [value]="quantityOfPropertiesWithoutTenantByUser"
+            [description]="percentageOfPropertiesWithoutTenantByUser + '% disponibles'" iconColor="text-red-500"
+            descriptionColor="text-red-400">
+        </app-card-statistic>
 
         <!-- Inquilinos -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-purple-500 text-3xl">groups</span>
-                <span class="text-sm text-gray-400">Inquilinos</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> {{quantityOfTenants}} </p>
-            <p class="text-sm text-gray-400 mt-1">Activos</p>
-        </div>
-
-        <!-- Total alquileres -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-emerald-500 text-3xl">attach_money</span>
-                <span class="text-sm text-gray-400">Ingresos</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> ${{totalRent}} </p>
-            <p class="text-sm text-gray-400 mt-1">Mensuales (solo alquileres)</p>
-        </div>
-
-        <!-- Promedio alquiler -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-yellow-500 text-3xl">trending_up</span>
-                <span class="text-sm text-gray-400">Promedio</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> ${{averageRent ? averageRent.toFixed(2) : 0}} </p>
-            <p class="text-sm text-gray-400 mt-1">Por propiedad (solo alquileres)</p>
-        </div>
+        <app-card-statistic icon="groups" title="Inquilinos" [value]="quantityOfTenants"
+            description="Total de inquilinos" iconColor="text-purple-500" descriptionColor="text-purple-400">
+        </app-card-statistic>
 
         <!-- Alquiler más alto -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-purple-500 text-3xl">arrow_upward</span>
-                <span class="text-sm text-gray-400">Máximo</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> ${{highestRent}} </p>
-            <p class="text-sm text-gray-400 mt-1">Alquiler más alto</p>
-        </div>
+        <app-card-statistic icon="arrow_upward" title="Máximo" [value]="'$' + highestRent"
+            description="Alquiler más alto" iconColor="text-purple-500" descriptionColor="text-purple-400">
+        </app-card-statistic>
 
         <!-- Alquiler más bajo -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-indigo-500 text-3xl">arrow_downward</span>
-                <span class="text-sm text-gray-400">Mínimo</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> ${{lowestRent}} </p>
-            <p class="text-sm text-gray-400 mt-1">Alquiler más bajo</p>
-        </div>
+        <app-card-statistic icon="arrow_downward" title="Mínimo" [value]="'$' + lowestRent"
+            description="Alquiler más bajo" iconColor="text-indigo-500" descriptionColor="text-indigo-400">
+        </app-card-statistic>
 
         <!-- Contratos activos -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-green-500 text-3xl">article</span>
-                <span class="text-sm text-gray-400">Contratos activos</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> 0 </p>
-            <p class="text-sm text-green-400 mt-1"> % de contratos activos </p>
-        </div>
-
+        <app-card-statistic icon="article" title="Contratos activos" value="0" description="% de contratos activos"
+            iconColor="text-green-500" descriptionColor="text-green-400">
+        </app-card-statistic>
 
         <!-- Contratos proximos a vencerse -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-yellow-500 text-3xl">article</span>
-                <span class="text-sm text-gray-400">Contratos a vencerse</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> 0 </p>
-            <p class="text-sm text-yellow-400 mt-1"> % de contratos a vencerse </p>
-        </div>
+        <app-card-statistic icon="article" title="Contratos a vencerse" value="0"
+            description="% de contratos a vencerse" iconColor="text-yellow-500" descriptionColor="text-yellow-400">
+        </app-card-statistic>
 
         <!-- Contratos vencidos -->
-        <div class="bg-gray-900 border border-white/10 rounded-xl p-6 shadow-lg">
-            <div class="flex items-center justify-between">
-                <span class="material-icons text-red-500 text-3xl">article</span>
-                <span class="text-sm text-gray-400">Contratos vencidos</span>
-            </div>
-            <p class="text-3xl font-bold mt-4 text-white"> 0 </p>
-            <p class="text-sm text-red-400 mt-1"> % de contratos vencidos </p>
-        </div>
+        <app-card-statistic icon="article" title="Contratos vencidos" value="0" description="% de contratos vencidos"
+            iconColor="text-red-500" descriptionColor="text-red-400">
+        </app-card-statistic>
 
+    </div>
 
+    <div class="max-w-screen mx-auto mt-20 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
+        <!-- Ingresos mensuales -->
+        <app-card-statistic icon="attach_money" title="Alquileres" [value]="'$' + totalRent"
+            description="Ingreso mensual" iconColor="text-emerald-500" descriptionColor="text-emerald-400">
+        </app-card-statistic>
 
+        <!-- Costos de luz -->
+        <app-card-statistic icon="flash_on" title="Luz" [value]="'$' + 0" description="Costo mensual"
+            iconColor="text-yellow-500" descriptionColor="text-yellow-400">
+        </app-card-statistic>
+
+        <!-- Costos de gas -->
+        <app-card-statistic icon="local_gas_station" title="Gas" [value]="'$' + 0" description="Costo mensual"
+            iconColor="text-red-500" descriptionColor="text-red-400">
+        </app-card-statistic>
+
+        <!-- Costos de agua -->
+        <app-card-statistic icon="water" title="Agua" [value]="'$' + 0" description="Costo mensual"
+            iconColor="text-blue-500" descriptionColor="text-blue-400">
+        </app-card-statistic>
+
+        <!-- Costos de ABL/expensas -->
+        <app-card-statistic icon="attach_money" title="ABL/Expensas" [value]="'$' + 0" description="Costo mensual"
+            iconColor="text-red-500" descriptionColor="text-red-400">
+        </app-card-statistic>
 
     </div>
 </div>

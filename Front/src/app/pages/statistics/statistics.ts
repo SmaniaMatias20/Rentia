@@ -4,10 +4,11 @@ import { PropertyService } from '../../services/property/property';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { TenantService } from '../../services/tenant/tenant';
+import { CardStatistic } from './components/card-statistic/card-statistic';
 
 @Component({
   selector: 'app-statistics',
-  imports: [Spinner],
+  imports: [Spinner, CardStatistic],
   templateUrl: './statistics.html',
   styleUrls: ['./statistics.css']
 })
