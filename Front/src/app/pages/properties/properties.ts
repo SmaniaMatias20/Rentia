@@ -6,11 +6,12 @@ import { PropertyService } from '../../services/property/property';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-properties',
-  imports: [CardProperty, FormProperty, Spinner],
+  imports: [CardProperty, FormProperty, Spinner, FormsModule],
   templateUrl: './properties.html',
   styleUrl: './properties.css',
 })
@@ -20,6 +21,7 @@ export class Properties {
   loading = false;
   user: any;
   formProperty = false;
+  filter: string = 'active';
 
   constructor(private router: Router, private property: PropertyService, private auth: AuthService) {
     this.user = this.auth.getCurrentUser();
@@ -53,7 +55,7 @@ export class Properties {
 
   async loadProperties() {
     this.loading = true;
-    this.properties = await this.property.getProperties(this.user.id);
+    this.properties = await this.property.getProperties(this.user.id, this.filter);
     this.loading = false;
   }
 
@@ -86,6 +88,10 @@ export class Properties {
       console.error('Error al activar propiedad:', error);
       this.toast.showToast('Error al activar propiedad', 'error');
     }
+  }
+
+  onFilterChange() {
+    this.loadProperties();
   }
 
 

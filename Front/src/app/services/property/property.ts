@@ -29,11 +29,21 @@ export class PropertyService {
   /**
    * Obtiene todas las propiedades del usuario logueado
    */
-  async getProperties(user_id: string): Promise<any[]> {
-    const { data, error } = await this.db.client
+  async getProperties(user_id: string, filter = 'all'): Promise<any[]> {
+
+    // Filtrar propiedades
+    let query = this.db.client
       .from('properties')
       .select('*')
       .eq('user_id', user_id);
+
+    if (filter === 'active') {
+      query = query.eq('is_enabled', true);
+    } else if (filter === 'inactive') {
+      query = query.eq('is_enabled', false);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('Error al obtener propiedades:', error.message);

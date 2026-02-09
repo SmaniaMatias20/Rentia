@@ -14,6 +14,20 @@
     flex flex-col gap-2
     sm:flex-row sm:gap-3
   ">
+
+    <!-- Filtro de propiedades activos/inactivos -->
+    <div class="flex items-center gap-2">
+      <span class="material-icons text-gray-400">filter_list</span>
+      <select class="
+                flex-1 p-2 rounded-lg bg-blue-600 hover:bg-blue-700
+                text-white font-semibold transition cursor-pointer
+              " [(ngModel)]="filter" (ngModelChange)="onFilterChange()">
+        <option value="all">Todos</option>
+        <option value="active">Activas</option>
+        <option value="inactive">Inactivas</option>
+      </select>
+    </div>
+
     <!-- Nueva propiedad -->
     <button class="
       flex items-center justify-center gap-1
