@@ -13,7 +13,7 @@
   <!-- Overlay -->
   <div class="absolute inset-0 bg-black/40 z-0"></div>
 
-  <!-- Botón eliminar -->
+  <!-- Botón desactivar -->
   <button class="
       absolute top-2 right-2
       text-gray-300 hover:text-red-500
@@ -37,7 +37,7 @@
 
 
 @if(openConfirmModal) {
-<app-modal-confirm (confirm)="deleteProperty(); openConfirmModal = false;" (cancel)="openConfirmModal = false"
+<app-modal-confirm (confirm)="IsPropertyEnabled(); openConfirmModal = false;" (cancel)="openConfirmModal = false"
   message="{{ message }}">
 </app-modal-confirm>
 }

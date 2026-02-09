@@ -11,13 +11,14 @@ import { ModalConfirm } from '../../../../components/modal-confirm/modal-confirm
 })
 export class CardTenant {
   openConfirmModal = false;
+  message = '¿Estás seguro que quieres desactivar este inquilino?';
   @Input() icon!: string;
   @Input() title!: string;
   @Input() bgColor: string = 'bg-blue-600';
   @Input() backgroundImage: string = '';
   @Input() url!: string;
   @Input() tenant!: any;
-  @Output() delete = new EventEmitter<number>(); // <-- emitir id al padre
+  @Output() isEnabled = new EventEmitter<any>(); // <-- emitir id al padre
 
   constructor(private router: Router) { }
 
@@ -27,8 +28,21 @@ export class CardTenant {
     }
   }
 
-  deleteTenant() {
-    this.delete.emit(this.tenant.id); // <-- emitir el id al padre
+  isTenanrEnabled() {
+    this.isEnabled.emit(this.tenant); // <-- emitir el id al padre
+  }
+
+  openModal(isEnabled: boolean) {
+    if (isEnabled) {
+      this.message = '¿Estás seguro que quieres desactivar este inquilino?';
+      this.openConfirmModal = true;
+      this.tenant.is_enabled = false;
+      return;
+    }
+
+    this.message = '¿Estás seguro que quieres activar este inquilino?';
+    this.openConfirmModal = true;
+    this.tenant.is_enabled = true;
   }
 
 }

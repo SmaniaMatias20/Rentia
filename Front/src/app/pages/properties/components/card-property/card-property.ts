@@ -19,7 +19,7 @@ export class CardProperty {
   @Input() url!: string;
   @Input() property!: any;
 
-  @Output() isEnabled = new EventEmitter<void>();
+  @Output() isEnabled = new EventEmitter<any>();
 
   constructor(private router: Router) { }
 
@@ -29,7 +29,7 @@ export class CardProperty {
     }
   }
 
-  deleteProperty() {
+  IsPropertyEnabled() {
     this.isEnabled.emit(this.property);
   }
 

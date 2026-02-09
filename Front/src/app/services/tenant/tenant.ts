@@ -166,6 +166,20 @@ export class TenantService {
     }
   }
 
+  async toggleTenant(tenant: any): Promise<any> {
+    const { data, error } = await this.db.client
+      .from('users')
+      .update({ is_enabled: tenant.is_enabled })
+      .eq('id', tenant.id);
+
+    if (error) {
+      console.error('Error al cambiar tenant:', error.message);
+      return { error: error };
+    }
+
+    return {};
+  }
+
   async getQuantityOfTenantsByUser(user_id: string): Promise<number> {
     const { count, error } = await this.db.client
       .from('users')

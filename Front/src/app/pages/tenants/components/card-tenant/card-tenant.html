@@ -18,8 +18,8 @@
       absolute top-2 right-2
       text-gray-300 hover:text-red-500
       transition z-20 cursor-pointer
-    " (click)="openConfirmModal = true; $event.stopPropagation()">
-    <span class="material-icons">delete</span>
+    " (click)="openModal(tenant.is_enabled); $event.stopPropagation()">
+    <span class="material-icons"> {{ tenant.is_enabled ? 'toggle_on' : 'toggle_off' }}</span>
   </button>
 
   <!-- Contenido -->
@@ -37,7 +37,7 @@
 
 <!-- Confirm modal -->
 @if (openConfirmModal) {
-<app-modal-confirm (confirm)="deleteTenant(); openConfirmModal = false;" (cancel)="openConfirmModal = false"
-  message="¿Estás seguro que quieres eliminar este inquilino?">
+<app-modal-confirm (confirm)="isTenanrEnabled(); openConfirmModal = false;" (cancel)="openConfirmModal = false"
+  message="{{ message }}">
 </app-modal-confirm>
 }

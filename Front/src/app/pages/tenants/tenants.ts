@@ -72,4 +72,15 @@ export class Tenants {
     }
   }
 
+  async isTenantEnabled(tenant: any) {
+    try {
+      await this.tenant.toggleTenant(tenant);
+      this.loadTenants();
+      this.toast.showToast('Inquilino activado correctamente', 'success');
+    } catch (error) {
+      console.error('Error al activar tenant:', error);
+      this.toast.showToast('Error al activar tenant', 'error');
+    }
+  }
+
 }
