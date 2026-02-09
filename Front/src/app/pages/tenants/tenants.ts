@@ -6,10 +6,11 @@ import { TenantService } from '../../services/tenant/tenant';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast/toast';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-tenants',
-  imports: [CardTenant, FormTenant, Spinner, Toast],
+  imports: [CardTenant, FormTenant, Spinner, Toast, FormsModule],
   templateUrl: './tenants.html',
   styleUrl: './tenants.css',
 })
@@ -19,6 +20,7 @@ export class Tenants {
   formTenant = false;
   tenants: any[] = [];
   user: any;
+  filter: string = 'active';
 
   constructor(private router: Router, private tenant: TenantService, private auth: AuthService) {
     this.user = this.auth.getCurrentUser();
@@ -44,7 +46,7 @@ export class Tenants {
 
   async loadTenants() {
     this.loading = true;
-    this.tenants = await this.tenant.getTenantsByUser(this.user.id);
+    this.tenants = await this.tenant.getTenantsByUser(this.user.id, this.filter);
     this.loading = false;
   }
 
@@ -81,6 +83,10 @@ export class Tenants {
       console.error('Error al activar tenant:', error);
       this.toast.showToast('Error al activar tenant', 'error');
     }
+  }
+
+  onFilterChange() {
+    this.loadTenants();
   }
 
 }

@@ -83,13 +83,23 @@ export class TenantService {
   /**
    * Obtiene todos los inquilinos del usuario logueado
    */
-  async getTenantsByUser(user_id: string): Promise<any[]> {
+  async getTenantsByUser(user_id: string, filter = 'all'): Promise<any[]> {
+
     try {
-      const { data, error } = await this.db.client
+      // Filtrar inquilinos
+      let query = this.db.client
         .from('users')
         .select('*')
         .eq('owner_id', user_id)
         .eq('role', 'tenant'); // opcional pero recomendado
+
+      if (filter === 'active') {
+        query = query.eq('is_enabled', true);
+      } else if (filter === 'inactive') {
+        query = query.eq('is_enabled', false);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error al obtener tenants:', error.message);
@@ -97,11 +107,11 @@ export class TenantService {
       }
 
       return data || [];
-
-    } catch (err) {
-      console.error('Error inesperado:', err);
+    } catch (err: any) {
+      console.error('Error inesperado:', err.message);
       return [];
     }
+
   }
 
   async getTenant(id: string): Promise<any> {
