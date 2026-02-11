@@ -1,9 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-table-contracts',
-  imports: [NgClass],
+  imports: [NgClass, FormsModule],
   templateUrl: './table-contracts.html',
   styleUrl: './table-contracts.css',
 })
@@ -11,6 +12,19 @@ export class TableContracts {
   @Output() deleteContract = new EventEmitter<any>();
   @Input() contracts: any[] = [];
   currentDate: Date = new Date();
+  searchTerm: string = '';
+
+  get filteredContracts() {
+    if (!this.searchTerm.trim()) return this.contracts;
+
+    const term = this.searchTerm.toLowerCase();
+
+    return this.contracts.filter(contract =>
+      Object.values(contract).some(value =>
+        String(value).toLowerCase().includes(term)
+      )
+    );
+  }
 
   formatFrequency(freq: string) {
     const map: any = {
@@ -83,9 +97,5 @@ export class TableContracts {
 
     return diffDays <= -1;
   }
-
-
-
-
 
 }

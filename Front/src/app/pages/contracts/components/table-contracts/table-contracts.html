@@ -1,5 +1,11 @@
 <div class="bg-gray-900 text-white rounded-xl shadow-lg overflow-hidden">
 
+    <div class="p-4 bg-gray-900 border-b border-gray-800">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar en cualquier columna..."
+            class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-600" />
+    </div>
+
+
     <table class="w-full text-sm">
         <thead class="bg-gray-800 text-gray-300">
             <tr>
@@ -17,7 +23,7 @@
         </thead>
 
         <tbody>
-            @for (contract of contracts; track contract.id) {
+            @for (contract of filteredContracts; track contract.id) {
             <tr class="border-t border-gray-800 transition" [ngClass]="{
     'bg-red-600/40 hover:bg-red-600/60': isExpired(contract),
     'bg-yellow-500/40 hover:bg-yellow-500/60': !isExpired(contract) && isExpiringSoon(contract),
@@ -102,7 +108,7 @@
 
     </table>
 
-    @if (contracts.length === 0) {
+    @if (filteredContracts.length === 0) {
     <p class="text-center text-gray-400 py-6">
         No hay contratos cargados
     </p>

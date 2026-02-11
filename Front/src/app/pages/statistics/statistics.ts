@@ -5,10 +5,11 @@ import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { TenantService } from '../../services/tenant/tenant';
 import { CardStatistic } from './components/card-statistic/card-statistic';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-statistics',
-  imports: [Spinner, CardStatistic],
+  imports: [Spinner, CardStatistic, FormsModule],
   templateUrl: './statistics.html',
   styleUrls: ['./statistics.css']
 })
@@ -25,6 +26,7 @@ export class Statistics {
   averageRent: number = 0;
   highestRent: number = 0;
   lowestRent: number = 0;
+  selectedMonthYear: string = '';
 
   constructor(private router: Router, private propertyService: PropertyService, private auth: AuthService, private tenantService: TenantService) {
   }
@@ -80,6 +82,22 @@ export class Statistics {
       100
     );
   }
+
+  onMonthYearChange() {
+    console.log('onMonthYearChange');
+    console.log(this.selectedMonthYear);
+  }
+
+  applyMonthYearFilter() {
+    console.log('Filtro aplicado:', this.selectedMonthYear);
+  }
+
+  clearMonthYearFilter() {
+    this.selectedMonthYear = '';
+    console.log('Filtro eliminado');
+
+  }
+
 
 
 }
