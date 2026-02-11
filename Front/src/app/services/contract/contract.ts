@@ -116,6 +116,133 @@ export class ContractService {
     return {};
   }
 
+  async getHighestRentByUser(user_id: string): Promise<number> {
+    const today = new Date().toISOString();
+    const now = new Date();
+
+    // 1️⃣ Obtener contratos activos hoy
+    const { data: contracts, error } = await this.db.client
+      .from('contracts')
+      .select('*')
+      .eq('owner_id', user_id)
+      .or(
+        `and(valid_from.lte.${today},valid_to.gte.${today}),and(valid_from.lte.${today},valid_to.is.null)`
+      );
+
+    if (error) {
+      console.error('Error al obtener contratos:', error.message);
+      return 0;
+    }
+
+    if (!contracts?.length) return 0;
+
+    // 2️⃣ Calcular alquiler actualizado por contrato
+    let highestRent = 0;
+
+    for (const contract of contracts) {
+      const base = contract.rent_amount ?? 0;
+      const percent = (contract.increase_percentage ?? 0) / 100;
+      const frequency = contract.increase_frequency; // 'monthly' | 'quarterly' | 'yearly'
+
+      const start = new Date(contract.valid_from);
+
+      const end = contract.valid_to ? new Date(contract.valid_to) : now;
+      const effectiveDate = now > end ? end : now;
+
+      // Diferencia de meses
+      const monthsDiff =
+        (effectiveDate.getFullYear() - start.getFullYear()) * 12 +
+        (effectiveDate.getMonth() - start.getMonth());
+
+      let periods = 0;
+
+      if (frequency === 'monthly') {
+        periods = monthsDiff;
+      }
+
+      if (frequency === 'quarterly') {
+        periods = Math.floor(monthsDiff / 3);
+      }
+
+      if (frequency === 'yearly') {
+        periods = Math.floor(monthsDiff / 12);
+      }
+
+      // Cálculo del valor actualizado
+      const updatedRent = base * Math.pow(1 + percent, Math.max(periods, 0));
+
+      // Comparar con el máximo actual
+      if (updatedRent > highestRent) {
+        highestRent = updatedRent;
+      }
+    }
+
+    return Math.round(highestRent);
+  }
+
+  async getLowestRentByUser(user_id: string): Promise<number> {
+    const today = new Date().toISOString();
+    const now = new Date();
+
+    // 1️⃣ Obtener contratos activos hoy
+    const { data: contracts, error } = await this.db.client
+      .from('contracts')
+      .select('*')
+      .eq('owner_id', user_id)
+      .or(
+        `and(valid_from.lte.${today},valid_to.gte.${today}),and(valid_from.lte.${today},valid_to.is.null)`
+      );
+
+    if (error) {
+      console.error('Error al obtener contratos:', error.message);
+      return 0;
+    }
+
+    console.log('contracts:', contracts);
+
+    if (!contracts?.length) return 0;
+
+    let lowestRent = Infinity;
+
+    // 2️⃣ Calcular alquiler actualizado por contrato
+    for (const contract of contracts) {
+      const base = contract.rent_amount ?? 0;
+      const percent = (contract.increase_percentage ?? 0) / 100;
+      const frequency = contract.increase_frequency;
+
+      const start = new Date(contract.valid_from);
+
+      const end = contract.valid_to ? new Date(contract.valid_to) : now;
+      const effectiveDate = now > end ? end : now;
+
+      const monthsDiff =
+        (effectiveDate.getFullYear() - start.getFullYear()) * 12 +
+        (effectiveDate.getMonth() - start.getMonth());
+
+      let periods = 0;
+
+      if (frequency === 'monthly') {
+        periods = monthsDiff;
+      }
+
+      if (frequency === 'quarterly') {
+        periods = Math.floor(monthsDiff / 3);
+      }
+
+      if (frequency === 'yearly') {
+        periods = Math.floor(monthsDiff / 12);
+      }
+
+      const updatedRent = base * Math.pow(1 + percent, Math.max(periods, 0));
+
+      // Comparar menor valor
+      if (updatedRent < lowestRent) {
+        lowestRent = updatedRent;
+      }
+    }
+
+    return lowestRent === Infinity ? 0 : Math.round(lowestRent);
+  }
 
 
 

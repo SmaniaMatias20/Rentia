@@ -4,6 +4,7 @@ import { PropertyService } from '../../services/property/property';
 import { AuthService } from '../../services/auth/auth';
 import { Spinner } from '../../components/spinner/spinner';
 import { TenantService } from '../../services/tenant/tenant';
+import { ContractService } from '../../services/contract/contract';
 import { CardStatistic } from './components/card-statistic/card-statistic';
 import { FormsModule } from '@angular/forms';
 
@@ -21,14 +22,17 @@ export class Statistics {
   quantityOfPropertiesWithTenantByUser: number = 0;
   percentageOfPropertiesWithTenantByUser: number = 0;
   percentageOfPropertiesWithoutTenantByUser: number = 0;
-  quantityOfTenants: number = 0;
+  quantityOfTenantsByUser: number = 0;
+  quantityOfActiveContractsByUser: number = 0;
+  quantityOfContractsToVenceByUser: number = 0;
+  quantityOfContractsVencedByUser: number = 0;
   totalRent: number = 0;
   averageRent: number = 0;
   highestRent: number = 0;
   lowestRent: number = 0;
   selectedMonthYear: string = '';
 
-  constructor(private router: Router, private propertyService: PropertyService, private auth: AuthService, private tenantService: TenantService) {
+  constructor(private router: Router, private propertyService: PropertyService, private auth: AuthService, private tenantService: TenantService, private contractService: ContractService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -40,19 +44,21 @@ export class Statistics {
       // Obtener la cantidad de propiedades por usuario
       this.quantityOfPropertiesByUser = await this.propertyService.getQuantityOfPropertiesByUser(this.currentUser.id);
       // Obtener la cantidad de propiedades con inquilino 
-      this.quantityOfPropertiesWithTenantByUser = await this.propertyService.getQuantityOfPropertiesWithTenantByUser(this.currentUser.id);
+      this.quantityOfPropertiesWithTenantByUser = await this.propertyService.getQuantityOfPropertiesWithActiveTenantByUser(this.currentUser.id);
       // Obtener la cantidad de propiedades sin inquilino
       this.quantityOfPropertiesWithoutTenantByUser = this.quantityOfPropertiesByUser - this.quantityOfPropertiesWithTenantByUser;
       // Obtener la cantidad de inquilinos por usuario
-      this.quantityOfTenants = await this.tenantService.getQuantityOfTenantsByUser(this.currentUser.id);
-      // Obtener el total de alquileres por usuario
-      this.totalRent = await this.propertyService.getTotalRentByUser(this.currentUser.id);
-      // Obtener el promedio de alquiler por usuario
-      this.averageRent = this.totalRent / this.quantityOfPropertiesByUser;
-      // Obtener el máximo de alquiler por usuario
-      this.highestRent = await this.propertyService.getHighestRentByUser(this.currentUser.id);
+      this.quantityOfTenantsByUser = await this.tenantService.getQuantityOfTenantsByUser(this.currentUser.id);
+      // // Obtener el máximo de alquiler por usuario
+      this.highestRent = await this.contractService.getHighestRentByUser(this.currentUser.id);
       // Obtener el mínimo de alquiler por usuario
-      this.lowestRent = await this.propertyService.getLowestRentByUser(this.currentUser.id);
+      this.lowestRent = await this.contractService.getLowestRentByUser(this.currentUser.id);
+      // // Obtener la cantidad de contratos activos por usuario
+      // this.quantityOfActiveContractsByUser = await this.contractService.getQuantityOfActiveContractsByUser(this.currentUser.id);
+      // // Obtener la cantidad de contratos por vencer por usuario
+      // this.quantityOfContractsToVenceByUser = await this.contractService.getQuantityOfContractsToVenceByUser(this.currentUser.id);
+      // // Obtener la cantidad de contratos vencidos por usuario
+      // this.quantityOfContractsVencedByUser = await this.contractService.getQuantityOfContractsVencedByUser(this.currentUser.id);
 
       this.calculatePercentageOfPropertiesWithTenantByUser();
       this.calculatePercentageOfPropertiesWithoutTenantByUser();
@@ -97,7 +103,4 @@ export class Statistics {
     console.log('Filtro eliminado');
 
   }
-
-
-
 }

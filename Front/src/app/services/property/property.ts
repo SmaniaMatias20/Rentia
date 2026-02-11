@@ -168,73 +168,74 @@ export class PropertyService {
     return count ?? 0;
   }
 
-  async getQuantityOfPropertiesWithTenantByUser(
+  // async getQuantityOfPropertiesWithTenantByUser(
+  //   user_id: string
+  // ): Promise<number> {
+  //   const { count, error } = await this.db.client
+  //     .from('properties')
+  //     .select('id', { count: 'exact', head: true })
+  //     .eq('user_id', user_id)
+  //     .not('tenant_id', 'is', null); // ✅ con inquilino
+
+  //   if (error) {
+  //     console.error(
+  //       'Error al obtener la cantidad de propiedades con inquilino:',
+  //       error.message
+  //     );
+  //     return 0;
+  //   }
+
+  //   return count ?? 0;
+  // }
+
+  async getQuantityOfPropertiesWithActiveTenantByUser(
     user_id: string
   ): Promise<number> {
-    const { count, error } = await this.db.client
+    const today = new Date().toISOString();
+
+    // 1️⃣ Obtener IDs de propiedades del usuario
+    const { data: properties, error: propertiesError } = await this.db.client
+      .from('properties')
+      .select('id')
+      .eq('user_id', user_id);
+
+    if (propertiesError || !properties?.length) {
+      console.error('Error al obtener propiedades:', propertiesError?.message);
+      return 0;
+    }
+
+    const propertyIds = properties.map(p => p.id);
+    console.log('propertyIds:', propertyIds);
+
+    // 2️⃣ Obtener contratos activos HOY
+    const { data: contracts, error: contractsError } = await this.db.client
+      .from('contracts')
+      .select('property_id')
+      .in('property_id', propertyIds)
+      .or(
+        `and(valid_from.lte.${today},valid_to.gte.${today}),and(valid_from.lte.${today},valid_to.is.null)`
+      );
+
+    if (contractsError) {
+      console.error('Error al obtener contratos:', contractsError.message);
+      return 0;
+    }
+
+    if (!contracts?.length) return 0;
+
+    const activePropertyIds = [...new Set(contracts.map(c => c.property_id))];
+
+    // 3️⃣ Contar propiedades con contrato activo
+    const { count, error: countError } = await this.db.client
       .from('properties')
       .select('id', { count: 'exact', head: true })
-      .eq('user_id', user_id)
-      .not('tenant_id', 'is', null); // ✅ con inquilino
+      .in('id', activePropertyIds);
 
-    if (error) {
-      console.error(
-        'Error al obtener la cantidad de propiedades con inquilino:',
-        error.message
-      );
+    if (countError) {
+      console.error('Error al contar propiedades activas:', countError.message);
       return 0;
     }
 
     return count ?? 0;
   }
-
-  async getTotalRentByUser(user_id: string): Promise<number> {
-    const { data, error } = await this.db.client
-      .from('properties')
-      .select('value')
-      .eq('user_id', user_id);
-
-    if (error) {
-      console.error('Error al obtener el total de alquileres:', error.message);
-      return 0;
-    }
-
-    return (
-      data?.reduce((total, property) => total + (property.value ?? 0), 0) ?? 0
-    );
-  }
-
-  async getHighestRentByUser(user_id: string): Promise<number> {
-    const { data, error } = await this.db.client
-      .from('properties')
-      .select('value')
-      .eq('user_id', user_id)
-      .order('value', { ascending: false })
-      .limit(1);
-
-    if (error) {
-      console.error('Error al obtener el mayor alquiler:', error.message);
-      return 0;
-    }
-
-    return data?.[0]?.value ?? 0;
-  }
-
-  async getLowestRentByUser(user_id: string): Promise<number> {
-    const { data, error } = await this.db.client
-      .from('properties')
-      .select('value')
-      .eq('user_id', user_id)
-      .order('value', { ascending: true })
-      .limit(1);
-
-    if (error) {
-      console.error('Error al obtener el menor alquiler:', error.message);
-      return 0;
-    }
-
-    return data?.[0]?.value ?? 0;
-  }
-
-
 }
