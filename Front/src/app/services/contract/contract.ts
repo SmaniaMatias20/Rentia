@@ -58,11 +58,21 @@ export class ContractService {
     return {};
   }
 
-  async getContractsByUser(user_id: string): Promise<any[]> {
-    const { data, error } = await this.db.client
+  async getContractsByUser(user_id: string, filter = 'all'): Promise<any[]> {
+
+    // Filtrar contratos
+    let query = this.db.client
       .from('contracts')
       .select('*')
-      .eq('owner_id', user_id);
+      .eq('owner_id', user_id)
+
+    if (filter === 'active') {
+      query = query.eq('status', true);
+    } else if (filter === 'inactive') {
+      query = query.eq('status', false);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('Error al obtener contratos:', error.message);

@@ -21,7 +21,10 @@
 
         @for (contract of contracts; track contract.id) {
         <option [ngValue]="contract">
-          {{ contract.property_name }} - {{ contract.tenant_name }}
+          {{ contract.property_name.charAt(0).toUpperCase() +
+          contract.property_name.slice(1) }} - {{ contract.tenant_name.charAt(0).toUpperCase() +
+          contract.tenant_name.slice(1)
+          }}
         </option>
         }
       </select>

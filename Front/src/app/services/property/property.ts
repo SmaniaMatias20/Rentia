@@ -14,6 +14,9 @@ export class PropertyService {
    * Crea una nueva propiedad en la tabla "properties"
    */
   async createProperty(property: { user_id: string; name: string; address: string; }): Promise<{ error?: PostgrestError }> {
+
+    if (property.name) property.name = property.name.toLowerCase();
+
     const { error } = await this.db.client
       .from('properties')
       .insert([property]);
@@ -121,6 +124,9 @@ export class PropertyService {
   }
 
   async updateProperty(id: string, data: any): Promise<{ error?: PostgrestError }> {
+
+    if (data.name) data.name = data.name.toLowerCase();
+
     const { error } = await this.db.client
       .from('properties')
       .update(data)
