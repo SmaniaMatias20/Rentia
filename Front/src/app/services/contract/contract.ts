@@ -208,8 +208,6 @@ export class ContractService {
       return 0;
     }
 
-    console.log('contracts:', contracts);
-
     if (!contracts?.length) return 0;
 
     let lowestRent = Infinity;

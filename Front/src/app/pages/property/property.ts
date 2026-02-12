@@ -168,7 +168,13 @@ export class Property {
       );
 
       // actualizar UI sin recargar
-      this.propertyData[this.editType] = newValue;
+      if (this.editType === 'name') {
+        this.propertyData.name = newValue.toLowerCase();
+        this.propertyData.name = this.propertyData.name.charAt(0).toUpperCase() + this.propertyData.name.slice(1);
+      }
+      else {
+        this.propertyData[this.editType] = newValue;
+      }
 
       await this.loadMapScript();
 

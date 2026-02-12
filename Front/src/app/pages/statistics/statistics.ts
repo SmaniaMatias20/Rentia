@@ -101,7 +101,5 @@ export class Statistics {
 
   clearMonthYearFilter() {
     this.selectedMonthYear = '';
-    console.log('Filtro eliminado');
-
   }
 }

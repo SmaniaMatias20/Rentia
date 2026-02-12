@@ -211,7 +211,6 @@ export class PropertyService {
     }
 
     const propertyIds = properties.map(p => p.id);
-    console.log('propertyIds:', propertyIds);
 
     // 2️⃣ Obtener contratos activos HOY
     const { data: contracts, error: contractsError } = await this.db.client

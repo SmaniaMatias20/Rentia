@@ -63,8 +63,6 @@ export class TenantService {
 
   async updateTenant(tenantId: string, data: any): Promise<{ error?: PostgrestError }> {
     try {
-      console.log('data original:', data);
-
       const key = Object.keys(data)[0];
 
       // Normalizar campos lowercase
@@ -96,8 +94,6 @@ export class TenantService {
           };
         }
       }
-
-      console.log('data normalizada:', data);
 
       const { error } = await this.db.client
         .from('users')

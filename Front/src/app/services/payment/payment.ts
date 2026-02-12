@@ -24,7 +24,6 @@ export class PaymentService {
   }
 
   async createPayment(payment: any): Promise<{ error?: PostgrestError; data?: any }> {
-    console.log('createPayment', payment);
 
     if (payment.water && payment.electricy && payment.gas && payment.hoa_fees && payment.rent_amount >= payment.total_rent_amount) {
       payment.status = true;
@@ -57,7 +56,6 @@ export class PaymentService {
   }
 
   async updatePayment(payment: any): Promise<{ error?: PostgrestError }> {
-    console.log('updatePayment', payment);
 
     if (payment.water && payment.electricy && payment.gas && payment.hoa_fees && payment.rent_amount >= payment.total_rent_amount) {
       payment.status = true;
