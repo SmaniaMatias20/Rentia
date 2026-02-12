@@ -83,18 +83,18 @@
         </app-card-statistic>
 
         <!-- Contratos activos -->
-        <app-card-statistic icon="article" title="Contratos activos" value="0" description="% de contratos activos"
-            iconColor="text-green-500" descriptionColor="text-green-400">
+        <app-card-statistic icon="article" title="Contratos activos" [value]="quantityOfActiveContractsByUser"
+            description="% de contratos activos" iconColor="text-green-500" descriptionColor="text-green-400">
         </app-card-statistic>
 
         <!-- Contratos proximos a vencerse -->
-        <app-card-statistic icon="article" title="Contratos a vencerse" value="0"
+        <app-card-statistic icon="article" title="Contratos a vencerse" [value]="quantityOfContractsToVenceByUser"
             description="% de contratos a vencerse" iconColor="text-yellow-500" descriptionColor="text-yellow-400">
         </app-card-statistic>
 
         <!-- Contratos vencidos -->
-        <app-card-statistic icon="article" title="Contratos vencidos" value="0" description="% de contratos vencidos"
-            iconColor="text-red-500" descriptionColor="text-red-400">
+        <app-card-statistic icon="article" title="Contratos vencidos" [value]="quantityOfContractsVencedByUser"
+            description="% de contratos vencidos" iconColor="text-red-500" descriptionColor="text-red-400">
         </app-card-statistic>
 
     </div>

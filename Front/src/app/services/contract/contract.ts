@@ -244,6 +244,78 @@ export class ContractService {
     return lowestRent === Infinity ? 0 : Math.round(lowestRent);
   }
 
+  async getQuantityOfActiveContractsByUser(user_id: string): Promise<number> {
+    const today = new Date().toISOString();
+
+    const { count, error } = await this.db.client
+      .from('contracts')
+      .select('id', { count: 'exact', head: true })
+      .eq('owner_id', user_id)
+      .or(
+        `and(valid_from.lte.${today},valid_to.gte.${today}),and(valid_from.lte.${today},valid_to.is.null)`
+      );
+
+    if (error) {
+      console.error('Error al contar contratos activos:', error.message);
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
+  async getQuantityOfContractsToVenceByUser(user_id: string): Promise<number> {
+    const today = new Date();
+    const todayISO = today.toISOString();
+
+    const ninetyDaysLater = new Date();
+    ninetyDaysLater.setDate(today.getDate() + 90);
+    const ninetyDaysLaterISO = ninetyDaysLater.toISOString();
+
+    const { count, error } = await this.db.client
+      .from('contracts')
+      .select('id', { count: 'exact', head: true })
+      .eq('owner_id', user_id)
+      // Debe haber empezado
+      .lte('valid_from', todayISO)
+      // Debe tener fecha de fin
+      .not('valid_to', 'is', null)
+      // No vencido aún
+      .gte('valid_to', todayISO)
+      // Vence dentro de 90 días
+      .lte('valid_to', ninetyDaysLaterISO);
+
+    if (error) {
+      console.error('Error al contar contratos por vencer:', error.message);
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
+
+  async getQuantityOfContractsVencedByUser(user_id: string): Promise<number> {
+    const today = new Date().toISOString();
+
+    const { count, error } = await this.db.client
+      .from('contracts')
+      .select('id', { count: 'exact', head: true })
+      .eq('owner_id', user_id)
+      // Debe tener fecha de fin
+      .not('valid_to', 'is', null)
+      // Hoy superó la fecha de vencimiento
+      .lt('valid_to', today);
+
+    if (error) {
+      console.error('Error al contar contratos vencidos:', error.message);
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
+
+
+
 
 
 }

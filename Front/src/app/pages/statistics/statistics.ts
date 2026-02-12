@@ -53,14 +53,15 @@ export class Statistics {
       this.highestRent = await this.contractService.getHighestRentByUser(this.currentUser.id);
       // Obtener el mínimo de alquiler por usuario
       this.lowestRent = await this.contractService.getLowestRentByUser(this.currentUser.id);
-      // // Obtener la cantidad de contratos activos por usuario
-      // this.quantityOfActiveContractsByUser = await this.contractService.getQuantityOfActiveContractsByUser(this.currentUser.id);
-      // // Obtener la cantidad de contratos por vencer por usuario
-      // this.quantityOfContractsToVenceByUser = await this.contractService.getQuantityOfContractsToVenceByUser(this.currentUser.id);
-      // // Obtener la cantidad de contratos vencidos por usuario
-      // this.quantityOfContractsVencedByUser = await this.contractService.getQuantityOfContractsVencedByUser(this.currentUser.id);
-
+      // Obtener la cantidad de contratos activos por usuario
+      this.quantityOfActiveContractsByUser = await this.contractService.getQuantityOfActiveContractsByUser(this.currentUser.id);
+      // Obtener la cantidad de contratos por vencer por usuario
+      this.quantityOfContractsToVenceByUser = await this.contractService.getQuantityOfContractsToVenceByUser(this.currentUser.id);
+      // Obtener la cantidad de contratos vencidos por usuario
+      this.quantityOfContractsVencedByUser = await this.contractService.getQuantityOfContractsVencedByUser(this.currentUser.id);
+      // Calcular el porcentaje de propiedades con inquilino
       this.calculatePercentageOfPropertiesWithTenantByUser();
+      // Calcular el porcentaje de propiedades sin inquilino
       this.calculatePercentageOfPropertiesWithoutTenantByUser();
     } catch (error) {
       console.error('Error al obtener usuario:', error);
