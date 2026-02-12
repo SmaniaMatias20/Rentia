@@ -30,7 +30,7 @@ export class FormProperty implements AfterViewInit {
     // Inicializamos el formulario reactivo
     this.propertyForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      address: ['', [Validators.required, Validators.minLength(5)]],
+      address: [''],
     });
   }
 
@@ -40,7 +40,7 @@ export class FormProperty implements AfterViewInit {
 
   // Guardar propiedad
   async submit() {
-    if (this.propertyForm.invalid || !this.addressValid) {
+    if (this.propertyForm.invalid) {
       this.propertyForm.markAllAsTouched();
       return;
     }
