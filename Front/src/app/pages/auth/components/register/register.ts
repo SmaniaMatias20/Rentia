@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -8,14 +8,16 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { AuthService } from '../../../../services/auth/auth';
+import { Toast } from '../../../../components/toast/toast';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Toast],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class Register {
+  @ViewChild('toast') toast!: Toast;
   registerForm: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
@@ -24,7 +26,6 @@ export class Register {
     this.registerForm = this.fb.group({
       username: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      role: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       confirmPassword: new FormControl('', [Validators.required])
     });
@@ -40,11 +41,11 @@ export class Register {
       this.registerForm.value.username,
       this.registerForm.value.email,
       this.registerForm.value.password,
-      this.registerForm.value.role
     )
       .then(({ user, error }) => {
         if (error) {
           console.error('Error al registrarse:', error);
+          this.toast.showToast(error.message, 'error');
           return;
         }
 

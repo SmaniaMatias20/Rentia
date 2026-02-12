@@ -34,12 +34,22 @@
       backgroundImage="url('assets/images/contracts.jpg')" url="/contracts" />
     }
 
-    <!-- Opciones comunes -->
+
+    <!-- Opciones TENANT -->
+    @if (currentUser.role === 'tenant') {
     <app-card-option icon="payments" title="Pagos" bgColor="bg-rose-600"
       backgroundImage="url('assets/images/payments.png')" url="/payments" />
 
     <app-card-option icon="person" title="Mi perfil" bgColor="bg-indigo-600"
       backgroundImage="url('assets/images/profile.jpg')" url="/profile" />
+    }
+
+
+    <!-- Opciones ADMIN -->
+    @if (currentUser.role === 'admin') {
+    <app-card-option icon="settings" title="Administración" bgColor="bg-red-600"
+      backgroundImage="url('assets/images/settings.jpg')" url="/settings" />
+    }
 
   </div>
   }

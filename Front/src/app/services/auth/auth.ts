@@ -17,22 +17,24 @@ export class AuthService {
     username: string,
     email: string,
     password: string,
-    role: string
   ): Promise<{ user?: any; error?: any }> {
 
     // 1️⃣ Validar si ya existe usuario/email
     const { data: existingUser } = await this.db.client
       .from('users')
       .select('id')
-      .or(`username.eq.${username},email.eq.${email}`)
+      .or(`username.eq.${username}`)
       .maybeSingle();
 
     if (existingUser) {
-      return { error: { message: 'Usuario o email ya existe' } };
+      return { error: { message: 'Ya existe ese nombre de usuario en el sistema' } };
     }
 
     // 2️⃣ Hashear password
     const password_hash = await bcrypt.hash(password, 10);
+
+    // Pasar el username a lowercase
+    username = username.toLowerCase();
 
     // 3️⃣ Insertar usuario en public.users
     const { data, error } = await this.db.client
@@ -41,7 +43,7 @@ export class AuthService {
         username,
         email,
         password: password_hash,
-        role,
+        role: 'owner',
       }])
       .select()
       .single();
@@ -63,6 +65,10 @@ export class AuthService {
     username: string,
     password: string
   ): Promise<{ user?: any; error?: any }> {
+
+    // Pasar el username a lowercase
+    username = username.toLowerCase();
+
     // 1️⃣ Buscar usuario en public.users
     const { data: user, error } = await this.db.client
       .from('users')

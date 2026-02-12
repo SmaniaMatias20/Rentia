@@ -40,7 +40,7 @@
         <!-- Header -->
         <div class="flex gap-4 items-center">
           <h2 class="text-3xl font-bold">
-            {{ tenantData.username }}
+            {{ tenantData.username.charAt(0).toUpperCase() + tenantData.username.slice(1) }}
           </h2>
           <button class="
                 flex items-center gap-1
@@ -61,7 +61,8 @@
             <div>
               <p class="text-gray-400 text-sm">Nombre</p>
               <p class="text-lg font-semibold">
-                {{ tenantData.firstname || 'Sin información' }}
+                {{ tenantData.firstname ? tenantData.firstname.charAt(0).toUpperCase() + tenantData.firstname.slice(1) :
+                'Sin información' }}
               </p>
             </div>
             <button class="
@@ -81,7 +82,8 @@
             <div>
               <p class="text-gray-400 text-sm">Apellido</p>
               <p class="text-lg font-semibold">
-                {{ tenantData.lastname || 'Sin información' }}
+                {{ tenantData.lastname ? tenantData.lastname.charAt(0).toUpperCase() + tenantData.lastname.slice(1) :
+                'Sin información' }}
               </p>
             </div>
             <button class="
@@ -141,7 +143,8 @@
             <div>
               <p class="text-gray-400 text-sm">Email</p>
               <p class="text-lg font-semibold">
-                {{ tenantData.email || 'Sin información' }}
+                {{ tenantData.email ? tenantData.email.charAt(0).toUpperCase() + tenantData.email.slice(1) :
+                'Sin información' }}
               </p>
             </div>
             <button class="

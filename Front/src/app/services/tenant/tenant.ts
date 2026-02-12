@@ -63,9 +63,45 @@ export class TenantService {
 
   async updateTenant(tenantId: string, data: any): Promise<{ error?: PostgrestError }> {
     try {
+      console.log('data original:', data);
+
+      const key = Object.keys(data)[0];
+
+      // Normalizar campos lowercase
+      if (['firstname', 'lastname', 'email', 'username'].includes(key) && typeof data[key] === 'string') {
+        data[key] = data[key].toLowerCase().trim();
+      }
+
+      // Validar username único si se está actualizando
+      if (key === 'username') {
+        const username = data.username;
+
+        const { data: existingUser, error: checkError } = await this.db.client
+          .from('users')
+          .select('id')
+          .eq('username', username)
+          .neq('id', tenantId) // evitar conflicto con el mismo usuario
+          .maybeSingle();
+
+        if (checkError) {
+          console.error('Error verificando username:', checkError.message);
+          return { error: checkError };
+        }
+
+        if (existingUser) {
+          return {
+            error: {
+              message: 'El nombre de usuario ya existe'
+            } as PostgrestError
+          };
+        }
+      }
+
+      console.log('data normalizada:', data);
+
       const { error } = await this.db.client
         .from('users')
-        .update(data) // 👈 actualizar datos
+        .update(data)
         .eq('id', tenantId);
 
       if (error) {
@@ -79,6 +115,7 @@ export class TenantService {
       return { error: { message: err.message } as PostgrestError };
     }
   }
+
 
   /**
    * Obtiene todos los inquilinos del usuario logueado

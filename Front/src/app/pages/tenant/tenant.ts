@@ -120,12 +120,7 @@ export class Tenant {
 
       if (error) {
         console.error('Error al actualizar datos:', error);
-        if (error.code === '23505') {
-          this.toast.showToast('El nombre de usuario ya existe', 'error');
-          this.closeFormEditTenant();
-          return;
-        }
-        this.toast.showToast('Error al actualizar datos', 'error');
+        this.toast.showToast(error.message, 'error');
         this.closeFormEditTenant();
         return;
       }
