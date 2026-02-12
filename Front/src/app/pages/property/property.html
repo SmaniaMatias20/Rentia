@@ -60,7 +60,12 @@
                         <div>
                             <p class="text-gray-400 text-sm">Dirección</p>
                             <p class="text-lg font-semibold">
-                                {{ propertyData.address ? propertyData.address.slice(0, 20) : 'Sin información' }}
+                                {{ propertyData.address
+                                ? propertyData.address.includes(',')
+                                ? propertyData.address.split(',')[0]
+                                : propertyData.address
+                                : 'Sin información'
+                                }}
                             </p>
                         </div>
                         <button class="
