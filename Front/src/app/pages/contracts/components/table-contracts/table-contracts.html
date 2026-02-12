@@ -17,7 +17,7 @@
                 <th class="px-4 py-3 text-left">Valor actual</th>
                 <th class="px-4 py-3 text-left">Desde</th>
                 <th class="px-4 py-3 text-left">Hasta</th>
-                <th class="px-4 py-3 text-left">Vencimiento</th>
+                <th class="px-4 py-3 text-left">Vigencia</th>
                 <th class="px-4 py-3 text-left">Estado</th>
                 <th class="px-4 py-3 text-left">Actualizar</th>
             </tr>
@@ -33,17 +33,18 @@
 
                 <!-- Propiedad -->
                 <td class="px-4 py-3">
-                    {{ contract.property_name }}
+                    {{ contract.property_name.charAt(0).toUpperCase() + contract.property_name.slice(1) || '-' }}
                 </td>
 
                 <!-- Inquilino -->
                 <td class="px-4 py-3">
-                    {{ contract.tenant_name }}
+                    {{ contract.tenant_name.charAt(0).toUpperCase() + contract.tenant_name.slice(1) || '-'
+                    }}
                 </td>
 
                 <!-- Monto base -->
                 <td class="px-4 py-3 font-semibold">
-                    ${{ contract.rent_amount }}
+                    ${{ contract.rent_amount || '-' }}
                 </td>
 
                 <!-- % -->
@@ -54,21 +55,21 @@
 
                 <!-- Frecuencia -->
                 <td class="px-4 py-3">
-                    {{ formatFrequency(contract.increase_frequency) }}
+                    {{ formatFrequency(contract.increase_frequency) || '-' }}
                 </td>
 
                 <!-- Monto actualizado -->
                 <td class="px-4 py-3 font-semibold">
-                    ${{ calculateCurrentRent(contract) }}
+                    ${{ calculateCurrentRent(contract) || '-' }}
                 </td>
 
                 <!-- Fechas -->
                 <td class="px-4 py-3">
-                    {{ formatDate(contract.valid_from) }}
+                    {{ formatDate(contract.valid_from) || '-' }}
                 </td>
 
                 <td class="px-4 py-3">
-                    {{ formatDate(contract.valid_to) }}
+                    {{ formatDate(contract.valid_to) || '-' }}
                 </td>
 
                 <td class="px-4 py-3">
