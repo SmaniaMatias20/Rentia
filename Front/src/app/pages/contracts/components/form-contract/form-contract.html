@@ -19,7 +19,8 @@
             <select formControlName="property_id" class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
                 <option value="">Seleccionar propiedad</option>
                 @for (property of properties; track property.id) {
-                <option [value]="property.id">{{ property.name }}</option>
+                <option [value]="property.id">{{ property.name.charAt(0).toUpperCase() + property.name.slice(1) }}
+                </option>
                 }
             </select>
             <div class="min-h-[1.25rem]">
@@ -35,7 +36,8 @@
             <select formControlName="tenant_id" class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
                 <option value="">Seleccionar inquilino</option>
                 @for (tenant of tenants; track tenant.id) {
-                <option [value]="tenant.id">{{ tenant.username }}</option>
+                <option [value]="tenant.id">{{ tenant.username.charAt(0).toUpperCase() + tenant.username.slice(1) }}
+                </option>
                 }
             </select>
 

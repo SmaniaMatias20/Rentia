@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './table-contracts.css',
 })
 export class TableContracts {
-  @Output() deleteContract = new EventEmitter<any>();
+  @Output() updateContractStatus = new EventEmitter<any>();
   @Input() contracts: any[] = [];
   currentDate: Date = new Date();
   searchTerm: string = '';

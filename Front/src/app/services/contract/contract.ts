@@ -313,9 +313,18 @@ export class ContractService {
     return count ?? 0;
   }
 
+  async updateContractStatus(contractId: any, status: boolean): Promise<{ error?: PostgrestError }> {
 
+    const { error } = await this.db.client
+      .from('contracts')
+      .update({ status })
+      .eq('id', contractId);
 
+    if (error) {
+      console.error('Error al actualizar estado:', error.message);
+      return { error };
+    }
 
-
-
+    return {};
+  }
 }

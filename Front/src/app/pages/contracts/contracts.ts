@@ -50,14 +50,25 @@ export class Contracts {
     this.formContract = true;
   }
 
-  async onDeleteContract(contract: any) {
+  // async onDeleteContract(contract: any) {
+  //   try {
+  //     await this.contract.deleteContract(contract.id);
+  //     this.toast.showToast('Contrato eliminado correctamente', 'success');
+  //     this.loadContracts();
+  //   } catch (error) {
+  //     this.toast.showToast('Error al eliminar contrato', 'error');
+  //     console.error('Error al eliminar contrato:', error);
+  //   }
+  // }
+
+  async updateContractStatus(contract: any) {
     try {
-      await this.contract.deleteContract(contract.id);
-      this.toast.showToast('Contrato eliminado correctamente', 'success');
+      await this.contract.updateContractStatus(contract.id, !contract.status);
+      this.toast.showToast('Estado actualizado correctamente', 'success');
       this.loadContracts();
     } catch (error) {
-      this.toast.showToast('Error al eliminar contrato', 'error');
-      console.error('Error al eliminar contrato:', error);
+      this.toast.showToast('Error al actualizar estado', 'error');
+      console.error('Error al actualizar estado:', error);
     }
   }
 
