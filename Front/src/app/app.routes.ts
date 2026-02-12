@@ -42,8 +42,10 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () => import('./pages/profile/profile').then(m => m.Profile)
     },
-    { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: '**', redirectTo: '' }
+    {
+        path: '**',
+        redirectTo: 'home'
+    }
 
 
 ];
