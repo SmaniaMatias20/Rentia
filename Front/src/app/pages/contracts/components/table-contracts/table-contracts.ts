@@ -98,4 +98,14 @@ export class TableContracts {
     return diffDays <= -1;
   }
 
+  isPending(contract: any): boolean {
+    if (!contract.valid_from) return false;
+
+    const now = new Date();
+    const end = new Date(contract.valid_from);
+
+    // esta pendiente si la fecha de hoy es menor a la fecha de comienzo
+    return now < end;
+  }
+
 }
