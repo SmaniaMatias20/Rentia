@@ -130,7 +130,7 @@ export class Payments {
         rent_month: new Date(date),
         status: payment ? payment.status : false,
         rent_amount: payment ? payment.rent_amount : 0,
-        total_rent_amount: total_rent_amount,
+        total_rent_amount: payment ? payment.total_rent_amount : total_rent_amount,
         water: payment ? payment.water : false,
         electricy: payment ? payment.electricy : false,
         gas: payment ? payment.gas : false,
@@ -324,8 +324,38 @@ export class Payments {
 
   }
 
-  async onSaveTotalRentAmount(rent_amount: number) {
-    console.log(rent_amount);
+  async onSaveTotalRentAmount(total_rent_amount: number) {
+    console.log(total_rent_amount);
+    this.paymentMonthEdit.total_rent_amount = total_rent_amount;
+
+    if (!this.paymentMonthEdit.id) {
+      delete this.paymentMonthEdit.id;
+
+      const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+
+      if (error) {
+        console.error('Error al crear total alquiler:', error);
+        this.toast.showToast('Error al crear total alquiler', 'error');
+        return;
+      }
+
+      this.paymentMonthEdit.id = data.id;
+
+      this.toast.showToast('Total alquiler creado correctamente', 'success');
+      this.openFormTotalRentAmount = false;
+      return;
+    }
+
+    const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
+
+    if (error) {
+      console.error('Error al actualizar total alquiler:', error);
+      this.toast.showToast('Error al actualizar total alquiler', 'error');
+      return;
+    }
+
+    this.toast.showToast('Total alquiler actualizado correctamente', 'success');
+    this.openFormTotalRentAmount = false;
   }
 
 

@@ -21,6 +21,8 @@ export class FormTotalRentAmount {
   }
 
   saveTotalRentAmount() {
+    if (!this.rent_amount || this.rent_amount < 0) return;
+
     this.save.emit(this.rent_amount);
   }
 
