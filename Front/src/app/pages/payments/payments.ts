@@ -125,6 +125,8 @@ export class Payments {
         monthIndex
       );
 
+      console.log(payment);
+
       months.push({
         id: payment ? payment.id : null,
         rent_month: new Date(date),
