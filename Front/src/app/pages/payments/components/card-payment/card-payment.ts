@@ -14,6 +14,7 @@ export class CardPayment {
   @Output() onCheckbox = new EventEmitter<any>();
   @Output() onAddNote = new EventEmitter<any>();
   @Output() onAddPayment = new EventEmitter<any>();
+  @Output() onEditTotalRentAmount = new EventEmitter<any>();
 
   constructor() {
     console.log(this.month);

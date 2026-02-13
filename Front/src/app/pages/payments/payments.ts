@@ -11,31 +11,38 @@ import { FormsModule } from '@angular/forms';
 import { CardPayment } from './components/card-payment/card-payment';
 import { FormNote } from './components/form-note/form-note';
 import { Toast } from '../../components/toast/toast';
+import { FormTotalRentAmount } from './components/form-total-rent-amount/form-total-rent-amount';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast, FormPayment],
+  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast, FormPayment, FormTotalRentAmount],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
 export class Payments {
+  @ViewChild('toast') toast!: Toast;
   loading = false;
+  currentUser: any;
   properties: any[] = [];
   contracts: any[] = [];
-  currentUser: any;
+  payments: any[] = [];
+
   selectedProperty: any | null = null;
   selectedYear: string | null = null;
+  selectedContract: any | null = null;
+
   months: any[] = [];
   years = Array.from({ length: 12 }, (_, i) => 2026 + i);
-  payments: any[] = [];
-  selectedContract: any | null = null;
-  openFormNote = false;
-  openFormPayment = false;
   paymentMonthEdit: any | null = null;
-  @ViewChild('toast') toast!: Toast;
   currentMonthPage: number = 1;
   monthsPerPage: number = 12;
+
+  openFormNote = false;
+  openFormPayment = false;
+  openFormTotalRentAmount = false;
+
+
 
   constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService, private contractService: ContractService) { }
 
@@ -238,6 +245,11 @@ export class Payments {
     this.openFormPayment = true;
   }
 
+  onEditTotalRentAmount(month: any) {
+    this.paymentMonthEdit = month;
+    this.openFormTotalRentAmount = true;
+  }
+
 
   async onSaveNote(note: string) {
     this.paymentMonthEdit.description = note;
@@ -310,6 +322,10 @@ export class Payments {
       this.toast.showToast('Error al guardar pago', 'error');
     }
 
+  }
+
+  async onSaveTotalRentAmount(rent_amount: number) {
+    console.log(rent_amount);
   }
 
 

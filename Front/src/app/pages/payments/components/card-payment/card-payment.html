@@ -20,12 +20,28 @@
     <div class="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
 
         <!-- Total -->
-        <div class="bg-gray-800 rounded-lg p-3 flex flex-col gap-1 border border-gray-700">
+        <div class="relative bg-gray-800 rounded-lg p-3 flex flex-col gap-1 border border-gray-700">
+
+            <!-- Botón editar pequeño -->
+            <button class="absolute top-2 right-2
+               bg-green-600 hover:bg-green-700
+               text-white
+               rounded-full
+               w-7 h-7 p-4 
+               flex items-center justify-center
+               transition cursor-pointer" (click)="onEditTotalRentAmount.emit(month)">
+
+                <span class="material-icons text-[14px] leading-none">edit</span>
+            </button>
+
             <span class="text-gray-400">Total alquiler</span>
+
             <span class="text-green-400 font-semibold text-base">
                 {{ month.total_rent_amount | currency:'ARS':'symbol':'1.0-0' }}
             </span>
+
         </div>
+
 
         <!-- Pagado -->
         <div class="bg-gray-800 rounded-lg p-3 flex flex-col gap-1 border border-gray-700">
