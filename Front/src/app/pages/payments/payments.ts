@@ -34,9 +34,21 @@ export class Payments {
   openFormPayment = false;
   paymentMonthEdit: any | null = null;
   @ViewChild('toast') toast!: Toast;
-
+  currentMonthPage: number = 1;
+  monthsPerPage: number = 12;
 
   constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService, private contractService: ContractService) { }
+
+  get paginatedMonths() {
+    const startIndex = (this.currentMonthPage - 1) * this.monthsPerPage;
+    const endIndex = startIndex + this.monthsPerPage;
+    return this.months.slice(startIndex, endIndex);
+  }
+
+  get totalMonthPages(): number {
+    return Math.ceil(this.months.length / this.monthsPerPage) || 1;
+  }
+
 
   async ngOnInit() {
     try {

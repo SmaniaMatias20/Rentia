@@ -208,7 +208,7 @@
     @if (comments.length > commentsPerPage) {
     <div class="flex justify-between items-center mt-4">
 
-      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40"
+      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40 cursor-pointer"
         (click)="currentCommentPage = currentCommentPage - 1" [disabled]="currentCommentPage === 1">
         Anterior
       </button>
@@ -217,7 +217,7 @@
         Página {{ currentCommentPage }} de {{ totalCommentPages }}
       </span>
 
-      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40"
+      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40 cursor-pointer"
         (click)="currentCommentPage = currentCommentPage + 1" [disabled]="currentCommentPage === totalCommentPages">
         Siguiente
       </button>

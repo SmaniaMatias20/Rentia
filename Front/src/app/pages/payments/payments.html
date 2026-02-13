@@ -147,12 +147,33 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-      <div *ngFor="let month of months" class="bg-gray-900 rounded-lg p-4 shadow-lg text-white">
+    <div class="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-2 gap-4 mt-6">
+      <div *ngFor="let month of paginatedMonths" class="bg-gray-900 rounded-lg p-4 shadow-lg text-white">
         <app-card-payment [month]="month" (onCheckbox)="onCheckbox($event)" (onAddNote)="onAddNote($event)"
           (onAddPayment)="onAddPayment($event)"></app-card-payment>
       </div>
     </div>
+
+    @if (months.length > monthsPerPage) {
+    <div class="flex justify-between items-center mt-6 px-2 cursor-pointer mb-6">
+
+      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40"
+        (click)="currentMonthPage = currentMonthPage - 1" [disabled]="currentMonthPage === 1">
+        Anterior
+      </button>
+
+      <span class="text-sm text-gray-300">
+        Página {{ currentMonthPage }} de {{ totalMonthPages }}
+      </span>
+
+      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40 cursor-pointer"
+        (click)="currentMonthPage = currentMonthPage + 1" [disabled]="currentMonthPage === totalMonthPages">
+        Siguiente
+      </button>
+
+    </div>
+    }
+
   </div>
   }
   }
