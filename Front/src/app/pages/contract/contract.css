@@ -1,0 +1,11 @@
+.pdf-safe {
+    color: #1f2937 !important;
+    /* gray-800 */
+    background-color: #ffffff !important;
+}
+
+.pdf-safe * {
+    color: #1f2937 !important;
+    background-color: transparent !important;
+    border-color: #d1d5db !important;
+}

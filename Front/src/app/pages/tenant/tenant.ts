@@ -22,13 +22,13 @@ type EditType = 'username' | 'email' | 'phone' | 'firstname' | 'lastname' | 'doc
 export class Tenant {
   loading = false;
   tenantData: any;
-  comments: string[] = []; // Lista de comentarios
-
+  comments: string[] = [];
   formEditTenant = false;
   editType!: EditType;
   editValue: any;
   user: any;
-
+  currentCommentPage: number = 1;
+  commentsPerPage: number = 3;
   @ViewChild('toast') toast!: Toast;
 
   constructor(
@@ -37,6 +37,17 @@ export class Tenant {
     private router: Router,
     private authService: AuthService
   ) { }
+
+  get paginatedComments() {
+    const startIndex = (this.currentCommentPage - 1) * this.commentsPerPage;
+    const endIndex = startIndex + this.commentsPerPage;
+    return this.comments.slice(startIndex, endIndex);
+  }
+
+  get totalCommentPages(): number {
+    return Math.ceil(this.comments.length / this.commentsPerPage) || 1;
+  }
+
 
   async ngOnInit() {
     try {

@@ -3,6 +3,17 @@
     <div class="absolute top-4 right-4 z-20
     flex flex-col gap-2
     sm:flex-row sm:gap-3">
+        <!-- Descargar PDF -->
+        <button class="flex items-center justify-center gap-1
+     py-2 px-4
+     w-full sm:w-auto
+     rounded-lg bg-green-600 hover:bg-green-700
+     text-white font-semibold transition cursor-pointer" (click)="downloadPDF()">
+
+            <span class="material-icons">download</span>
+            Descargar PDF
+        </button>
+
         <!-- Volver al menú -->
         <button class="
       flex items-center justify-center gap-1
@@ -17,112 +28,190 @@
         </button>
     </div>
 
-    <div class="max-w-4xl mx-auto p-6 bg-white text-gray-800 rounded-lg shadow">
+    <div id="contract-content"
+        class="pdf-safe max-w-4xl mx-auto p-6 bg-white text-gray-800 rounded-lg shadow text-sm leading-relaxed">
 
         <h1 class="text-2xl font-bold text-center mb-6">
-            CONTRATO DE LOCACIÓN DE INMUEBLE
+            CONTRATO DE LOCACIÓN
         </h1>
 
-        <p class="text-sm mb-4">
-            En la ciudad de <span class="font-semibold">__________________</span>,
-            a los <span class="font-semibold">____</span> días del mes de
-            <span class="font-semibold">__________</span> de
-            <span class="font-semibold">______</span>, entre:
+        <p class="mb-4">
+            En la Ciudad de ____________________, a los ____ días del mes de __________________ del año ________,
+            entre el Sr./Sra. ____________________, DNI __________________, con domicilio en ____________________,
+            denominado en adelante <strong>EL LOCADOR</strong>, y el Sr./Sra. ____________________, DNI
+            __________________,
+            denominado en adelante <strong>EL LOCATARIO</strong>, se celebra el presente CONTRATO DE LOCACIÓN que se
+            regirá
+            por las siguientes cláusulas y las disposiciones del Código Civil y Comercial.
         </p>
 
-        <div class="mb-4 text-sm">
-            <p><strong>LOCADOR (Propietario):</strong> __________________, DNI __________, domicilio __________________
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">PRIMERA: Objeto de la locación</h2>
+            <p>
+                EL LOCADOR cede en locación a EL LOCATARIO un inmueble tipo departamento que consta de baño, cocina
+                completa,
+                dormitorios, comedor y espacios comunes, ubicado en ____________________, en la Ciudad Autónoma de
+                Buenos Aires,
+                el cual EL LOCATARIO declara haber visitado y conocer su estado general, aceptándolo de conformidad.
             </p>
-            <p><strong>LOCATARIO (Inquilino):</strong> __________________, DNI __________, domicilio __________________
+        </section>
+
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">SEGUNDA: Destino del inmueble</h2>
+            <p>
+                EL LOCATARIO declara que destinará el inmueble única y exclusivamente a vivienda familiar. No podrá
+                modificar
+                su destino ni realizar reformas sin autorización escrita de EL LOCADOR. Queda prohibido sublocar, ceder
+                o transferir
+                total o parcialmente la locación.
             </p>
-        </div>
+        </section>
 
-        <p class="mb-6 text-sm">
-            Se celebra el presente contrato de alquiler bajo las siguientes cláusulas:
-        </p>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">TERCERA: Seguridad y convivencia</h2>
+            <p>
+                EL LOCATARIO se compromete a respetar las normas municipales, de convivencia y seguridad. Queda
+                prohibido
+                almacenar sustancias peligrosas, generar molestias, realizar actos contrarios a la moral o introducir
+                mascotas
+                sin autorización expresa. Cualquier instalación de gas deberá ser realizada por personal matriculado.
+            </p>
+        </section>
 
-        <div class="space-y-5 text-sm leading-relaxed">
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">CUARTA: Conservación del inmueble</h2>
+            <p>
+                EL LOCATARIO recibe el inmueble en buen estado de conservación y se obliga a devolverlo en iguales
+                condiciones,
+                salvo el desgaste normal por el uso y el paso del tiempo.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">1) OBJETO</h2>
-                <p>
-                    El LOCADOR da en alquiler al LOCATARIO el inmueble ubicado en:
-                    <br>
-                    <strong>Dirección:</strong> ______________________________________
-                    <br>
-                    <strong>Destino:</strong> Vivienda (salvo pacto distinto).
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">QUINTA: Mantenimiento</h2>
+            <p>
+                EL LOCADOR se obliga a conservar la cosa locada en condiciones aptas para su uso. EL LOCATARIO no podrá
+                compensar
+                gastos de reparación con el canon locativo sin autorización previa.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">2) PLAZO</h2>
-                <p>
-                    El plazo del contrato es de ____ años, comenzando el ___ / ___ / ______
-                    y finalizando el ___ / ___ / ______.
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">SEXTA: Intervenciones por desperfectos</h2>
+            <p>
+                EL LOCATARIO notificará a EL LOCADOR cualquier desperfecto, permitiendo inspecciones y reparaciones
+                necesarias.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">3) PRECIO DEL ALQUILER</h2>
-                <p>
-                    El LOCATARIO abonará un alquiler mensual de <strong>$________________</strong>,
-                    pagadero hasta el día ____ de cada mes.
-                    <br>
-                    <strong>Ajuste:</strong> ___________________________________________.
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">SÉPTIMA: Duración</h2>
+            <p>
+                El plazo del contrato es de ______ meses, iniciando el ___ / ___ / ______ y finalizando el ___ / ___ /
+                ______,
+                venciendo automáticamente sin necesidad de notificación.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">4) DEPÓSITO EN GARANTÍA</h2>
-                <p>
-                    El LOCATARIO entrega un depósito de <strong>$________________</strong>,
-                    que será devuelto al finalizar el contrato si el inmueble se encuentra en buen estado.
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">OCTAVA: Monto y forma de pago</h2>
+            <p>
+                El canon locativo se fija en $________________ mensuales, con ajustes según índice IPC. El pago deberá
+                realizarse
+                hasta el día ____ de cada mes, en efectivo o por transferencia bancaria a la cuenta que EL LOCADOR
+                indique.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">5) GASTOS Y SERVICIOS</h2>
-                <p>
-                    El LOCATARIO abonará los servicios y gastos ordinarios
-                    (luz, gas, agua, expensas ordinarias, internet, etc.).
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">NOVENA: Intereses por mora</h2>
+            <p>
+                En caso de mora, EL LOCATARIO abonará un interés punitorio del ______ % diario sobre el monto adeudado.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">6) OBLIGACIONES DEL LOCATARIO</h2>
-                <ul class="list-disc ml-5">
-                    <li>Mantener el inmueble en buen estado</li>
-                    <li>No subalquilar sin autorización</li>
-                    <li>Restituir la propiedad en condiciones similares a las recibidas</li>
-                </ul>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA: Servicios e impuestos</h2>
+            <p>
+                El inmueble cuenta con medidores de energía eléctrica, gas natural y servicios públicos, los cuales
+                estarán a cargo
+                de EL LOCATARIO, quien deberá acreditar el pago al momento de la restitución.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">7) RESCISIÓN</h2>
-                <p>
-                    El contrato podrá rescindirse anticipadamente conforme a la normativa vigente.
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA PRIMERA: Caso fortuito</h2>
+            <p>
+                EL LOCADOR no será responsable por daños materiales, robos, incendios, inundaciones u otros eventos de
+                fuerza mayor.
+            </p>
+        </section>
 
-            <section>
-                <h2 class="font-semibold mb-1">8) JURISDICCIÓN</h2>
-                <p>
-                    Para cualquier conflicto, las partes se someten a los tribunales de __________________.
-                </p>
-            </section>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA SEGUNDA: Llaves</h2>
+            <p>
+                La devolución de llaves deberá acreditarse mediante constancia escrita emitida por EL LOCADOR.
+            </p>
+        </section>
 
-        </div>
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA TERCERA: Incumplimiento y desalojo</h2>
+            <p>
+                Ante incumplimiento contractual, EL LOCADOR podrá iniciar acciones judiciales de desalojo conforme a la
+                ley vigente.
+            </p>
+        </section>
 
-        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm">
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA CUARTA: Resolución anticipada</h2>
+            <p>
+                EL LOCATARIO podrá rescindir anticipadamente abonando el porcentaje correspondiente del saldo restante
+                del contrato.
+            </p>
+        </section>
+
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA QUINTA: Garantía</h2>
+            <p>
+                EL LOCATARIO entrega en concepto de garantía la suma de $________________ (o se deja constancia de
+                inexistencia de garantía).
+            </p>
+        </section>
+
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA SEXTA: Restitución</h2>
+            <p>
+                El inmueble deberá restituirse totalmente desocupado al finalizar la locación. En caso de ocupación
+                indebida,
+                se aplicarán recargos progresivos sobre el canon vigente.
+            </p>
+        </section>
+
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA SÉPTIMA: Jurisdicción</h2>
+            <p>
+                Las partes se someten a la jurisdicción de los Tribunales Ordinarios de ____________________.
+            </p>
+        </section>
+
+        <section class="mt-4">
+            <h2 class="font-semibold mb-1">DÉCIMA OCTAVA: Domicilios legales</h2>
+            <p>
+                EL LOCADOR fija domicilio en ____________________.
+                EL LOCATARIO fija domicilio en el inmueble locado.
+            </p>
+        </section>
+
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-10 text-sm">
 
             <div>
-                <p class="mb-8 border-t pt-3">LOCADOR: _______________________</p>
-                <p>DNI: __________</p>
+                <p class="mb-10 border-t pt-3">LOCADOR: _______________________</p>
+                <p>DNI: _______________________</p>
             </div>
 
             <div>
-                <p class="mb-8 border-t pt-3">LOCATARIO: _____________________</p>
-                <p>DNI: __________</p>
+                <p class="mb-10 border-t pt-3">LOCATARIO: _____________________</p>
+                <p>DNI: _______________________</p>
             </div>
 
         </div>
@@ -132,5 +221,6 @@
         </p>
 
     </div>
+
 
 </div>

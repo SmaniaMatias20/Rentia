@@ -24,7 +24,8 @@
         </thead>
 
         <tbody>
-            @for (contract of filteredContracts; track contract.id) {
+            @for (contract of paginatedContracts; track contract.id)
+            {
             <tr class="border-t border-gray-800 transition" [ngClass]="{
     'bg-red-600/40 hover:bg-red-600/60': isExpired(contract),
     'bg-yellow-500/40 hover:bg-yellow-500/60': !isExpired(contract) && isExpiringSoon(contract),
@@ -120,6 +121,27 @@
         </tbody>
 
     </table>
+
+    @if (filteredContracts.length > 0) {
+    <div class="flex justify-between items-center p-4 border-t border-gray-800 bg-gray-900">
+
+        <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40 cursor-pointer"
+            (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
+            Anterior
+        </button>
+
+        <span class="text-sm text-gray-300">
+            Página {{ currentPage }} de {{ totalPages }}
+        </span>
+
+        <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40 cursor-pointer"
+            (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
+            Siguiente
+        </button>
+
+    </div>
+    }
+
 
     @if (filteredContracts.length === 0) {
     <p class="text-center text-gray-400 py-6">

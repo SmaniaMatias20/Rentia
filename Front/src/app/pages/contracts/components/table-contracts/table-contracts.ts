@@ -13,6 +13,8 @@ export class TableContracts {
   @Input() contracts: any[] = [];
   currentDate: Date = new Date();
   searchTerm: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
 
   get filteredContracts() {
     if (!this.searchTerm.trim()) return this.contracts;
@@ -24,6 +26,16 @@ export class TableContracts {
         String(value).toLowerCase().includes(term)
       )
     );
+  }
+
+  get paginatedContracts() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredContracts.slice(startIndex, endIndex);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredContracts.length / this.itemsPerPage) || 1;
   }
 
   formatFrequency(freq: string) {
@@ -75,6 +87,7 @@ export class TableContracts {
 
   isExpiringSoon(contract: any): boolean {
     if (!contract.valid_to) return false;
+    if (this.isPending(contract)) return false;
 
     const now = new Date();
     const end = new Date(contract.valid_to);

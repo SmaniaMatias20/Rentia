@@ -196,7 +196,7 @@
 
     <!-- Comentarios -->
     <div class="flex flex-col gap-4 mt-6">
-      @for (comment of comments; track comment) {
+      @for (comment of paginatedComments; track comment) {
       <app-show-comment [comment]="comment" (delete)="onDeleteComment($event)"
         (toggle)="onToggleComment($event)"></app-show-comment>
       }
@@ -205,7 +205,25 @@
       }
     </div>
 
+    @if (comments.length > commentsPerPage) {
+    <div class="flex justify-between items-center mt-4">
 
+      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40"
+        (click)="currentCommentPage = currentCommentPage - 1" [disabled]="currentCommentPage === 1">
+        Anterior
+      </button>
+
+      <span class="text-sm text-gray-300">
+        Página {{ currentCommentPage }} de {{ totalCommentPages }}
+      </span>
+
+      <button class="px-4 py-2 bg-gray-700 rounded disabled:opacity-40"
+        (click)="currentCommentPage = currentCommentPage + 1" [disabled]="currentCommentPage === totalCommentPages">
+        Siguiente
+      </button>
+
+    </div>
+    }
   </div>
   }
 
