@@ -104,7 +104,7 @@
     </div>
 
     <div class="flex sm:flex-row flex-col gap-2 justify-end items-center mt-4">
-        <button
+        <button (click)="onAddServicesAmount.emit(month)"
             class="bg-yellow-600 hover:bg-yellow-700 text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center w-full h-9">
             <span class="text-sm font-semibold">Valor de los servicios</span>
         </button>

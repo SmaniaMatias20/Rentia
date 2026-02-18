@@ -12,11 +12,12 @@ import { CardPayment } from './components/card-payment/card-payment';
 import { FormNote } from './components/form-note/form-note';
 import { Toast } from '../../components/toast/toast';
 import { FormTotalRentAmount } from './components/form-total-rent-amount/form-total-rent-amount';
+import { FormServicesAmount } from './components/form-services-amount/form-services-amount';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast, FormPayment, FormTotalRentAmount],
+  imports: [CommonModule, Spinner, FormsModule, CardPayment, FormNote, Toast, FormPayment, FormTotalRentAmount, FormServicesAmount],
   templateUrl: './payments.html',
   styleUrls: ['./payments.css'],
 })
@@ -41,6 +42,7 @@ export class Payments {
   openFormNote = false;
   openFormPayment = false;
   openFormTotalRentAmount = false;
+  openFormServicesAmount = false;
 
 
 
@@ -251,6 +253,11 @@ export class Payments {
     this.openFormTotalRentAmount = true;
   }
 
+  onAddServicesAmount(month: any) {
+    this.paymentMonthEdit = month;
+    this.openFormServicesAmount = true;
+  }
+
 
   async onSaveNote(note: string) {
     this.paymentMonthEdit.description = note;
@@ -356,6 +363,39 @@ export class Payments {
 
     this.toast.showToast('Total alquiler actualizado correctamente', 'success');
     this.openFormTotalRentAmount = false;
+  }
+
+  async onSaveServicesAmount(services_amount: any) {
+    this.paymentMonthEdit.services_amount = services_amount;
+
+    if (!this.paymentMonthEdit.id) {
+      delete this.paymentMonthEdit.id;
+
+      const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+
+      if (error) {
+        console.error('Error al crear servicio:', error);
+        this.toast.showToast('Error al crear servicio', 'error');
+        return;
+      }
+
+      this.paymentMonthEdit.id = data.id;
+
+      this.toast.showToast('Servicio creado correctamente', 'success');
+      this.openFormServicesAmount = false;
+      return;
+    }
+
+    const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
+
+    if (error) {
+      console.error('Error al actualizar servicio:', error);
+      this.toast.showToast('Error al actualizar servicio', 'error');
+      return;
+    }
+
+    this.toast.showToast('Servicio actualizado correctamente', 'success');
+    this.openFormServicesAmount = false;
   }
 
 

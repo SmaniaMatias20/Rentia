@@ -1,0 +1,56 @@
+<!-- OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/90" (click)="cancel.emit()">
+
+    <!-- MODAL -->
+    <div class="bg-gray-900 text-white w-full max-w-md rounded-xl p-6 shadow-2xl relative"
+        (click)="$event.stopPropagation()">
+
+        <h2 class="text-xl font-semibold mb-4">
+            Valores de los servicios
+        </h2>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+
+            <!-- LUZ -->
+            <div>
+                <input type="number" formControlName="electricity" placeholder="Luz"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- GAS -->
+            <div>
+                <input type="number" formControlName="gas" placeholder="Gas"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- AGUA -->
+            <div>
+                <input type="number" formControlName="water" placeholder="Agua"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- ABL / EXPENSAS -->
+            <div>
+                <input type="number" formControlName="hoa_fees" placeholder="ABL / Expensas"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- BOTONES -->
+            <div class="flex justify-end gap-2 pt-4">
+
+                <button type="button" (click)="cancel.emit()"
+                    class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition cursor-pointer">
+                    Cancelar
+                </button>
+
+                <button type="submit" [disabled]="form.invalid"
+                    class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition cursor-pointer">
+                    Guardar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
