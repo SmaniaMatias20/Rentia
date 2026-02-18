@@ -91,7 +91,8 @@ export class PaymentService {
       await this.database.client
         .from('contracts')
         .select('id')
-        .eq('owner_id', userId);
+        .eq('owner_id', userId)
+        .eq('status', true);
 
     if (errorContracts) {
       console.error('Error al obtener contratos:', errorContracts.message);
@@ -139,7 +140,8 @@ export class PaymentService {
       await this.database.client
         .from('contracts')
         .select('id')
-        .eq('owner_id', userId);
+        .eq('owner_id', userId)
+        .eq('status', true);
 
     if (errorContracts) {
       console.error('Error al obtener contratos:', errorContracts.message);
@@ -188,7 +190,8 @@ export class PaymentService {
       await this.database.client
         .from('contracts')
         .select('id')
-        .eq('owner_id', userId);
+        .eq('owner_id', userId)
+        .eq('status', true);
 
     if (errorContracts) {
       console.error('Error al obtener contratos:', errorContracts.message);
@@ -237,7 +240,8 @@ export class PaymentService {
       await this.database.client
         .from('contracts')
         .select('id')
-        .eq('owner_id', userId);
+        .eq('owner_id', userId)
+        .eq('status', true);
 
     if (errorContracts) {
       console.error('Error al obtener contratos:', errorContracts.message);
@@ -286,7 +290,8 @@ export class PaymentService {
       await this.database.client
         .from('contracts')
         .select('id')
-        .eq('owner_id', userId);
+        .eq('owner_id', userId)
+        .eq('status', true);
 
     if (errorContracts) {
       console.error('Error al obtener contratos:', errorContracts.message);
@@ -335,7 +340,8 @@ export class PaymentService {
       await this.database.client
         .from('contracts')
         .select('id')
-        .eq('owner_id', userId);
+        .eq('owner_id', userId)
+        .eq('status', true);
 
     if (errorContracts) {
       console.error('Error al obtener contratos:', errorContracts.message);

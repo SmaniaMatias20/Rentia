@@ -21,12 +21,39 @@ export class TableContracts {
 
     const term = this.searchTerm.toLowerCase();
 
-    return this.contracts.filter(contract =>
-      Object.values(contract).some(value =>
-        String(value).toLowerCase().includes(term)
-      )
-    );
+    return this.contracts.filter(contract => {
+      // 🔹 estado legible
+      const statusText = contract.status ? 'activo' : 'inactivo';
+
+      // 🔹 vigencia legible
+      let vigenciaText = 'en curso';
+      if (this.isExpired(contract)) vigenciaText = 'vencido';
+      else if (this.isExpiringSoon(contract)) vigenciaText = 'por vencer';
+      else if (this.isPending(contract)) vigenciaText = 'pendiente';
+
+      // 🔹 frecuencia legible
+      const freqText = this.formatFrequency(contract.increase_frequency);
+
+      // 🔹 juntar todo lo buscable
+      const searchable = [
+        contract.property_name,
+        contract.tenant_name,
+        contract.rent_amount,
+        contract.increase_percentage,
+        freqText,
+        this.calculateCurrentRent(contract),
+        this.formatDate(contract.valid_from),
+        this.formatDate(contract.valid_to),
+        statusText,
+        vigenciaText
+      ]
+        .join(' ')
+        .toLowerCase();
+
+      return searchable.includes(term);
+    });
   }
+
 
   get paginatedContracts() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
