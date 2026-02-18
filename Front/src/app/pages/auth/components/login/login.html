@@ -15,7 +15,7 @@
                focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <!-- Error -->
-            <div class="min-h-[1.25rem]">
+            <div class="min-h-[1.25rem] text-start">
                 @if (loginForm.get('username')?.touched && loginForm.get('username')?.invalid) {
                 <p class="text-sm text-red-500 mt-1">
                     El usuario es obligatorio
@@ -45,7 +45,7 @@
             </button>
 
             <!-- Error -->
-            <div class="min-h-[1.25rem]">
+            <div class="min-h-[1.25rem] text-start">
                 @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
                 <p class="text-sm text-red-500 mt-1">
                     La contraseña es obligatoria

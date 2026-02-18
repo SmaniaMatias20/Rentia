@@ -125,8 +125,6 @@ export class Payments {
         monthIndex
       );
 
-      console.log(payment);
-
       months.push({
         id: payment ? payment.id : null,
         rent_month: new Date(date),
@@ -327,7 +325,6 @@ export class Payments {
   }
 
   async onSaveTotalRentAmount(total_rent_amount: number) {
-    console.log(total_rent_amount);
     this.paymentMonthEdit.total_rent_amount = total_rent_amount;
 
     if (!this.paymentMonthEdit.id) {
