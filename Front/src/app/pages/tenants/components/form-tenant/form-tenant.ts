@@ -74,7 +74,7 @@ export class FormTenant implements OnInit {
     });
 
     if (error) {
-      this.toast.showToast('Error al guardar el inquilino', 'error');
+      this.toast.showToast(error.message, 'error');
       this.submitting = false;
       return;
     }

@@ -60,28 +60,32 @@
         </app-card-statistic>
 
         <!-- Ingresos mensuales -->
-        <app-card-statistic icon="attach_money" title="Alquileres" [value]="'$' + monthlyRentIncome"
-            description="Ingreso mensual" iconColor="text-emerald-500" descriptionColor="text-emerald-400">
+        <app-card-statistic icon="attach_money" title="Alquileres"
+            [value]="monthlyRentIncome | currency:'ARS':'symbol':'1.0-0'" description="Ingreso mensual"
+            iconColor="text-emerald-500" descriptionColor="text-emerald-400">
         </app-card-statistic>
 
         <!-- Costos de luz -->
-        <app-card-statistic icon="flash_on" title="Luz" [value]="'$' + monthlyElectricityIncome"
-            description="Costo mensual" iconColor="text-yellow-500" descriptionColor="text-yellow-400">
+        <app-card-statistic icon="flash_on" title="Luz"
+            [value]="monthlyElectricityIncome | currency:'ARS':'symbol':'1.0-0'" description="Costo mensual"
+            iconColor="text-yellow-500" descriptionColor="text-yellow-400">
         </app-card-statistic>
 
         <!-- Costos de gas -->
-        <app-card-statistic icon="local_gas_station" title="Gas" [value]="'$' + monthlyGasIncome"
-            description="Costo mensual" iconColor="text-red-500" descriptionColor="text-red-400">
+        <app-card-statistic icon="local_gas_station" title="Gas"
+            [value]="monthlyGasIncome | currency:'ARS':'symbol':'1.0-0'" description="Costo mensual"
+            iconColor="text-red-500" descriptionColor="text-red-400">
         </app-card-statistic>
 
         <!-- Costos de agua -->
-        <app-card-statistic icon="water" title="Agua" [value]="'$' + monthlyWaterIncome" description="Costo mensual"
-            iconColor="text-blue-500" descriptionColor="text-blue-400">
+        <app-card-statistic icon="water" title="Agua" [value]=" monthlyWaterIncome | currency:'ARS':'symbol':'1.0-0'"
+            description="Costo mensual" iconColor="text-blue-500" descriptionColor="text-blue-400">
         </app-card-statistic>
 
         <!-- Costos de ABL/expensas -->
-        <app-card-statistic icon="attach_money" title="ABL/Expensas" [value]="'$' + monthlyHoaIncome"
-            description="Costo mensual" iconColor="text-red-500" descriptionColor="text-red-400">
+        <app-card-statistic icon="attach_money" title="ABL/Expensas"
+            [value]=" monthlyHoaIncome | currency:'ARS':'symbol':'1.0-0'" description="Costo mensual"
+            iconColor="text-red-500" descriptionColor="text-red-400">
         </app-card-statistic>
 
     </div>
@@ -119,12 +123,12 @@
         </app-card-statistic>
 
         <!-- Alquiler más alto -->
-        <app-card-statistic icon="arrow_upward" title="Máximo" [value]="'$' + highestRent"
+        <app-card-statistic icon="arrow_upward" title="Máximo" [value]=" highestRent | currency:'ARS':'symbol':'1.0-0'"
             description="Alquiler más alto" iconColor="text-purple-500" descriptionColor="text-purple-400">
         </app-card-statistic>
 
         <!-- Alquiler más bajo -->
-        <app-card-statistic icon="arrow_downward" title="Mínimo" [value]="'$' + lowestRent"
+        <app-card-statistic icon="arrow_downward" title="Mínimo" [value]="lowestRent | currency:'ARS':'symbol':'1.0-0'"
             description="Alquiler más bajo" iconColor="text-indigo-500" descriptionColor="text-indigo-400">
         </app-card-statistic>
 

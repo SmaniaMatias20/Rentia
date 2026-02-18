@@ -24,29 +24,34 @@ export class TenantService {
     }
   ): Promise<{ user?: User; error?: AuthError | PostgrestError | any }> {
 
+    // Normalizar
+    const username = tenant.username.toLowerCase().trim();
+    const email = tenant.email.toLowerCase().trim();
 
-    // 1️⃣ Validar si ya existe usuario/email
-    const { data: existingUser } = await this.db.client
+    // Validar duplicados
+    const { data: existingUser, error: checkError } = await this.db.client
       .from('users')
       .select('id')
-      .or(`username.eq.${tenant.username}`)
+      .or(`username.eq.${username}`)
+      .limit(1)
       .maybeSingle();
 
+    if (checkError) return { error: checkError };
+
     if (existingUser) {
-      return { error: { message: 'Usuario o email ya existe' } };
+      return { error: { message: 'El nombre de usuario ya se encuentra en uso' } };
     }
 
-
-    // 2️⃣ Hashear password
+    // Hash password
     const password_hash = await bcrypt.hash("1234", 10);
 
-    // 1️⃣ Crear usuario en tabla users y obtener el id
+    // Insertar
     const { data: userData, error: profileError } = await this.db.client
       .from('users')
       .insert([
         {
-          username: tenant.username,
-          email: tenant.email,
+          username,
+          email,
           role: tenant.role,
           phone: tenant.phone,
           owner_id: tenant.owner_id,
@@ -54,12 +59,13 @@ export class TenantService {
         }
       ])
       .select()
-      .single(); // 👈 importante para obtener un solo objeto
+      .single();
 
     if (profileError) return { error: profileError };
 
     return { user: userData };
   }
+
 
   async updateTenant(tenantId: string, data: any): Promise<{ error?: PostgrestError }> {
     try {
@@ -89,7 +95,7 @@ export class TenantService {
         if (existingUser) {
           return {
             error: {
-              message: 'El nombre de usuario ya existe'
+              message: 'El nombre de usuario del inquilino ya se encuentra en uso'
             } as PostgrestError
           };
         }

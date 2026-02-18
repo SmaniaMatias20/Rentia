@@ -11,7 +11,7 @@ import { NgClass } from '@angular/common';
 export class CardStatistic {
   @Input() icon: string = '';
   @Input() title: string = '';
-  @Input() value: any = '';
+  @Input() value: any = 0;
   @Input() description: string = '';
   @Input() iconColor: string = '';
   @Input() descriptionColor: string = '';

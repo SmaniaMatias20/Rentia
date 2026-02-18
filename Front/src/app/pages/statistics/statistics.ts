@@ -9,10 +9,11 @@ import { ContractService } from '../../services/contract/contract';
 import { CardStatistic } from './components/card-statistic/card-statistic';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../components/toast/toast';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-statistics',
-  imports: [Spinner, CardStatistic, FormsModule, Toast],
+  imports: [Spinner, CardStatistic, FormsModule, Toast, CommonModule],
   templateUrl: './statistics.html',
   styleUrls: ['./statistics.css']
 })
