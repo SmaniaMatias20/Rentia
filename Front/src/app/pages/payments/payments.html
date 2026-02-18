@@ -21,12 +21,12 @@
 
         @for (contract of contracts; track contract.id) {
         <option [ngValue]="contract">
-          {{ contract.property_name.charAt(0).toUpperCase() +
-          contract.property_name.slice(1) }} - {{ contract.tenant_name.charAt(0).toUpperCase() +
-          contract.tenant_name.slice(1)
-          }}
+          {{ contract.property_name | titlecase }} —
+          {{ contract.tenant_name | titlecase }}
+          ({{ contract.valid_from | date:'dd/MM/yyyy' }} → {{ contract.valid_to | date:'dd/MM/yyyy' }})
         </option>
         }
+
       </select>
     </div>
 

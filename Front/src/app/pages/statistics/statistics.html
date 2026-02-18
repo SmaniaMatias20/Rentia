@@ -98,7 +98,7 @@
         </app-card-statistic>
 
         <!-- Contratos que todavia no han comenzado -->
-        <app-card-statistic icon="article" title="Contratos pendientes" [value]="0"
+        <app-card-statistic icon="article" title="Contratos pendientes" [value]="quantityOfContractsPendingByUser"
             description="Todavía no han comenzado" iconColor="text-blue-500" descriptionColor="text-blue-400">
         </app-card-statistic>
 
@@ -106,10 +106,14 @@
 
     <hr class="border-gray-700 my-10 mx-5">
 
+    <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
+        Ingresos/Costos de {{ visibleMonthYear}}
+    </h2>
+
     <div class="max-w-screen mx-auto mt-10 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- Ingresos mensuales -->
-        <app-card-statistic icon="attach_money" title="Alquileres" [value]="'$' + totalRent"
+        <app-card-statistic icon="attach_money" title="Alquileres" [value]="'$' + monthlyRentIncome"
             description="Ingreso mensual" iconColor="text-emerald-500" descriptionColor="text-emerald-400">
         </app-card-statistic>
 
@@ -134,4 +138,7 @@
         </app-card-statistic>
 
     </div>
+
+    <!-- Toast -->
+    <app-toast #toast></app-toast>
 </div>

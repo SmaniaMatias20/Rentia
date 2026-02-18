@@ -321,6 +321,22 @@ export class ContractService {
     return count ?? 0;
   }
 
+  async getQuantityOfContractsPendingByUser(userId: string): Promise<number> {
+    // cantidad de contratos donde valid_from es mayor que la fecha actual
+    const { count, error } = await this.db.client
+      .from('contracts')
+      .select('id', { count: 'exact', head: true })
+      .eq('owner_id', userId)
+      .gt('valid_from', new Date().toISOString());
+
+    if (error) {
+      console.error('Error al contar contratos pendientes:', error.message);
+      return 0;
+    }
+
+    return count ?? 0;
+  }
+
   async updateContractStatus(contractId: any, status: boolean): Promise<{ error?: PostgrestError }> {
 
     const { error } = await this.db.client
