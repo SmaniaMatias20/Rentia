@@ -30,6 +30,7 @@ export class Statistics {
   quantityOfContractsToVenceByUser: number = 0;
   quantityOfContractsVencedByUser: number = 0;
   quantityOfContractsPendingByUser: number = 0;
+  quantityOfPaymentsByUser: number = 0;
   monthlyRentIncome: number = 0;
   monthlyElectricityIncome: number = 0;
   monthlyGasIncome: number = 0;
@@ -171,6 +172,13 @@ export class Statistics {
           month
         );
 
+      this.quantityOfPaymentsByUser =
+        await this.paymentService.getQuantityOfPaymentsByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
       this.loading = false;
       this.toast.showToast('Ingresos/costos mensuales obtenidos correctamente', 'success');
     } catch (error) {
@@ -223,6 +231,13 @@ export class Statistics {
 
       this.monthlyWaterIncome =
         await this.paymentService.getMonthlyWaterIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.quantityOfPaymentsByUser =
+        await this.paymentService.getQuantityOfPaymentsByUser(
           this.currentUser.id,
           year,
           month
