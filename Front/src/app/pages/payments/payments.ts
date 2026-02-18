@@ -44,6 +44,7 @@ export class Payments {
   openFormTotalRentAmount = false;
   openFormServicesAmount = false;
 
+  servicesAmount: any;
 
 
   constructor(private router: Router, private propertyService: PropertyService, private authService: AuthService, private paymentService: PaymentService, private contractService: ContractService) { }
@@ -141,6 +142,10 @@ export class Payments {
         description: payment ? payment.description : '',
         contract_id: contract.id,
         payment_method: payment ? payment.payment_method : '',
+        electricy_amount: payment ? payment.electricy_amount : 0,
+        gas_amount: payment ? payment.gas_amount : 0,
+        hoa_fees_amount: payment ? payment.hoa_fees_amount : 0,
+        water_amount: payment ? payment.water_amount : 0,
       });
 
       date.setMonth(date.getMonth() + 1);
@@ -254,9 +259,18 @@ export class Payments {
   }
 
   onAddServicesAmount(month: any) {
-    this.paymentMonthEdit = month;
+    this.paymentMonthEdit = { ...month }; // 👈 CLAVE (clon)
+
+    this.servicesAmount = {
+      electricity: month.electricy_amount ?? 0,
+      gas: month.gas_amount ?? 0,
+      hoa_fees: month.hoa_fees_amount ?? 0,
+      water: month.water_amount ?? 0,
+    };
+
     this.openFormServicesAmount = true;
   }
+
 
 
   async onSaveNote(note: string) {
@@ -366,37 +380,69 @@ export class Payments {
   }
 
   async onSaveServicesAmount(services_amount: any) {
-    this.paymentMonthEdit.services_amount = services_amount;
+    // 🔥 mapear valores al edit
+    this.paymentMonthEdit.electricy_amount = services_amount.electricity;
+    this.paymentMonthEdit.gas_amount = services_amount.gas;
+    this.paymentMonthEdit.hoa_fees_amount = services_amount.hoa_fees;
+    this.paymentMonthEdit.water_amount = services_amount.water;
 
+    // 🆕 CREATE
     if (!this.paymentMonthEdit.id) {
-      delete this.paymentMonthEdit.id;
+      const payload = { ...this.paymentMonthEdit };
+      delete payload.id;
 
-      const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+      const { error, data } = await this.paymentService.createPayment(payload);
 
-      if (error) {
-        console.error('Error al crear servicio:', error);
-        this.toast.showToast('Error al crear servicio', 'error');
+      if (error || !data) {
+        console.error('Error al cargar los valores de los servicios:', error);
+        this.toast.showToast('Error al cargar los valores de los servicios', 'error');
         return;
       }
 
       this.paymentMonthEdit.id = data.id;
+    } else {
+      // 🔄 UPDATE
+      const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
 
-      this.toast.showToast('Servicio creado correctamente', 'success');
-      this.openFormServicesAmount = false;
-      return;
+      if (error) {
+        console.error('Error al actualizar los valores de los servicios:', error);
+        this.toast.showToast('Error al actualizar los valores de los servicios', 'error');
+        return;
+      }
     }
 
-    const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
+    // ================================
+    // 🔥🔥🔥 ESTO ES LO QUE TE FALTA
+    // ================================
 
-    if (error) {
-      console.error('Error al actualizar servicio:', error);
-      this.toast.showToast('Error al actualizar servicio', 'error');
-      return;
+    const index = this.months.findIndex(m =>
+      new Date(m.rent_month).getTime() ===
+      new Date(this.paymentMonthEdit.rent_month).getTime()
+    );
+
+    if (index !== -1) {
+      this.months[index] = {
+        ...this.months[index],
+        electricy_amount: this.paymentMonthEdit.electricy_amount,
+        gas_amount: this.paymentMonthEdit.gas_amount,
+        hoa_fees_amount: this.paymentMonthEdit.hoa_fees_amount,
+        water_amount: this.paymentMonthEdit.water_amount,
+        id: this.paymentMonthEdit.id
+      };
+
+      // 🔥 MUY IMPORTANTE: nueva referencia
+      this.months = [...this.months];
     }
 
-    this.toast.showToast('Servicio actualizado correctamente', 'success');
+    this.toast.showToast(
+      'Valores de los servicios actualizados correctamente',
+      'success'
+    );
+
     this.openFormServicesAmount = false;
   }
+
+
 
 
 }

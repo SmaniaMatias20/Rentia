@@ -201,7 +201,7 @@
   <!-- Modal de agregar servicios -->
   @if (openFormServicesAmount) {
   <app-form-services-amount (save)="onSaveServicesAmount($event)" (cancel)="openFormServicesAmount = false"
-    [services_amount]="0"></app-form-services-amount>
+    [services_amount]="servicesAmount"></app-form-services-amount>
   }
 
 </div>

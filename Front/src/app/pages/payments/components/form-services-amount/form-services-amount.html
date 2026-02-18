@@ -13,25 +13,29 @@
 
             <!-- LUZ -->
             <div>
-                <input type="number" formControlName="electricity" placeholder="Luz"
+                <label class="text-sm text-gray-400 mb-1 block">Luz</label>
+                <input type="number" formControlName="electricity" placeholder="Luz" min="0"
                     class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <!-- GAS -->
             <div>
-                <input type="number" formControlName="gas" placeholder="Gas"
+                <label class="text-sm text-gray-400 mb-1 block">Gas</label>
+                <input type="number" formControlName="gas" placeholder="Gas" min="0"
                     class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <!-- AGUA -->
             <div>
-                <input type="number" formControlName="water" placeholder="Agua"
+                <label class="text-sm text-gray-400 mb-1 block">Agua</label>
+                <input type="number" formControlName="water" placeholder="Agua" min="0"
                     class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <!-- ABL / EXPENSAS -->
             <div>
-                <input type="number" formControlName="hoa_fees" placeholder="ABL / Expensas"
+                <label class="text-sm text-gray-400 mb-1 block">ABL / Expensas</label>
+                <input type="number" formControlName="hoa_fees" placeholder="ABL / Expensas" min="0"
                     class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
