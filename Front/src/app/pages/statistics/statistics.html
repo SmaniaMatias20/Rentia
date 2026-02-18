@@ -118,23 +118,23 @@
         </app-card-statistic>
 
         <!-- Costos de luz -->
-        <app-card-statistic icon="flash_on" title="Luz" [value]="'$' + 0" description="Costo mensual"
-            iconColor="text-yellow-500" descriptionColor="text-yellow-400">
+        <app-card-statistic icon="flash_on" title="Luz" [value]="'$' + monthlyElectricityIncome"
+            description="Costo mensual" iconColor="text-yellow-500" descriptionColor="text-yellow-400">
         </app-card-statistic>
 
         <!-- Costos de gas -->
-        <app-card-statistic icon="local_gas_station" title="Gas" [value]="'$' + 0" description="Costo mensual"
-            iconColor="text-red-500" descriptionColor="text-red-400">
+        <app-card-statistic icon="local_gas_station" title="Gas" [value]="'$' + monthlyGasIncome"
+            description="Costo mensual" iconColor="text-red-500" descriptionColor="text-red-400">
         </app-card-statistic>
 
         <!-- Costos de agua -->
-        <app-card-statistic icon="water" title="Agua" [value]="'$' + 0" description="Costo mensual"
+        <app-card-statistic icon="water" title="Agua" [value]="'$' + monthlyWaterIncome" description="Costo mensual"
             iconColor="text-blue-500" descriptionColor="text-blue-400">
         </app-card-statistic>
 
         <!-- Costos de ABL/expensas -->
-        <app-card-statistic icon="attach_money" title="ABL/Expensas" [value]="'$' + 0" description="Costo mensual"
-            iconColor="text-red-500" descriptionColor="text-red-400">
+        <app-card-statistic icon="attach_money" title="ABL/Expensas" [value]="'$' + monthlyHoaIncome"
+            description="Costo mensual" iconColor="text-red-500" descriptionColor="text-red-400">
         </app-card-statistic>
 
     </div>

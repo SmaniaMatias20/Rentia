@@ -31,6 +31,10 @@ export class Statistics {
   quantityOfContractsVencedByUser: number = 0;
   quantityOfContractsPendingByUser: number = 0;
   monthlyRentIncome: number = 0;
+  monthlyElectricityIncome: number = 0;
+  monthlyGasIncome: number = 0;
+  monthlyHoaIncome: number = 0;
+  monthlyWaterIncome: number = 0;
   averageRent: number = 0;
   highestRent: number = 0;
   lowestRent: number = 0;
@@ -133,7 +137,35 @@ export class Statistics {
       const [year, month] = this.selectedMonthYear.split('-').map(Number);
 
       this.monthlyRentIncome =
-        await this.paymentService.getMonthlyRentIncomeByUserAndMonth(
+        await this.paymentService.getMonthlyRentIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyElectricityIncome =
+        await this.paymentService.getMonthlyElectricityIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyGasIncome =
+        await this.paymentService.getMonthlyGasIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyHoaIncome =
+        await this.paymentService.getMonthlyHoaIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyWaterIncome =
+        await this.paymentService.getMonthlyWaterIncomeByUser(
           this.currentUser.id,
           year,
           month
@@ -162,7 +194,35 @@ export class Statistics {
       const year = today.getFullYear();
 
       this.monthlyRentIncome =
-        await this.paymentService.getMonthlyRentIncomeByUserAndMonth(
+        await this.paymentService.getMonthlyRentIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyElectricityIncome =
+        await this.paymentService.getMonthlyElectricityIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyGasIncome =
+        await this.paymentService.getMonthlyGasIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyHoaIncome =
+        await this.paymentService.getMonthlyHoaIncomeByUser(
+          this.currentUser.id,
+          year,
+          month
+        );
+
+      this.monthlyWaterIncome =
+        await this.paymentService.getMonthlyWaterIncomeByUser(
           this.currentUser.id,
           year,
           month

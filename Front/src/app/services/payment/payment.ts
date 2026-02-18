@@ -76,7 +76,7 @@ export class PaymentService {
     return {};
   }
 
-  async getMonthlyRentIncomeByUserAndMonth(
+  async getMonthlyRentIncomeByUser(
     userId: string,
     year: number,
     month: number
@@ -119,6 +119,202 @@ export class PaymentService {
     // ➕ 3. suma total
     const total = payments.reduce(
       (acc, p) => acc + (p.rent_amount ?? 0),
+      0
+    );
+
+    return total;
+  }
+
+  async getMonthlyElectricityIncomeByUser(
+    userId: string,
+    year: number,
+    month: number
+  ): Promise<number> {
+    // 📅 rango del mes
+    const from = new Date(year, month - 1, 1).toISOString();
+    const to = new Date(year, month, 1).toISOString();
+
+    // 🔎 1. obtener contratos del usuario
+    const { data: contracts, error: errorContracts } =
+      await this.database.client
+        .from('contracts')
+        .select('id')
+        .eq('owner_id', userId);
+
+    if (errorContracts) {
+      console.error('Error al obtener contratos:', errorContracts.message);
+      return 0;
+    }
+
+    if (!contracts?.length) return 0;
+
+    const contractIds = contracts.map(c => c.id);
+
+    // 💰 2. obtener pagos del mes
+    const { data: payments, error: errorPayments } =
+      await this.database.client
+        .from('payments')
+        .select('electricy_amount')
+        .in('contract_id', contractIds)
+        .gte('rent_month', from)
+        .lt('rent_month', to)
+        .eq('electricy', true);
+
+    if (errorPayments) {
+      console.error('Error al obtener pagos:', errorPayments.message);
+      return 0;
+    }
+
+    // ➕ 3. suma total
+    const total = payments.reduce(
+      (acc, p) => acc + (p.electricy_amount ?? 0),
+      0
+    );
+
+    return total;
+  }
+
+  async getMonthlyGasIncomeByUser(
+    userId: string,
+    year: number,
+    month: number
+  ): Promise<number> {
+    // 📅 rango del mes
+    const from = new Date(year, month - 1, 1).toISOString();
+    const to = new Date(year, month, 1).toISOString();
+
+    // 🔎 1. obtener contratos del usuario
+    const { data: contracts, error: errorContracts } =
+      await this.database.client
+        .from('contracts')
+        .select('id')
+        .eq('owner_id', userId);
+
+    if (errorContracts) {
+      console.error('Error al obtener contratos:', errorContracts.message);
+      return 0;
+    }
+
+    if (!contracts?.length) return 0;
+
+    const contractIds = contracts.map(c => c.id);
+
+    // 💰 2. obtener pagos del mes
+    const { data: payments, error: errorPayments } =
+      await this.database.client
+        .from('payments')
+        .select('gas_amount')
+        .in('contract_id', contractIds)
+        .gte('rent_month', from)
+        .lt('rent_month', to)
+        .eq('gas', true);
+
+    if (errorPayments) {
+      console.error('Error al obtener pagos:', errorPayments.message);
+      return 0;
+    }
+
+    // ➕ 3. suma total
+    const total = payments.reduce(
+      (acc, p) => acc + (p.gas_amount ?? 0),
+      0
+    );
+
+    return total;
+  }
+
+  async getMonthlyHoaIncomeByUser(
+    userId: string,
+    year: number,
+    month: number
+  ): Promise<number> {
+    // 📅 rango del mes
+    const from = new Date(year, month - 1, 1).toISOString();
+    const to = new Date(year, month, 1).toISOString();
+
+    // 🔎 1. obtener contratos del usuario
+    const { data: contracts, error: errorContracts } =
+      await this.database.client
+        .from('contracts')
+        .select('id')
+        .eq('owner_id', userId);
+
+    if (errorContracts) {
+      console.error('Error al obtener contratos:', errorContracts.message);
+      return 0;
+    }
+
+    if (!contracts?.length) return 0;
+
+    const contractIds = contracts.map(c => c.id);
+
+    // 💰 2. obtener pagos del mes
+    const { data: payments, error: errorPayments } =
+      await this.database.client
+        .from('payments')
+        .select('hoa_fees_amount')
+        .in('contract_id', contractIds)
+        .gte('rent_month', from)
+        .lt('rent_month', to)
+        .eq('hoa_fees', true);
+
+    if (errorPayments) {
+      console.error('Error al obtener pagos:', errorPayments.message);
+      return 0;
+    }
+
+    // ➕ 3. suma total
+    const total = payments.reduce(
+      (acc, p) => acc + (p.hoa_fees_amount ?? 0),
+      0
+    );
+
+    return total;
+  }
+
+  async getMonthlyWaterIncomeByUser(
+    userId: string,
+    year: number,
+    month: number
+  ): Promise<number> {
+    // 📅 rango del mes
+    const from = new Date(year, month - 1, 1).toISOString();
+    const to = new Date(year, month, 1).toISOString();
+
+    // 🔎 1. obtener contratos del usuario
+    const { data: contracts, error: errorContracts } =
+      await this.database.client
+        .from('contracts')
+        .select('id')
+        .eq('owner_id', userId);
+
+    if (errorContracts) {
+      console.error('Error al obtener contratos:', errorContracts.message);
+      return 0;
+    }
+
+    if (!contracts?.length) return 0;
+
+    const contractIds = contracts.map(c => c.id);
+
+    // 💰 2. obtener pagos del mes
+    const { data: payments, error: errorPayments } =
+      await this.database.client
+        .from('payments')
+        .select('water_amount')
+        .in('contract_id', contractIds)
+        .gte('rent_month', from)
+        .lt('rent_month', to)
+        .eq('water', true);
+
+    if (errorPayments) {
+      console.error('Error al obtener pagos:', errorPayments.message);
+      return 0;
+    }
+
+    // ➕ 3. suma total
+    const total = payments.reduce(
+      (acc, p) => acc + (p.water_amount ?? 0),
       0
     );
 
