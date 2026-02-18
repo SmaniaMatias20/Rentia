@@ -75,25 +75,27 @@
             <input type="checkbox" [(ngModel)]="month.water"
                 (change)="onCheckboxChange('water', $event.target.checked, month)"
                 class="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500 cursor-pointer" />
-            Agua
+            Agua <span class="text-gray-400">({{ month.water_amount | currency:'ARS':'symbol':'1.0-0' }})</span>
         </label>
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.electricy"
                 (change)="onCheckboxChange('electricy', $event.target.checked, month)"
                 class="h-4 w-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500 cursor-pointer" />
-            Electricidad
+            Electricidad <span class="text-gray-400">({{ month.electricy_amount | currency:'ARS':'symbol':'1.0-0'
+                }})</span>
         </label>
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.gas"
                 (change)="onCheckboxChange('gas', $event.target.checked, month)"
                 class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer" />
-            Gas
+            Gas <span class="text-gray-400">({{ month.gas_amount | currency:'ARS':'symbol':'1.0-0' }})</span>
         </label>
         <label class="flex items-center gap-2">
             <input type="checkbox" [(ngModel)]="month.hoa_fees"
                 (change)="onCheckboxChange('hoa_fees', $event.target.checked, month)"
                 class="h-4 w-4 text-purple-500 border-gray-300 rounded focus:ring-purple-500 cursor-pointer" />
-            Expensas/ABL
+            Expensas/ABL <span class="text-gray-400">({{ month.hoa_fees_amount | currency:'ARS':'symbol':'1.0-0'
+                }})</span>
         </label>
     </div>
 
