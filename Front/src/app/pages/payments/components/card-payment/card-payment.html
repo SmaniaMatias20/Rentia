@@ -7,12 +7,20 @@
     <!-- Header: Mes y estado -->
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold capitalize">{{ formatRentMonth(month.rent_month) }}</h3>
-        <span class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="{
-    'bg-green-600': month.status === true,
-    'bg-red-600': month.status !== true
-  }">
-            {{ month.status === "true" || month.status === true ? 'Pagado' : 'Pendiente' }}
-        </span>
+        <div class="flex gap-2">
+
+            @if (month.status === true) {
+            <button class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600"
+                (click)="downloadPDF(month)">Descargar
+                recibo</button>
+            }
+            <span class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+        'bg-green-600': month.status === true,
+        'bg-red-600': month.status !== true
+      }">
+                {{ month.status === "true" || month.status === true ? 'Pagado' : 'Pendiente' }}
+            </span>
+        </div>
 
     </div>
 
@@ -120,4 +128,66 @@
         </button>
     </div>
 
+</div>
+
+<div id="payment-content" class="hidden pdf-safe">
+    <div class="w-full max-w-[794px] bg-white text-gray-800 p-8 font-sans">
+
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b pb-4 mb-6">
+            <div class="flex flex-col gap-2">
+                <h2 class="text-2xl font-bold text-gray-900">Recibo de Alquiler</h2>
+                <p class="text-sm text-gray-500">
+                    Generado el {{ today | date:'dd/MM/yyyy HH:mm' }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Información principal -->
+        <div class="grid grid-cols-2 gap-6 mb-6 text-sm">
+            <div class="flex flex-col gap-2">
+                <p class="text-gray-500">Período</p>
+                <p id="period" class="font-semibold text-gray-900"></p>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <p class="text-gray-500">Método de pago</p>
+                <p id="payment-method" class="font-semibold text-gray-900"></p>
+            </div>
+        </div>
+
+        <!-- Resumen alquiler -->
+        <div class="border rounded-xl p-5 mb-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Resumen del alquiler</h3>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span>Total alquiler</span>
+                    <span id="total-rent-amount" class="font-semibold"></span>
+                </div>
+
+                <div class="flex justify-between">
+                    <span>Pagado</span>
+                    <span id="rent-amount" class="font-semibold text-green-600"></span>
+                </div>
+
+                <div class="flex justify-between border-t pt-2 mt-2">
+                    <span class="font-semibold">Saldo pendiente</span>
+                    <span id="balance-pending" class="font-bold text-red-600"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicios -->
+        <div class="border rounded-xl p-5 mb-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Servicios</h3>
+            <div id="services" class="grid grid-cols-2 gap-y-2 text-sm"></div>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="border rounded-xl p-5">
+            <h3 class="font-semibold text-gray-900 mb-2">Observaciones</h3>
+            <p id="observations" class="text-sm text-gray-600 whitespace-pre-line"></p>
+        </div>
+
+    </div>
 </div>
