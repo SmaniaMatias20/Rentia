@@ -56,9 +56,26 @@ export class CardPayment {
       clone.style.display = 'block';
       clone.classList.remove('hidden');
 
+      if (month.payment_method) {
+        if (month.payment_method === 'transfer') {
+          clone.querySelector('#payment-method')!.textContent = 'Transferencia bancaria';
+        }
+        if (month.payment_method === 'cash') {
+          clone.querySelector('#payment-method')!.textContent = 'Efectivo';
+        }
+        if (month.payment_method === 'mixed') {
+          clone.querySelector('#payment-method')!.textContent = 'Mixto';
+        }
+        if (month.payment_method === 'card') {
+          clone.querySelector('#payment-method')!.textContent = 'Tarjeta';
+        }
+      } else {
+        clone.querySelector('#payment-method')!.textContent = 'No especificado';
+      }
+
       // Actualizar datos principales
       clone.querySelector('#period')!.textContent = this.formatRentMonth(month.rent_month);
-      clone.querySelector('#payment-method')!.textContent = month.payment_method || 'No especificado';
+      // clone.querySelector('#payment-method')!.textContent = month.payment_method || 'No especificado';
       clone.querySelector('#total-rent-amount')!.textContent =
         month.total_rent_amount.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
       clone.querySelector('#rent-amount')!.textContent =
@@ -66,30 +83,34 @@ export class CardPayment {
       clone.querySelector('#balance-pending')!.textContent =
         (month.total_rent_amount - month.rent_amount).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
 
+      // 🔹 Nuevo: nombre del inquilino (AJUSTAR)
+      const tenantNameEl = clone.querySelector('#tenant-name') as HTMLElement;
+      tenantNameEl.textContent = month.tenant_name || 'Inquilino no especificado';
+
       // Servicios dinámicos
-      const servicesContainer = clone.querySelector('#services') as HTMLElement;
-      servicesContainer.innerHTML = ''; // limpiar
+      // const servicesContainer = clone.querySelector('#services') as HTMLElement;
+      // servicesContainer.innerHTML = ''; // limpiar
 
-      const servicios = [
-        { key: 'water', label: 'Agua' },
-        { key: 'electricy', label: 'Electricidad' },
-        { key: 'gas', label: 'Gas' },
-        { key: 'hoa_fees', label: 'Expensas / ABL' },
-      ];
+      // const services = [
+      //   { key: 'water', label: 'Agua' },
+      //   { key: 'electricy', label: 'Electricidad' },
+      //   { key: 'gas', label: 'Gas' },
+      //   { key: 'hoa_fees', label: 'Expensas / ABL' },
+      // ];
 
-      servicios.forEach(s => {
-        if (month[s.key]) {
-          const div = document.createElement('div');
-          div.className = 'flex justify-between col-span-2';
-          div.innerHTML = `
-          <span>${s.label}</span>
-          <span class="font-medium">
-            <span class="material-icons">check</span>
-          </span>
-        `;
-          servicesContainer.appendChild(div);
-        }
-      });
+      // services.forEach(s => {
+      //   if (month[s.key]) {
+      //     const div = document.createElement('div');
+      //     div.className = 'flex justify-between col-span-2';
+      //     div.innerHTML = `
+      //     <span>${s.label}</span>
+      //     <span class="font-medium">
+      //       <span class="material-icons">check</span>
+      //     </span>
+      //   `;
+      //     servicesContainer.appendChild(div);
+      //   }
+      // });
 
       // Observaciones
       const obs = clone.querySelector('#observations') as HTMLElement;
@@ -98,7 +119,7 @@ export class CardPayment {
       // Opciones PDF
       const options = {
         margin: 10,
-        filename: `recibo-${month.rent_month}.pdf`,
+        filename: `${this.formatRentMonth(month.rent_month)}.pdf`,
         image: { type: 'jpeg' as const, quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },

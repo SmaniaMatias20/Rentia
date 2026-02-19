@@ -10,7 +10,7 @@
         <div class="flex gap-2">
 
             @if (month.status === true) {
-            <button class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600"
+            <button class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600 cursor-pointer"
                 (click)="downloadPDF(month)">Descargar
                 recibo</button>
             }
@@ -134,9 +134,13 @@
     <div class="w-full max-w-[794px] bg-white text-gray-800 p-8 font-sans">
 
         <!-- Header -->
-        <div class="flex justify-between items-start border-b pb-4 mb-6">
+        <div class="flex justify-between items-start pb-4 mb-6">
             <div class="flex flex-col gap-2">
                 <h2 class="text-2xl font-bold text-gray-900">Recibo de Alquiler</h2>
+
+                <!-- Nuevo: Nombre del inquilino -->
+                <p id="tenant-name" class="text-gray-700 font-semibold"></p>
+
                 <p class="text-sm text-gray-500">
                     Generado el {{ today | date:'dd/MM/yyyy HH:mm' }}
                 </p>
@@ -157,7 +161,7 @@
         </div>
 
         <!-- Resumen alquiler -->
-        <div class="border rounded-xl p-5 mb-6">
+        <div class="rounded-xl mb-6">
             <h3 class="font-semibold text-gray-900 mb-4">Resumen del alquiler</h3>
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between">
@@ -178,16 +182,24 @@
         </div>
 
         <!-- Servicios -->
-        <div class="border rounded-xl p-5 mb-6">
+        <!-- <div class="border rounded-xl p-5 mb-6">
             <h3 class="font-semibold text-gray-900 mb-4">Servicios</h3>
             <div id="services" class="grid grid-cols-2 gap-y-2 text-sm"></div>
-        </div>
+        </div> -->
 
         <!-- Observaciones -->
-        <div class="border rounded-xl p-5">
+        <div class="rounded-xl">
             <h3 class="font-semibold text-gray-900 mb-2">Observaciones</h3>
             <p id="observations" class="text-sm text-gray-600 whitespace-pre-line"></p>
         </div>
+    </div>
+    <div class="flex justify-between items-center p-5 pt-20">
+        <div class="p-5 border-t border-black">
+            <h3 class="font-semibold text-gray-900 mb-2">Firma del propietario</h3>
+        </div>
 
+        <div class="p-5 border-t border-black">
+            <h3 class="font-semibold text-gray-900 mb-2">Firma del inquilino</h3>
+        </div>
     </div>
 </div>
