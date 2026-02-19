@@ -7,39 +7,67 @@
     }
 
     <!-- Botón volver -->
-    <div class="absolute top-4 right-4 flex gap-2 z-20">
+    <div class="
+  absolute top-4 right-4 left-4 sm:left-auto
+  flex justify-end
+  z-20
+">
         <button class="
-        flex items-center gap-1
-        py-2 px-4
-        rounded-lg bg-blue-600 hover:bg-blue-700
-        text-white font-semibold transition cursor-pointer
-      " (click)="goToHome()">
+    flex items-center justify-center gap-1
+    py-2 px-4
+    w-full sm:w-auto
+    whitespace-nowrap
+    rounded-lg bg-blue-600 hover:bg-blue-700
+    text-white font-semibold transition cursor-pointer
+  " (click)="goToHome()">
             <span class="material-icons">arrow_back</span>
             Volver al menú
         </button>
-
     </div>
 
-    <!-- Filtro Mes-Año -->
-    <div class="max-w-screen mx-auto px-4 flex justify-start">
-        <div class="flex items-center gap-3 bg-gray-900 p-3 rounded-lg border border-gray-700">
 
-            <label class="text-white text-sm font-semibold">
+    <!-- Filtro Mes-Año -->
+    <div class="max-w-screen mx-auto px-4 mt-20 sm:mt-0 flex justify-start">
+        <div class="
+    flex flex-col sm:flex-row
+    items-stretch sm:items-center
+    gap-3
+    bg-gray-900 p-3 rounded-lg border border-gray-700
+    w-full sm:w-auto
+  ">
+
+            <label class="text-white text-sm font-semibold whitespace-nowrap">
                 Filtrar por período:
             </label>
 
-            <input type="month" [(ngModel)]="selectedMonthYear"
-                class="bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none" />
+            <input type="month" [(ngModel)]="selectedMonthYear" class="
+        w-full sm:w-auto
+        bg-gray-800 text-white px-3 py-2
+        rounded-lg border border-gray-600
+        focus:outline-none
+      " />
 
-            <!-- Botón Aplicar -->
-            <button (click)="applyMonthYearFilter()" [disabled]="!selectedMonthYear"
-                class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+            <!-- Aplicar -->
+            <button (click)="applyMonthYearFilter()" [disabled]="!selectedMonthYear" class="
+        w-full sm:w-auto
+        bg-blue-600 hover:bg-blue-700
+        text-white text-sm font-semibold
+        px-4 py-2 rounded-lg transition
+        disabled:opacity-50 disabled:cursor-not-allowed
+        cursor-pointer whitespace-nowrap
+      ">
                 Aplicar
             </button>
 
-            <!-- Botón Limpiar -->
-            <button (click)="clearMonthYearFilter()" [disabled]="!selectedMonthYear"
-                class="bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+            <!-- Limpiar -->
+            <button (click)="clearMonthYearFilter()" [disabled]="!selectedMonthYear" class="
+        w-full sm:w-auto
+        bg-gray-600 hover:bg-gray-700
+        text-white text-sm font-semibold
+        px-4 py-2 rounded-lg transition
+        disabled:opacity-50 disabled:cursor-not-allowed
+        cursor-pointer whitespace-nowrap
+      ">
                 Limpiar
             </button>
 

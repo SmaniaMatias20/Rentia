@@ -10,9 +10,12 @@
 
     @if (!loading) {
     <!-- Contenedor de botones arriba a la derecha -->
-    <div class="absolute top-4 right-4 z-20
-    flex flex-col gap-2
-    sm:flex-row sm:gap-3">
+    <div class="
+  absolute top-4 right-4 left-4 sm:left-auto z-20
+  flex flex-col sm:flex-row
+  gap-2 sm:gap-3
+  sm:items-center
+">
 
         <!-- Filtro de inquilinos activos/inactivos -->
         <div class="flex items-center gap-2">
@@ -54,7 +57,7 @@
     </div>
 
     @if (tenants.length > 0) {
-    <div class="pt-24">
+    <div class="sm:pt-24 pt-36">
         <div class="
     grid
     grid-cols-1

@@ -1,132 +1,208 @@
 <div class="bg-gray-900 text-white rounded-xl shadow-lg overflow-hidden">
 
+    <!-- 🔍 Buscador -->
     <div class="p-4 bg-gray-900 border-b border-gray-800">
         <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar en cualquier columna..."
             class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-600" />
     </div>
 
+    <!-- ================= DESKTOP TABLE ================= -->
+    <div class="hidden lg:block">
+        <table class="w-full text-sm">
 
-    <table class="w-full text-sm">
-        <thead class="bg-gray-800 text-gray-300">
-            <tr>
-                <th class="px-4 py-3 text-left">Propiedad</th>
-                <th class="px-4 py-3 text-left">Inquilino</th>
-                <th class="px-4 py-3 text-left">Valor base</th>
-                <th class="px-4 py-3 text-left">% Aumento</th>
-                <th class="px-4 py-3 text-left">Frecuencia</th>
-                <th class="px-4 py-3 text-left">Valor actual</th>
-                <th class="px-4 py-3 text-left">Desde</th>
-                <th class="px-4 py-3 text-left">Hasta</th>
-                <th class="px-4 py-3 text-left">Vigencia</th>
-                <th class="px-4 py-3 text-left">Estado</th>
-                <th class="px-4 py-3 text-left">Actualizar</th>
-            </tr>
-        </thead>
+            <thead class="bg-gray-800 text-gray-300">
+                <tr>
+                    <th class="px-4 py-3 text-left">Propiedad</th>
+                    <th class="px-4 py-3 text-left">Inquilino</th>
+                    <th class="px-4 py-3 text-left">Valor base</th>
+                    <th class="px-4 py-3 text-left">% Aumento</th>
+                    <th class="px-4 py-3 text-left">Frecuencia</th>
+                    <th class="px-4 py-3 text-left">Valor actual</th>
+                    <th class="px-4 py-3 text-left">Desde</th>
+                    <th class="px-4 py-3 text-left">Hasta</th>
+                    <th class="px-4 py-3 text-left">Vigencia</th>
+                    <th class="px-4 py-3 text-left">Estado</th>
+                    <th class="px-4 py-3 text-left">Actualizar</th>
+                </tr>
+            </thead>
 
-        <tbody>
-            @for (contract of paginatedContracts; track contract.id)
-            {
-            <tr class="border-t border-gray-800 transition" [ngClass]="{
-    'bg-red-600/40 hover:bg-red-600/60': isExpired(contract),
-    'bg-yellow-500/40 hover:bg-yellow-500/60': !isExpired(contract) && isExpiringSoon(contract),
-    'hover:bg-gray-800': !isExpired(contract) && !isExpiringSoon(contract)
-  }">
+            <tbody>
+                @for (contract of paginatedContracts; track contract.id) {
 
-                <!-- Propiedad -->
-                <td class="px-4 py-3">
-                    {{ contract.property_name.charAt(0).toUpperCase() + contract.property_name.slice(1) || '-' }}
-                </td>
+                <tr class="border-t border-gray-800 transition" [ngClass]="{
+            'bg-red-600/40 hover:bg-red-600/60': isExpired(contract),
+            'bg-yellow-500/40 hover:bg-yellow-500/60': !isExpired(contract) && isExpiringSoon(contract),
+            'hover:bg-gray-800': !isExpired(contract) && !isExpiringSoon(contract)
+          }">
 
-                <!-- Inquilino -->
-                <td class="px-4 py-3">
-                    {{ contract.tenant_name.charAt(0).toUpperCase() + contract.tenant_name.slice(1) || '-'
-                    }}
-                </td>
+                    <td class="px-4 py-3">
+                        {{ contract.property_name?.charAt(0).toUpperCase() + contract.property_name?.slice(1) || '-' }}
+                    </td>
 
-                <!-- Monto base -->
-                <td class="px-4 py-3 font-semibold">
-                    ${{ contract.rent_amount || '-' }}
-                </td>
+                    <td class="px-4 py-3">
+                        {{ contract.tenant_name?.charAt(0).toUpperCase() + contract.tenant_name?.slice(1) || '-' }}
+                    </td>
 
-                <!-- % -->
-                <td class="px-4 py-3">
-                    {{ contract.increase_percentage }}%
-                </td>
+                    <td class="px-4 py-3 font-semibold">
+                        ${{ contract.rent_amount || '-' }}
+                    </td>
 
+                    <td class="px-4 py-3">
+                        {{ contract.increase_percentage }}%
+                    </td>
 
-                <!-- Frecuencia -->
-                <td class="px-4 py-3">
-                    {{ formatFrequency(contract.increase_frequency) || '-' }}
-                </td>
+                    <td class="px-4 py-3">
+                        {{ formatFrequency(contract.increase_frequency) || '-' }}
+                    </td>
 
-                <!-- Monto actualizado -->
-                <td class="px-4 py-3 font-semibold">
-                    ${{ calculateCurrentRent(contract) || '-' }}
-                </td>
+                    <td class="px-4 py-3 font-semibold">
+                        ${{ calculateCurrentRent(contract) || '-' }}
+                    </td>
 
-                <!-- Fechas -->
-                <td class="px-4 py-3">
-                    {{ formatDate(contract.valid_from) || '-' }}
-                </td>
+                    <td class="px-4 py-3">
+                        {{ formatDate(contract.valid_from) || '-' }}
+                    </td>
 
-                <td class="px-4 py-3">
-                    {{ formatDate(contract.valid_to) || '-' }}
-                </td>
+                    <td class="px-4 py-3">
+                        {{ formatDate(contract.valid_to) || '-' }}
+                    </td>
 
-                <td class="px-4 py-3">
-                    @if (isExpired(contract)) {
-                    <span class="bg-red-600 px-2 py-1 rounded text-xs text-white">
-                        Vencido
-                    </span>
-                    } @else if (isExpiringSoon(contract)) {
-                    <span class="bg-yellow-600 px-2 py-1 rounded text-xs text-white">
-                        Por vencer
-                    </span>
-                    }
-                    @else if (isPending(contract)) {
-                    <span class="bg-blue-600 px-2 py-1 rounded text-xs text-white">
-                        Pendiente
-                    </span>
-                    }
-                    @else {
-                    <span class="bg-gray-600 px-2 py-1 rounded text-xs text-white">
-                        En curso
-                    </span>
-                    }
-                </td>
+                    <!-- Vigencia -->
+                    <td class="px-4 py-3">
+                        @if (isExpired(contract)) {
+                        <span class="bg-red-600 px-2 py-1 rounded text-xs text-white">Vencido</span>
+                        } @else if (isExpiringSoon(contract)) {
+                        <span class="bg-yellow-600 px-2 py-1 rounded text-xs text-white">Por vencer</span>
+                        } @else if (isPending(contract)) {
+                        <span class="bg-blue-600 px-2 py-1 rounded text-xs text-white">Pendiente</span>
+                        } @else {
+                        <span class="bg-gray-600 px-2 py-1 rounded text-xs text-white">En curso</span>
+                        }
+                    </td>
 
-                <td class="px-4 py-3">
-                    @if (contract.status) {
-                    <span class="bg-green-600 px-2 py-1 rounded text-xs text-white">
-                        Activo
-                    </span>
-                    } @else {
-                    <span class="bg-red-600 px-2 py-1 rounded text-xs text-white">
-                        Inactivo
-                    </span>
-                    }
-                </td>
+                    <!-- Estado -->
+                    <td class="px-4 py-3">
+                        @if (contract.status) {
+                        <span class="bg-green-600 px-2 py-1 rounded text-xs text-white">Activo</span>
+                        } @else {
+                        <span class="bg-red-600 px-2 py-1 rounded text-xs text-white">Inactivo</span>
+                        }
+                    </td>
 
-                <!-- Actualizar estado -->
-                <td class="px-4 py-3">
+                    <!-- Acción -->
+                    <td class="px-4 py-3">
+                        <button
+                            class="text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center"
+                            [ngClass]="{
+                'bg-red-600 hover:bg-red-700': contract.status,
+                'bg-green-600 hover:bg-green-700': !contract.status
+              }" (click)="updateContractStatus.emit(contract)">
+                            {{ contract.status ? 'Desactivar' : 'Activar' }}
+                        </button>
+                    </td>
 
-                    <button class="text-white transition cursor-pointer rounded-lg p-2 flex items-center justify-center"
-                        [ngClass]="{
-    'bg-red-600 hover:bg-red-700': contract.status,
-    'bg-green-600 hover:bg-green-700': !contract.status
-  }" (click)="updateContractStatus.emit(contract)" title="Actualizar estado">
-                        {{ contract.status ? 'Desactivar' : 'Activar' }}
-                    </button>
-                </td>
+                </tr>
+                }
+            </tbody>
 
+        </table>
+    </div>
 
+    <!-- ================= MOBILE / TABLET CARDS ================= -->
+    <div class="lg:hidden p-4 space-y-4 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0">
 
-            </tr>
-            }
-        </tbody>
+        @for (contract of paginatedContracts; track contract.id) {
 
-    </table>
+        <div class="rounded-xl border border-gray-800 bg-gray-900 p-4 space-y-3" [ngClass]="{
+        'bg-red-600/30': isExpired(contract),
+        'bg-yellow-500/30': !isExpired(contract) && isExpiringSoon(contract)
+      }">
 
+            <!-- Header -->
+            <div class="flex justify-between items-start gap-2">
+                <div>
+                    <p class="font-semibold text-white">
+                        {{ contract.property_name || '-' }}
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        {{ contract.tenant_name || '-' }}
+                    </p>
+                </div>
+
+                <span class="text-xs px-2 py-1 rounded" [ngClass]="{
+            'bg-red-600 text-white': isExpired(contract),
+            'bg-yellow-600 text-white': isExpiringSoon(contract),
+            'bg-blue-600 text-white': isPending(contract),
+            'bg-gray-600 text-white':
+              !isExpired(contract) && !isExpiringSoon(contract) && !isPending(contract)
+          }">
+                    @if (isExpired(contract)) { Vencido }
+                    @else if (isExpiringSoon(contract)) { Por vencer }
+                    @else if (isPending(contract)) { Pendiente }
+                    @else { En curso }
+                </span>
+            </div>
+
+            <!-- Grid info -->
+            <div class="grid grid-cols-2 gap-2 text-sm">
+
+                <div>
+                    <p class="text-gray-400">Base</p>
+                    <p class="font-semibold">$ {{ contract.rent_amount || '-' }}</p>
+                </div>
+
+                <div>
+                    <p class="text-gray-400">Actual</p>
+                    <p class="font-semibold">$ {{ calculateCurrentRent(contract) || '-' }}</p>
+                </div>
+
+                <div>
+                    <p class="text-gray-400">% Aumento</p>
+                    <p>{{ contract.increase_percentage }}%</p>
+                </div>
+
+                <div>
+                    <p class="text-gray-400">Frecuencia</p>
+                    <p>{{ formatFrequency(contract.increase_frequency) || '-' }}</p>
+                </div>
+
+                <div>
+                    <p class="text-gray-400">Desde</p>
+                    <p>{{ formatDate(contract.valid_from) || '-' }}</p>
+                </div>
+
+                <div>
+                    <p class="text-gray-400">Hasta</p>
+                    <p>{{ formatDate(contract.valid_to) || '-' }}</p>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="flex justify-between items-center pt-2 border-t border-gray-800">
+
+                <span class="text-xs px-2 py-1 rounded" [ngClass]="{
+            'bg-green-600 text-white': contract.status,
+            'bg-red-600 text-white': !contract.status
+          }">
+                    {{ contract.status ? 'Activo' : 'Inactivo' }}
+                </span>
+
+                <button class="text-white transition cursor-pointer rounded-lg px-3 py-2 text-sm" [ngClass]="{
+            'bg-red-600 hover:bg-red-700': contract.status,
+            'bg-green-600 hover:bg-green-700': !contract.status
+          }" (click)="updateContractStatus.emit(contract)">
+                    {{ contract.status ? 'Desactivar' : 'Activar' }}
+                </button>
+
+            </div>
+
+        </div>
+
+        }
+    </div>
+
+    <!-- ================= PAGINACIÓN ================= -->
     @if (filteredContracts.length > 0) {
     <div class="flex justify-between items-center p-4 border-t border-gray-800 bg-gray-900">
 
@@ -147,10 +223,10 @@
     </div>
     }
 
-
     @if (filteredContracts.length === 0) {
     <p class="text-center text-gray-400 py-6">
         No hay contratos cargados
     </p>
     }
+
 </div>

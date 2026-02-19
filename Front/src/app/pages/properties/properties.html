@@ -8,20 +8,25 @@
 
 
   @if (!loading) {
-  <!-- Contenedor de botones arriba a la derecha -->
+  <!-- Contenedor de botones -->
   <div class="
-    absolute top-4 right-4 z-20
-    flex flex-col gap-2
-    sm:flex-row sm:gap-3
-  ">
+  absolute top-4 right-4 left-4 sm:left-auto z-20
+  flex flex-col sm:flex-row
+  gap-2 sm:gap-3
+  sm:items-center
+">
+
 
     <!-- Filtro de propiedades activos/inactivos -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 w-full sm:w-auto">
       <span class="material-icons text-gray-400">filter_list</span>
       <select class="
-                flex-1 p-2 rounded-lg bg-blue-600 hover:bg-blue-700
-                text-white font-semibold transition cursor-pointer
-              " [(ngModel)]="filter" (ngModelChange)="onFilterChange()">
+  w-full sm:w-auto
+  p-2 rounded-lg
+  bg-blue-600 hover:bg-blue-700
+  text-white font-semibold
+  transition cursor-pointer
+" [(ngModel)]="filter" (ngModelChange)="onFilterChange()">
         <option value="all">Todos</option>
         <option value="active">Activas</option>
         <option value="inactive">Inactivas</option>
@@ -56,7 +61,7 @@
   </div>
 
   <!-- Contenido principal (cards) -->
-  <div class="pt-24">
+  <div class="sm:pt-24 pt-36">
     <div class="
     grid
     grid-cols-1
