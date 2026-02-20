@@ -4,6 +4,7 @@ import { Toast } from '../../../../components/toast/toast';
 import { AuthService } from '../../../../services/auth/auth';
 import { PropertyService } from '../../../../services/property/property';
 import { environment } from '../../../../../../src/environments/environment';
+import { FormControl } from '@angular/forms';
 
 declare var google: any;
 
@@ -29,14 +30,19 @@ export class FormProperty implements AfterViewInit {
   ) {
     // Inicializamos el formulario reactivo
     this.propertyForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       address: [''],
     });
   }
 
-  // Getters para acceder a los controles desde el template
-  get name() { return this.propertyForm.get('name'); }
-  get address() { return this.propertyForm.get('address'); }
+  get name(): FormControl {
+    return this.propertyForm.get('name') as FormControl;
+  }
+
+  get address(): FormControl {
+    return this.propertyForm.get('address') as FormControl;
+  }
+
 
   // Guardar propiedad
   async submit() {
@@ -116,7 +122,6 @@ export class FormProperty implements AfterViewInit {
       });
   }
 
-
   loadGoogleMaps(): Promise<void> {
     return new Promise((resolve, reject) => {
       if ((window as any).google?.maps?.places) {
@@ -135,9 +140,4 @@ export class FormProperty implements AfterViewInit {
       document.body.appendChild(script);
     });
   }
-
-
-
-
-
 }

@@ -21,27 +21,27 @@
                 class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <div class="min-h-[1.25rem]">
-                @if (name && name.invalid && (name.dirty || name.touched)) {
+                @if (name.touched || name.dirty) {
+
+                @if (name.errors?.['required']) {
                 <p class="text-sm text-red-500 mt-1">
-                    El nombre es obligatorio y debe tener al menos 3 caracteres.
+                    El nombre es obligatorio.
                 </p>
+
+                } @else if (name.errors?.['minlength']) {
+                <p class="text-sm text-red-500 mt-1">
+                    El nombre debe tener al menos 3 caracteres.
+                </p>
+
+                } @else if (name.errors?.['maxlength']) {
+                <p class="text-sm text-red-500 mt-1">
+                    El nombre no puede superar los 30 caracteres.
+                </p>
+                }
+
                 }
             </div>
         </div>
-
-        <!-- Dirección -->
-        <!-- <div>
-            <input #addressInput type="text" formControlName="address" placeholder="Dirección"
-                class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-
-            <div class="min-h-[1.25rem]"> -->
-        <!-- @if (address && address.invalid && (address.dirty || address.touched)) {
-                <p class="text-sm text-red-500 mt-1">
-                    La dirección es obligatoria y debe tener al menos 5 caracteres.
-                </p>
-                } -->
-        <!-- </div>
-        </div> -->
 
         <button type="submit" [disabled]="submitting"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full cursor-pointer">
