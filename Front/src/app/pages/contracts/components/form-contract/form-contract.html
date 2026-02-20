@@ -50,7 +50,7 @@
 
         <!-- Precio -->
         <div>
-            <input type="number" formControlName="rent_amount" placeholder="Monto del alquiler"
+            <input type="number" formControlName="rent_amount" placeholder="Monto del alquiler" min="1"
                 class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
 
             <div class="min-h-[1.25rem]">
@@ -70,7 +70,7 @@
 
         <!-- % Aumento -->
         <div>
-            <input type="number" formControlName="increase_percentage" placeholder="% Aumento"
+            <input type="number" formControlName="increase_percentage" placeholder="% Aumento" min="0" max="100"
                 class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded" />
 
             <div class="min-h-[1.25rem]">
@@ -85,8 +85,11 @@
             <select formControlName="increase_frequency"
                 class="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded">
                 <option value="monthly">Mensual</option>
+                <option value="bimonthly">Bimestral</option>
                 <option value="quarterly">Trimestral</option>
-                <option value="yearly">Anual</option>
+                <option value="four_monthly">Cuatrimestral</option>
+                <option value="semiannual">Semestral</option>
+                <option value="annual">Anual</option>
             </select>
         </div>
 

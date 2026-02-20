@@ -156,23 +156,30 @@ export class Payments {
   }
 
 
-  calculateAccumulatedRent(base: number, increase: number, frequency: string, monthIndex: number): number {
+  calculateAccumulatedRent(
+    base: number,
+    increase: number,
+    frequency: string,
+    monthIndex: number
+  ): number {
     const inc = increase / 100;
-    let total = base;
 
-    switch (frequency) {
-      case 'monthly':
-        total = base * Math.pow(1 + inc, monthIndex);
-        break;
-      case 'quarterly':
-        const quarterIndex = Math.floor(monthIndex / 3);
-        total = base * Math.pow(1 + inc, quarterIndex);
-        break;
-      case 'annual':
-        const yearIndex = Math.floor(monthIndex / 12);
-        total = base * Math.pow(1 + inc, yearIndex);
-        break;
-    }
+    const frequencyMap: Record<string, number> = {
+      monthly: 1,
+      bimonthly: 2,
+      quarterly: 3,
+      four_monthly: 4,
+      semiannual: 6,
+      annual: 12,
+    };
+
+    const period = frequencyMap[frequency];
+
+    // fallback seguro
+    if (!period) return Math.round(base);
+
+    const index = Math.floor(monthIndex / period);
+    const total = base * Math.pow(1 + inc, index);
 
     return Math.round(total);
   }

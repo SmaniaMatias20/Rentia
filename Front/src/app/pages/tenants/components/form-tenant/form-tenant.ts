@@ -29,9 +29,13 @@ export class FormTenant implements OnInit {
     private propertyService: PropertyService
   ) {
     this.tenantForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      phone: ['', [Validators.pattern(/^\d{7,15}$/)]],
-      email: ['', [Validators.email]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      phone: ['', [
+        Validators.pattern(/^\d+$/),
+        Validators.minLength(7),
+        Validators.maxLength(15)
+      ]],
+      email: ['', [Validators.email, Validators.minLength(5), Validators.maxLength(50)]],
       role: ['tenant'],
     });
 

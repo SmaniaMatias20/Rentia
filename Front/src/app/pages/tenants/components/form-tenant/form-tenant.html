@@ -17,14 +17,26 @@
 
         <!-- Nombre -->
         <div>
-            <input type="text" formControlName="username" placeholder="Nombre"
+            <input type="text" formControlName="username" placeholder="Nombre de usuario"
                 class="w-full bg-gray-800 border border-gray-700 text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (f['username'].invalid && (f['username'].dirty || f['username'].touched)) {
+                @if (f['username'].errors?.['required'] && f['username'].touched) {
                 <p class="text-red-500 text-sm">
-                    El nombre es obligatorio (mínimo 3 caracteres)
+                    El nombre es obligatorio
+                </p>
+                }
+
+                @if (f['username'].errors?.['maxlength']) {
+                <p class="text-red-500 text-sm">
+                    El nombre no puede superar los 30 caracteres
+                </p>
+                }
+
+                @if (f['username'].errors?.['minlength']) {
+                <p class="text-red-500 text-sm">
+                    El nombre no puede ser menor a 3 caracteres
                 </p>
                 }
 
@@ -38,10 +50,25 @@
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (f['phone'].invalid && (f['phone'].dirty || f['phone'].touched)) {
+                @if (f['phone'].touched || f['phone'].dirty) {
+
+                @if (f['phone'].errors?.['pattern']) {
                 <p class="text-sm text-red-500 mt-1">
-                    Teléfono inválido. Solo números entre 7 y 15 dígitos.
+                    El teléfono solo debe contener números.
                 </p>
+
+                } @else if (f['phone'].errors?.['minlength']) {
+                <p class="text-sm text-red-500 mt-1">
+                    El teléfono debe tener al menos 7 dígitos.
+                </p>
+
+                } @else if (f['phone'].errors?.['maxlength']) {
+                <p class="text-sm text-red-500 mt-1">
+                    El teléfono no puede superar los 15 dígitos.
+                </p>
+
+                }
+
                 }
             </div>
         </div>
@@ -53,10 +80,24 @@
 
             <!-- error -->
             <div class="min-h-[1.25rem]">
-                @if (f['email'].invalid && (f['email'].dirty || f['email'].touched)) {
+                @if (f['email'].touched || f['email'].dirty) {
+
+                @if (f['email'].errors?.['email']) {
                 <p class="text-sm text-red-500 mt-1">
                     Email inválido
                 </p>
+
+                } @else if (f['email'].errors?.['minlength']) {
+                <p class="text-red-500 text-sm">
+                    El correo no puede ser menor a 5 caracteres
+                </p>
+
+                } @else if (f['email'].errors?.['maxlength']) {
+                <p class="text-red-500 text-sm">
+                    El correo no puede superar los 50 caracteres
+                </p>
+                }
+
                 }
             </div>
         </div>

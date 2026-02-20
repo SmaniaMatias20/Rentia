@@ -87,31 +87,6 @@ export class CardPayment {
       const tenantNameEl = clone.querySelector('#tenant-name') as HTMLElement;
       tenantNameEl.textContent = month.tenant_name || 'Inquilino no especificado';
 
-      // Servicios dinámicos
-      // const servicesContainer = clone.querySelector('#services') as HTMLElement;
-      // servicesContainer.innerHTML = ''; // limpiar
-
-      // const services = [
-      //   { key: 'water', label: 'Agua' },
-      //   { key: 'electricy', label: 'Electricidad' },
-      //   { key: 'gas', label: 'Gas' },
-      //   { key: 'hoa_fees', label: 'Expensas / ABL' },
-      // ];
-
-      // services.forEach(s => {
-      //   if (month[s.key]) {
-      //     const div = document.createElement('div');
-      //     div.className = 'flex justify-between col-span-2';
-      //     div.innerHTML = `
-      //     <span>${s.label}</span>
-      //     <span class="font-medium">
-      //       <span class="material-icons">check</span>
-      //     </span>
-      //   `;
-      //     servicesContainer.appendChild(div);
-      //   }
-      // });
-
       // Observaciones
       const obs = clone.querySelector('#observations') as HTMLElement;
       obs.textContent = month.description || 'Sin observaciones';

@@ -10,7 +10,7 @@ import { TenantService } from '../../services/tenant/tenant';
 
 
 declare var google: any;
-type EditType = 'value' | 'additional_costs' | 'address' | 'tenant' | 'name' | 'rooms' | 'type';
+type EditType = 'value' | 'additional_costs' | 'address' | 'tenant' | 'name' | 'rooms' | 'type' | 'floor';
 
 @Component({
   selector: 'app-property',

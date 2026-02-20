@@ -47,14 +47,7 @@
                 <!-- Datos -->
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
 
-                    <!-- <div class="flex items-center gap-3">
-                        <span class="material-icons text-green-400 text-3xl">attach_money</span>
-                        <div>
-                            <p class="text-gray-400 text-sm">Valor del alquiler</p>
-                            <p class="text-lg font-semibold">${{ propertyData.value ? propertyData.value : '0' }}</p>
-                        </div>
-                    </div> -->
-
+                    <!-- Direccion -->
                     <div class="flex items-center gap-3">
                         <span class="material-icons text-purple-400 text-3xl">place</span>
                         <div>
@@ -74,6 +67,25 @@
                         rounded-lg bg-blue-600 hover:bg-blue-700
                         text-white font-semibold transition cursor-pointer
                       " (click)="openEdit('address', propertyData.address)">
+                            <span class="material-icons">edit</span>
+                        </button>
+                    </div>
+
+                    <!-- Piso -->
+                    <div class="flex items-center gap-3">
+                        <span class="material-icons text-green-400 text-3xl">stairs</span>
+                        <div>
+                            <p class="text-gray-400 text-sm">Piso</p>
+                            <p class="text-lg font-semibold">
+                                {{ propertyData.floor ? propertyData.floor : 'Sin información' }}
+                            </p>
+                        </div>
+                        <button class="
+                        flex items-center gap-1
+                        py-2 px-2
+                        rounded-lg bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold transition cursor-pointer
+                      " (click)="openEdit('floor', propertyData.floor)">
                             <span class="material-icons">edit</span>
                         </button>
                     </div>
@@ -133,32 +145,6 @@
                             }
                         </div>
                     </div>
-
-                    <!-- Contract Valid From -->
-                    <!-- <div class="flex items-center gap-3">
-                        <span class="material-icons text-green-400 text-3xl">date_range</span>
-                        <div>
-                            <p class="text-gray-400 text-sm">Contrato válido desde</p>
-                            <p class="text-lg font-semibold">
-                                {{ propertyData.contract_valid_from ? propertyData.contract_valid_from : 'Sin
-                                información' }}
-                            </p>
-                        </div>
-                    </div> -->
-
-                    <!-- Contract Valid To -->
-                    <!-- <div class="flex items-center gap-3">
-                        <span class="material-icons text-green-400 text-3xl">date_range</span>
-                        <div>
-                            <p class="text-gray-400 text-sm">Contrato válido hasta</p>
-                            <p class="text-lg font-semibold">
-                                {{ propertyData.contract_valid_to ? propertyData.contract_valid_to : 'Sin información'
-                                }}
-                            </p>
-                        </div>
-                    </div> -->
-
-
                 </div>
 
                 <!-- Badges -->

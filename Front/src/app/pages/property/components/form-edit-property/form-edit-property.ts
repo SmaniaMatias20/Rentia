@@ -19,7 +19,8 @@ type EditType =
   | 'address'
   | 'name'
   | 'rooms'
-  | 'type';
+  | 'type'
+  | 'floor';
 
 @Component({
   selector: 'app-form-edit-property',
