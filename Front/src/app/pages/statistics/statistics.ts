@@ -1,12 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { PropertyService } from '../../services/property/property';
 import { AuthService } from '../../services/auth/auth';
 import { PaymentService } from '../../services/payment/payment';
 import { Spinner } from '../../components/spinner/spinner';
-import { TenantService } from '../../services/tenant/tenant';
-import { ContractService } from '../../services/contract/contract';
 import { CardStatistic } from './components/card-statistic/card-statistic';
+import { StatisticsService } from '../../services/statistics/statistics';
 import { FormsModule } from '@angular/forms';
 import { Toast } from '../../components/toast/toast';
 import { CommonModule } from '@angular/common';
@@ -42,7 +40,7 @@ export class Statistics {
   lowestRent: number = 0;
   selectedMonthYear: string = '';
 
-  constructor(private router: Router, private propertyService: PropertyService, private auth: AuthService, private tenantService: TenantService, private contractService: ContractService, private paymentService: PaymentService) {
+  constructor(private router: Router, private auth: AuthService, private paymentService: PaymentService, private statisticsService: StatisticsService) {
   }
 
   get visibleMonthYear(): string {
@@ -56,46 +54,51 @@ export class Statistics {
     }).replace(/^./, c => c.toUpperCase());
   }
 
-
-
-
-
   async ngOnInit(): Promise<void> {
     this.loading = true;
 
     try {
-      // Obtener el usuario actual
+      // 👤 Usuario actual
       this.currentUser = await this.auth.getCurrentUser();
-      // Obtener la cantidad de propiedades por usuario
-      this.quantityOfPropertiesByUser = await this.propertyService.getQuantityOfPropertiesByUser(this.currentUser.id);
-      // Obtener la cantidad de propiedades con inquilino 
-      this.quantityOfPropertiesWithTenantByUser = await this.propertyService.getQuantityOfPropertiesWithActiveTenantByUser(this.currentUser.id);
-      // Obtener la cantidad de propiedades sin inquilino
-      this.quantityOfPropertiesWithoutTenantByUser = this.quantityOfPropertiesByUser - this.quantityOfPropertiesWithTenantByUser;
-      // Obtener la cantidad de inquilinos por usuario
-      this.quantityOfTenantsByUser = await this.tenantService.getQuantityOfTenantsByUser(this.currentUser.id);
-      // // Obtener el máximo de alquiler por usuario
-      this.highestRent = await this.contractService.getHighestRentByUser(this.currentUser.id);
-      // Obtener el mínimo de alquiler por usuario
-      this.lowestRent = await this.contractService.getLowestRentByUser(this.currentUser.id);
-      // Obtener la cantidad de contratos activos por usuario
-      this.quantityOfActiveContractsByUser = await this.contractService.getQuantityOfActiveContractsByUser(this.currentUser.id);
-      // Obtener la cantidad de contratos por vencer por usuario
-      this.quantityOfContractsToVenceByUser = await this.contractService.getQuantityOfContractsToVenceByUser(this.currentUser.id);
-      // Obtener la cantidad de contratos vencidos por usuario
-      this.quantityOfContractsVencedByUser = await this.contractService.getQuantityOfContractsVencedByUser(this.currentUser.id);
-      // Obtener la cantidad de contratos pendientes (todavia no estan en fecha)
-      this.quantityOfContractsPendingByUser = await this.contractService.getQuantityOfContractsPendingByUser(this.currentUser.id);
-      // Obtener ingresos mensuales por defecto (Sin filtro)
-      await this.getDefaultMonthlyRentIncomeByUser();
-      // Calcular el porcentaje de propiedades con inquilino
-      this.calculatePercentageOfPropertiesWithTenantByUser();
-      // Calcular el porcentaje de propiedades sin inquilino
-      this.calculatePercentageOfPropertiesWithoutTenantByUser();
 
-      this.toast.showToast('Estadísticas obtenidas correctamente', 'success');
+      // 📊 Todas las estadísticas en UNA llamada lógica
+      const stats = await this.statisticsService.getStatisticsByUser(
+        this.currentUser.id
+      );
+
+      // 🏠 Propiedades
+      this.quantityOfPropertiesByUser = stats.properties.total;
+      this.quantityOfPropertiesWithTenantByUser =
+        stats.properties.withTenant;
+      this.quantityOfPropertiesWithoutTenantByUser =
+        stats.properties.withoutTenant;
+      this.percentageOfPropertiesWithTenantByUser =
+        stats.properties.percentageWithTenant;
+      this.percentageOfPropertiesWithoutTenantByUser =
+        stats.properties.percentageWithoutTenant;
+
+      // 👥 Inquilinos
+      this.quantityOfTenantsByUser = stats.tenants;
+
+      // 💰 Alquileres
+      this.highestRent = stats.rents.highest;
+      this.lowestRent = stats.rents.lowest;
+
+      // 📄 Contratos
+      this.quantityOfActiveContractsByUser = stats.contracts.active;
+      this.quantityOfContractsToVenceByUser = stats.contracts.toExpire;
+      this.quantityOfContractsVencedByUser = stats.contracts.expired;
+      this.quantityOfContractsPendingByUser = stats.contracts.pending;
+
+      // 💵 Ingresos mensuales (se mantiene aparte)
+      await this.getDefaultMonthlyRentIncomeByUser();
+
+      this.toast.showToast(
+        'Estadísticas obtenidas correctamente',
+        'success'
+      );
     } catch (error) {
-      console.error('Error al obtener usuario:', error);
+      console.error('Error al obtener estadísticas:', error);
       this.toast.showToast('Error al obtener estadísticas', 'error');
     } finally {
       this.loading = false;
