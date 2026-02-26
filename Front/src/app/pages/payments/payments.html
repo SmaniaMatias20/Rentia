@@ -126,11 +126,8 @@
           <span class="material-icons text-orange-300 text-3xl">trending_up</span>
           <div>
             <div class="text-gray-400 text-sm">Incremento</div>
-            <div class="text-lg font-semibold">{{ selectedContract.increase_percentage }}% {{
-              selectedContract.increase_frequency == 'monthly' ? 'Mensual' : selectedContract.increase_frequency ==
-              'quarterly'
-              ? 'Trimestral' : 'Anual'
-              }} </div>
+            <div class="text-lg font-semibold">{{ selectedContract.increase_percentage }}%
+              {{ formatFrequency(selectedContract.increase_frequency) }} </div>
           </div>
         </div>
 

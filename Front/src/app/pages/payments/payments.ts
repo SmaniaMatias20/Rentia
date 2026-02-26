@@ -249,6 +249,19 @@ export class Payments {
     }
   }
 
+  formatFrequency(freq: string) {
+    const map: Record<string, string> = {
+      monthly: 'Mensual',
+      bimonthly: 'Bimestral',
+      quarterly: 'Trimestral',
+      four_monthly: 'Cuatrimestral',
+      semiannual: 'Semestral',
+      annual: 'Anual'
+    };
+
+    return map[freq] || freq;
+  }
+
 
   onAddNote(month: any) {
     this.paymentMonthEdit = month;
@@ -417,10 +430,6 @@ export class Payments {
         return;
       }
     }
-
-    // ================================
-    // 🔥🔥🔥 ESTO ES LO QUE TE FALTA
-    // ================================
 
     const index = this.months.findIndex(m =>
       new Date(m.rent_month).getTime() ===

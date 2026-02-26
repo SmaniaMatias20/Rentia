@@ -66,11 +66,15 @@ export class TableContracts {
   }
 
   formatFrequency(freq: string) {
-    const map: any = {
+    const map: Record<string, string> = {
       monthly: 'Mensual',
+      bimonthly: 'Bimestral',
       quarterly: 'Trimestral',
-      yearly: 'Anual'
+      four_monthly: 'Cuatrimestral',
+      semiannual: 'Semestral',
+      annual: 'Anual'
     };
+
     return map[freq] || freq;
   }
 
@@ -85,28 +89,27 @@ export class TableContracts {
     const start = new Date(contract.valid_from);
     const now = new Date();
 
-    // si hay fecha de fin, usar la menor entre hoy y valid_to
     const end = contract.valid_to ? new Date(contract.valid_to) : now;
-
     const effectiveDate = now > end ? end : now;
-
-    let periods = 0;
 
     const monthsDiff =
       (effectiveDate.getFullYear() - start.getFullYear()) * 12 +
       (effectiveDate.getMonth() - start.getMonth());
 
-    if (contract.increase_frequency === 'monthly') {
-      periods = monthsDiff;
-    }
+    const frequencyMap: Record<string, number> = {
+      monthly: 1,
+      bimonthly: 2,
+      quarterly: 3,
+      four_monthly: 4,
+      semiannual: 6,
+      annual: 12,
+    };
 
-    if (contract.increase_frequency === 'quarterly') {
-      periods = Math.floor(monthsDiff / 3);
-    }
+    const period = frequencyMap[contract.increase_frequency];
 
-    if (contract.increase_frequency === 'yearly') {
-      periods = Math.floor(monthsDiff / 12);
-    }
+    if (!period) return Math.round(base);
+
+    const periods = Math.floor(monthsDiff / period);
 
     return Math.round(base * Math.pow(1 + percent, Math.max(periods, 0)));
   }
