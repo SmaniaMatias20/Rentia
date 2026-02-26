@@ -16,6 +16,10 @@ export class TableContracts {
   currentPage: number = 1;
   itemsPerPage: number = 8;
 
+  ngOnInit(): void {
+    console.log(this.contracts);
+  }
+
   get filteredContracts() {
     if (!this.searchTerm.trim()) return this.contracts;
 
@@ -65,6 +69,7 @@ export class TableContracts {
     return Math.ceil(this.filteredContracts.length / this.itemsPerPage) || 1;
   }
 
+  // 🔥 Formatear frecuencia
   formatFrequency(freq: string) {
     const map: Record<string, string> = {
       monthly: 'Mensual',
@@ -82,6 +87,7 @@ export class TableContracts {
     return new Date(date).toLocaleDateString('es-AR');
   }
 
+  // 🔥 Calcular renta actual
   calculateCurrentRent(contract: any) {
     const base = contract.rent_amount;
     const percent = contract.increase_percentage / 100;
@@ -115,6 +121,7 @@ export class TableContracts {
   }
 
 
+  // 🔥 Estado por vencer
   isExpiringSoon(contract: any): boolean {
     if (!contract.valid_to) return false;
     if (this.isPending(contract)) return false;
@@ -125,10 +132,10 @@ export class TableContracts {
     const diffMs = end.getTime() - now.getTime();
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
-    // 3 meses exactos ≈ 90 días
     return diffDays <= 90 && diffDays >= 0;
   }
 
+  // 🔥 Estado vencido
   isExpired(contract: any): boolean {
     if (!contract.valid_to) return false;
 
@@ -141,13 +148,13 @@ export class TableContracts {
     return diffDays <= -1;
   }
 
+  // 🔥 Estado pendiente
   isPending(contract: any): boolean {
     if (!contract.valid_from) return false;
 
     const now = new Date();
     const end = new Date(contract.valid_from);
 
-    // esta pendiente si la fecha de hoy es menor a la fecha de comienzo
     return now < end;
   }
 

@@ -14,6 +14,7 @@
                 <tr>
                     <th class="px-4 py-3 text-left">Propiedad</th>
                     <th class="px-4 py-3 text-left">Inquilino</th>
+                    <th class="px-4 py-3 text-left">Moneda</th>
                     <th class="px-4 py-3 text-left">Valor base</th>
                     <th class="px-4 py-3 text-left">% Aumento</th>
                     <th class="px-4 py-3 text-left">Frecuencia</th>
@@ -41,6 +42,10 @@
 
                     <td class="px-4 py-3">
                         {{ contract.tenant_name?.charAt(0).toUpperCase() + contract.tenant_name?.slice(1) || '-' }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ contract.currency }}
                     </td>
 
                     <td class="px-4 py-3 font-semibold">
@@ -122,7 +127,7 @@
             <div class="flex justify-between items-start gap-2">
                 <div>
                     <p class="font-semibold text-white">
-                        {{ contract.property_name || '-' }}
+                        {{ contract.property_name || '-' }} ({{ contract.currency || '-' }})
                     </p>
                     <p class="text-sm text-gray-400">
                         {{ contract.tenant_name || '-' }}
