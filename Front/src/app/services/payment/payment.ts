@@ -9,6 +9,20 @@ export class PaymentService {
 
   constructor(private database: Database) { }
 
+  async getDetailPaymentsByPaymentId(paymentId: string): Promise<{ data: any[]; error?: PostgrestError }> {
+    const { data, error } = await this.database.client
+      .from('payment_transactions')
+      .select('*')
+      .eq('payment_id', paymentId);
+
+    if (error) {
+      console.error('Error al obtener detalles de pago:', error.message);
+      return { data: [], error };
+    }
+
+    return { data };
+  }
+
   async getPaymentsByContract(contractId: string): Promise<any[]> {
     const { data, error } = await this.database.client
       .from('payments')
@@ -78,10 +92,6 @@ export class PaymentService {
   }
 
   async createDetailPayment(paymentId: string, amount: number, payment_method: string): Promise<{ error?: PostgrestError }> {
-    console.log("ENTRO A CREATEDETAILPAYMENT");
-    console.log(paymentId);
-    console.log(amount);
-    console.log(payment_method);
     const detailPayment = {
       amount,
       payment_method,

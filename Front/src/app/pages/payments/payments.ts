@@ -66,7 +66,6 @@ export class Payments {
       this.currentUser = await this.authService.getCurrentUser();
       this.properties = await this.propertyService.getProperties(this.currentUser.id);
       this.contracts = await this.contractService.getContractsByUser(this.currentUser.id, "active");
-      console.log(this.contracts);
       this.loading = false;
     } catch (error) {
       console.error(error);

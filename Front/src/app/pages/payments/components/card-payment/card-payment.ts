@@ -2,11 +2,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaymentService } from '../../../../services/payment/payment';
+import { FormDetailsPayment } from '../form-details-payment/form-details-payment';
 import html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-card-payment',
-  imports: [NgClass, CommonModule, FormsModule],
+  imports: [NgClass, CommonModule, FormsModule, FormDetailsPayment],
   templateUrl: './card-payment.html',
   styleUrl: './card-payment.css',
 })
@@ -17,12 +19,28 @@ export class CardPayment {
   @Output() onAddPayment = new EventEmitter<any>();
   @Output() onEditTotalRentAmount = new EventEmitter<any>();
   @Output() onAddServicesAmount = new EventEmitter<any>();
+  detailPayments: any[] = [];
+  openDetailsForm = false;
 
   today = new Date();
 
+  constructor(private paymentService: PaymentService) {
+  }
 
-  constructor() {
-    console.log(this.month);
+  async ngOnInit() {
+    if (!this.month.id) {
+      return;
+    }
+
+    // Obtener detalles de pago (si existe)
+    const { data: detailPayments, error: errorPayments } = await this.paymentService.getDetailPaymentsByPaymentId(this.month.id);
+
+    if (errorPayments) {
+      console.error('Error al obtener detalles de pago:', errorPayments.message);
+      return;
+    }
+
+    this.detailPayments = detailPayments;
   }
 
   formatRentMonth(date: Date | string): string {

@@ -16,10 +16,6 @@ export class TableContracts {
   currentPage: number = 1;
   itemsPerPage: number = 8;
 
-  ngOnInit(): void {
-    console.log(this.contracts);
-  }
-
   get filteredContracts() {
     if (!this.searchTerm.trim()) return this.contracts;
 

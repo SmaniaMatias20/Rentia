@@ -1,0 +1,64 @@
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50">
+
+    <!-- Modal -->
+    <div class="relative bg-gray-900 text-white w-full max-w-lg rounded-xl shadow-xl p-6 animate-fadeIn">
+
+        <!-- Close button -->
+        <button (click)="cancel.emit()" class="absolute top-3 right-3 text-white text-sm">
+            <span class="material-icons">close</span>
+        </button>
+
+        <!-- Header -->
+        <h2 class="text-lg font-semibold mb-5">
+            Detalles de pago
+        </h2>
+
+        <!-- Lista de pagos -->
+        <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
+
+            @if (sortedDetails.length === 0) {
+            <div class="text-gray-400 text-sm text-center py-6">
+                No hay pagos registrados
+            </div>
+            }
+
+            @for (item of sortedDetails; track item.id) {
+            <div class="flex justify-between items-center bg-gray-800/60 
+                border border-gray-700 rounded-xl p-4 
+                hover:bg-gray-800 transition">
+
+                <div class="flex flex-col">
+                    <span class="text-sm font-medium text-white">
+                        {{ getPaymentMethodLabel(item.payment_method) }}
+                    </span>
+                    <span class="text-xs text-gray-400">
+                        {{ item.created_at | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                </div>
+
+                <div class="text-right">
+                    <span class="text-lg font-semibold" [class.text-green-400]="item.amount"
+                        [class.text-red-400]="!item.amount">
+                        $ {{ (item.amount || 0) | number:'1.0-0' }}
+                    </span>
+                </div>
+
+            </div>
+            }
+
+        </div>
+
+        <!-- Total -->
+        <div class="border-t border-gray-700 mt-5 pt-4 flex justify-between items-center">
+            <span class="text-sm text-gray-400">
+                Total de detalle
+            </span>
+
+            <span class="text-xl font-bold text-green-400">
+                $ {{ totalPaid | number:'1.0-0' }}
+            </span>
+        </div>
+
+    </div>
+</div>

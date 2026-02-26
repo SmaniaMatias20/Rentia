@@ -8,6 +8,11 @@
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold capitalize">{{ formatRentMonth(month.rent_month) }}</h3>
         <div class="flex gap-2">
+            @if(detailPayments.length > 0) {
+            <button class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600 cursor-pointer"
+                (click)="openDetailsForm = true">Detalles
+                de pago</button>
+            }
 
             @if (month.status === true) {
             <button class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-600 cursor-pointer"
@@ -181,12 +186,6 @@
             </div>
         </div>
 
-        <!-- Servicios -->
-        <!-- <div class="border rounded-xl p-5 mb-6">
-            <h3 class="font-semibold text-gray-900 mb-4">Servicios</h3>
-            <div id="services" class="grid grid-cols-2 gap-y-2 text-sm"></div>
-        </div> -->
-
         <!-- Observaciones -->
         <div class="rounded-xl">
             <h3 class="font-semibold text-gray-900 mb-2">Observaciones</h3>
@@ -203,3 +202,8 @@
         </div>
     </div>
 </div>
+
+<!-- Detalles de pago -->
+@if (openDetailsForm) {
+<app-form-details-payment [details]="detailPayments" (cancel)="openDetailsForm = false"></app-form-details-payment>
+}
