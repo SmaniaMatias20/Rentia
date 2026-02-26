@@ -327,14 +327,20 @@ export class Payments {
   }
 
   async onSavePayment(payment: any) {
-    console.log("ENTRO A ONSAVEPAYMENT");
-    this.paymentMonthEdit.rent_amount += payment.rent_amount;
-    this.paymentMonthEdit.payment_method = payment.payment_method;
-
     try {
+
+      // 🔹 Actualizar valores en memoria
+      this.paymentMonthEdit.rent_amount += payment.rent_amount;
+      this.paymentMonthEdit.payment_method = payment.payment_method;
+
+      // 🔹 CREATE
       if (!this.paymentMonthEdit.id) {
-        delete this.paymentMonthEdit.id;
-        const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+
+        const payload = { ...this.paymentMonthEdit };
+        delete payload.id;
+
+        const { error, data } =
+          await this.paymentService.createPayment(payload);
 
         if (error || !data) {
           this.toast.showToast('Error al crear pago', 'error');
@@ -342,44 +348,67 @@ export class Payments {
         }
 
         this.paymentMonthEdit.id = data.id;
+      }
+      else {
+        // 🔹 UPDATE
+        const { error } =
+          await this.paymentService.updatePayment(this.paymentMonthEdit);
 
-        // 🔥 Crear detalle de pago
-        const { error: errorDetail } = await this.paymentService.createDetailPayment(this.paymentMonthEdit.id, payment.rent_amount, payment.payment_method);
-
-        if (errorDetail) {
-          this.toast.showToast('Error al crear detalle de pago', 'error');
+        if (error) {
+          this.toast.showToast('Error al actualizar pago', 'error');
           return;
         }
-
-        this.toast.showToast('Pago creado correctamente', 'success');
-        this.openFormPayment = false;
-        return;
-
       }
 
-      const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
-
-      if (error) {
-        this.toast.showToast('Error al actualizar pago', 'error');
-        return;
-      }
-
-      // 🔥 Crear detalle de pago
-      const { error: errorDetail } = await this.paymentService.createDetailPayment(this.paymentMonthEdit.id, payment.rent_amount, payment.payment_method);
+      // 🔥 Crear detalle de pago (siempre)
+      const { error: errorDetail } =
+        await this.paymentService.createDetailPayment(
+          this.paymentMonthEdit.id,
+          payment.rent_amount,
+          payment.payment_method
+        );
 
       if (errorDetail) {
         this.toast.showToast('Error al crear detalle de pago', 'error');
         return;
       }
 
-      this.toast.showToast('Pago actualizado correctamente', 'success');
+      // 🔹 Recalcular estado del mes
+      this.paymentMonthEdit.status =
+        this.calculateStatus(this.paymentMonthEdit);
+
+      // 🔥 Actualizar mes en el array principal
+      const index = this.months.findIndex(m =>
+        new Date(m.rent_month).getTime() ===
+        new Date(this.paymentMonthEdit.rent_month).getTime()
+      );
+
+      if (index !== -1) {
+        this.months[index] = {
+          ...this.months[index],
+          rent_amount: this.paymentMonthEdit.rent_amount,
+          payment_method: this.paymentMonthEdit.payment_method,
+          status: this.paymentMonthEdit.status,
+          id: this.paymentMonthEdit.id
+        };
+
+        // 🚀 CLAVE: nueva referencia para refrescar la card
+        this.months = [...this.months];
+      }
+
+      this.toast.showToast(
+        this.paymentMonthEdit.id
+          ? 'Pago actualizado correctamente'
+          : 'Pago creado correctamente',
+        'success'
+      );
+
       this.openFormPayment = false;
 
     } catch (error) {
       console.error('Error al guardar pago:', error);
       this.toast.showToast('Error al guardar pago', 'error');
     }
-
   }
 
   async onSaveTotalRentAmount(total_rent_amount: number) {

@@ -28,19 +28,25 @@ export class CardPayment {
   }
 
   async ngOnInit() {
-    if (!this.month.id) {
+    await this.loadDetailPayments();
+  }
+
+  async ngOnChanges() {
+    await this.loadDetailPayments();
+  }
+
+  async loadDetailPayments() {
+    if (!this.month?.id) return;
+
+    const { data, error } =
+      await this.paymentService.getDetailPaymentsByPaymentId(this.month.id);
+
+    if (error) {
+      console.error('Error al obtener detalles:', error.message);
       return;
     }
 
-    // Obtener detalles de pago (si existe)
-    const { data: detailPayments, error: errorPayments } = await this.paymentService.getDetailPaymentsByPaymentId(this.month.id);
-
-    if (errorPayments) {
-      console.error('Error al obtener detalles de pago:', errorPayments.message);
-      return;
-    }
-
-    this.detailPayments = detailPayments;
+    this.detailPayments = data || [];
   }
 
   formatRentMonth(date: Date | string): string {
