@@ -185,7 +185,8 @@
   <!-- Modal de agregar pago -->
   @if (openFormPayment) {
   <app-form-payment (save)="onSavePayment($event)" (cancel)="openFormPayment = false"
-    [payment_method]="paymentMonthEdit?.payment_method"></app-form-payment>
+    [total_rent_amount]="paymentMonthEdit?.total_rent_amount"
+    [rent_amount]="paymentMonthEdit?.rent_amount"></app-form-payment>
   }
 
   <!-- Modal de editar total alquiler -->

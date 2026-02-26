@@ -9,12 +9,19 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './form-payment.css',
 })
 export class FormPayment {
-  rent_amount: any;
-  @Input() payment_method: any = "";
+  amount: any;
+  payment_method: any = "";
+  @Input() total_rent_amount: any;
+  @Input() rent_amount: any;
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
   constructor() { }
+
+  // Calcular cuando se puede pagar como maximo
+  get remainingAmount(): number {
+    return (this.total_rent_amount || 0) - (this.rent_amount || 0);
+  }
 
   close() {
     this.payment_method = "";
@@ -22,10 +29,17 @@ export class FormPayment {
   }
 
   savePayment() {
-    if (!this.rent_amount) return;
-    this.save.emit({ rent_amount: this.rent_amount, payment_method: this.payment_method });
+
+    if (!this.amount) return;
+
+    if (this.amount > this.remainingAmount) {
+      return; // bloquea totalmente
+    }
+
+    this.save.emit({
+      rent_amount: this.amount,
+      payment_method: this.payment_method
+    });
   }
-
-
 
 }
