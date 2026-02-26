@@ -328,7 +328,8 @@ export class Payments {
   }
 
   async onSavePayment(payment: any) {
-    this.paymentMonthEdit.rent_amount = payment.rent_amount;
+    console.log("ENTRO A ONSAVEPAYMENT");
+    this.paymentMonthEdit.rent_amount += payment.rent_amount;
     this.paymentMonthEdit.payment_method = payment.payment_method;
 
     try {
@@ -343,6 +344,14 @@ export class Payments {
 
         this.paymentMonthEdit.id = data.id;
 
+        // 🔥 Crear detalle de pago
+        const { error: errorDetail } = await this.paymentService.createDetailPayment(this.paymentMonthEdit.id, payment.rent_amount, payment.payment_method);
+
+        if (errorDetail) {
+          this.toast.showToast('Error al crear detalle de pago', 'error');
+          return;
+        }
+
         this.toast.showToast('Pago creado correctamente', 'success');
         this.openFormPayment = false;
         return;
@@ -353,6 +362,14 @@ export class Payments {
 
       if (error) {
         this.toast.showToast('Error al actualizar pago', 'error');
+        return;
+      }
+
+      // 🔥 Crear detalle de pago
+      const { error: errorDetail } = await this.paymentService.createDetailPayment(this.paymentMonthEdit.id, payment.rent_amount, payment.payment_method);
+
+      if (errorDetail) {
+        this.toast.showToast('Error al crear detalle de pago', 'error');
         return;
       }
 

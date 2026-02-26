@@ -55,6 +55,7 @@ export class PaymentService {
     return { data: inserted };
   }
 
+
   async updatePayment(payment: any): Promise<{ error?: PostgrestError }> {
 
     if (payment.water && payment.electricy && payment.gas && payment.hoa_fees && payment.rent_amount >= payment.total_rent_amount) {
@@ -70,6 +71,29 @@ export class PaymentService {
 
     if (error) {
       console.error('Error al actualizar pago:', error.message);
+      return { error };
+    }
+
+    return {};
+  }
+
+  async createDetailPayment(paymentId: string, amount: number, payment_method: string): Promise<{ error?: PostgrestError }> {
+    console.log("ENTRO A CREATEDETAILPAYMENT");
+    console.log(paymentId);
+    console.log(amount);
+    console.log(payment_method);
+    const detailPayment = {
+      amount,
+      payment_method,
+      payment_id: paymentId
+    };
+
+    const { error } = await this.database.client
+      .from('payment_transactions')
+      .insert(detailPayment)
+
+    if (error) {
+      console.error('Error al crear detalle de pago:', error.message);
       return { error };
     }
 

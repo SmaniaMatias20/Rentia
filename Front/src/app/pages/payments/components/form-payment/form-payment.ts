@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './form-payment.css',
 })
 export class FormPayment {
-  @Input() rent_amount: any = 0;
+  rent_amount: any;
   @Input() payment_method: any = "";
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
@@ -17,12 +17,12 @@ export class FormPayment {
   constructor() { }
 
   close() {
-    this.rent_amount = 0;
     this.payment_method = "";
     this.cancel.emit();
   }
 
   savePayment() {
+    if (!this.rent_amount) return;
     this.save.emit({ rent_amount: this.rent_amount, payment_method: this.payment_method });
   }
 

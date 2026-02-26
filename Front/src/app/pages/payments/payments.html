@@ -185,7 +185,6 @@
   <!-- Modal de agregar pago -->
   @if (openFormPayment) {
   <app-form-payment (save)="onSavePayment($event)" (cancel)="openFormPayment = false"
-    [rent_amount]="paymentMonthEdit?.rent_amount"
     [payment_method]="paymentMonthEdit?.payment_method"></app-form-payment>
   }
 
