@@ -25,7 +25,6 @@ export class PaymentService {
 
   async deleteDetailPayment(id: string): Promise<{ error?: PostgrestError }> {
     try {
-      console.log('deleteDetailPayment', id);
       // 1️⃣ Borrar la transacción y obtener los datos eliminados
       const { error, data } = await this.database.client
         .from('payment_transactions')
@@ -43,7 +42,6 @@ export class PaymentService {
       }
 
       const deletedTransaction = data[0];
-      console.log('deletedTransaction', deletedTransaction);
 
       // 2️⃣ Obtener el payment actual para calcular correctamente
       const { data: payment, error: paymentFetchError } = await this.database.client
@@ -57,14 +55,7 @@ export class PaymentService {
         return { error: paymentFetchError };
       }
 
-      console.log('payment', payment);
-
-      console.log(typeof deletedTransaction.rent_amount);
-      console.log(typeof payment.rent_amount);
-
       const newAmount = (payment.rent_amount || 0) - (deletedTransaction.amount || 0);
-
-      console.log('newAmount', newAmount);
 
       // 3️⃣ Actualizar el total del payment
       const { error: errorPayment } = await this.database.client
@@ -76,8 +67,6 @@ export class PaymentService {
         console.error('Error al actualizar total de pago:', errorPayment.message);
         return { error: errorPayment };
       }
-
-      console.log('Final');
 
       return {};
     } catch (error) {

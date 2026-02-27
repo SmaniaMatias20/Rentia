@@ -12,6 +12,7 @@ export class FormDetailsPayment {
 
   @Input() details: any[] = [];
   @Output() cancel = new EventEmitter<void>();
+  @Output() detailDeleted = new EventEmitter<any>();
 
   sortedDetails: any[] = [];
   totalPaid: number = 0;
@@ -19,7 +20,6 @@ export class FormDetailsPayment {
   constructor(private paymentService: PaymentService) { }
 
   ngOnInit(): void {
-
     // ordenar por fecha descendente
     this.sortedDetails = [...this.details].sort((a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -43,15 +43,24 @@ export class FormDetailsPayment {
   }
 
   async deleteDetailPayment(id: string) {
-    console.log('deleteDetailPayment', id);
-    const { error } = await this.paymentService.deleteDetailPayment(id);
+    try {
+      const { error } = await this.paymentService.deleteDetailPayment(id);
 
-    if (error) {
+      if (error) {
+        console.error('Error al borrar detalle de pago:', error);
+        return;
+      }
+
+      // Actualizar los valores en la interfaz
+      this.sortedDetails = this.sortedDetails.filter(d => d.id !== id);
+      this.totalPaid = this.sortedDetails.reduce((acc, d) =>
+        acc + (d.amount || 0), 0
+      );
+
+      this.detailDeleted.emit(id);
+    } catch (error) {
       console.error('Error al borrar detalle de pago:', error);
-      return;
     }
-
-    this.details = this.details.filter(d => d.id !== id);
   }
 
 

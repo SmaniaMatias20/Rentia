@@ -205,5 +205,6 @@
 
 <!-- Detalles de pago -->
 @if (openDetailsForm) {
-<app-form-details-payment [details]="detailPayments" (cancel)="openDetailsForm = false"></app-form-details-payment>
+<app-form-details-payment [details]="detailPayments" (cancel)="openDetailsForm = false"
+    (detailDeleted)="onDetailDeleted($event)"></app-form-details-payment>
 }

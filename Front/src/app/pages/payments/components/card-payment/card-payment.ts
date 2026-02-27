@@ -133,7 +133,20 @@ export class CardPayment {
     }
   }
 
+  async onDetailDeleted(id: string) {
+    // 1️⃣ Volver a cargar los detalles desde la BD
+    await this.loadDetailPayments();
 
+    // 2️⃣ Recalcular el total pagado
+    const totalPaid = this.detailPayments.reduce((acc, d) =>
+      acc + (d.amount || 0), 0
+    );
 
+    // 3️⃣ Actualizar el month
+    this.month.rent_amount = totalPaid;
+
+    // 4️⃣ Actualizar estado
+    this.month.status = totalPaid >= this.month.total_rent_amount;
+  }
 
 }
