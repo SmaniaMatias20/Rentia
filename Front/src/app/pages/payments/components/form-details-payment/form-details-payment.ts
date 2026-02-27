@@ -1,15 +1,16 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../../../../services/payment/payment';
+import { Toast } from '../../../../components/toast/toast';
 
 @Component({
   selector: 'app-form-details-payment',
-  imports: [CommonModule],
+  imports: [CommonModule, Toast],
   templateUrl: './form-details-payment.html',
   styleUrl: './form-details-payment.css',
 })
 export class FormDetailsPayment {
-
+  @ViewChild('toast') toast!: Toast;
   @Input() details: any[] = [];
   @Output() cancel = new EventEmitter<void>();
   @Output() detailDeleted = new EventEmitter<any>();
@@ -58,8 +59,10 @@ export class FormDetailsPayment {
       );
 
       this.detailDeleted.emit(id);
+      this.toast.showToast('Detalle de pago borrado correctamente', 'success');
     } catch (error) {
       console.error('Error al borrar detalle de pago:', error);
+      this.toast.showToast('Error al borrar detalle de pago', 'error');
     }
   }
 
