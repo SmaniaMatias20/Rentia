@@ -1,0 +1,187 @@
+<div class="bg-gray-900 text-white rounded-xl shadow-lg overflow-hidden">
+
+    <!-- 🔍 Buscador -->
+    <div class="p-4 border-b border-gray-800">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar usuario..."
+            class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-600" />
+    </div>
+
+    <!-- ================= DESKTOP TABLE ================= -->
+    <div class="hidden lg:block">
+        <table class="w-full text-sm">
+
+            <!-- THEAD DINÁMICO -->
+            <thead class="bg-gray-800 text-gray-300">
+                <tr>
+                    @for (column of columns; track column.key) {
+                    <th class="px-4 py-3 text-left">
+                        {{ column.label }}
+                    </th>
+                    }
+                    <th class="px-4 py-3 text-left">Acciones</th>
+                </tr>
+            </thead>
+
+            <!-- TBODY DINÁMICO -->
+            <tbody>
+                @for (user of filteredData; track user.id) {
+
+                <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
+
+                    @for (column of columns; track column.key) {
+
+                    <td class="px-4 py-3">
+
+                        @if (column.type === 'date') {
+                        {{ formatDate(getValue(user, column)) }}
+                        }
+
+                        @else if (column.type === 'status') {
+                        <span class="px-2 py-1 rounded text-xs" [ngClass]="{
+                  'bg-green-600 text-white': getValue(user, column),
+                  'bg-red-600 text-white': !getValue(user, column)
+                }">
+                            {{ getValue(user, column) ? 'Activo' : 'Inactivo' }}
+                        </span>
+                        }
+
+                        @else if (column.type === 'role') {
+                        <span class="px-2 py-1 rounded text-xs" [ngClass]="{
+                  'bg-purple-600 text-white': getValue(user, column) === 'admin',
+                  'bg-blue-600 text-white': getValue(user, column) === 'user'
+                }">
+                            {{ getValue(user, column) }}
+                        </span>
+                        }
+
+                        @else {
+                        {{ getValue(user, column) }}
+                        }
+
+                    </td>
+
+                    }
+
+                    <!-- ACCIONES -->
+                    <td class="px-4 py-3 flex gap-2">
+                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
+                            (click)="editUser(user)">
+                            Editar
+                        </button>
+
+                        <button class="px-3 py-1 rounded text-xs" [ngClass]="{
+                'bg-red-600 hover:bg-red-700': user.active,
+                'bg-green-600 hover:bg-green-700': !user.active
+              }" (click)="toggleStatus(user)">
+                            {{ user.active ? 'Desactivar' : 'Activar' }}
+                        </button>
+                    </td>
+
+                </tr>
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    <!-- ================= MOBILE CARDS DINÁMICAS ================= -->
+    <div class="lg:hidden p-4 space-y-4">
+
+        @for (user of filteredData; track user.id) {
+
+        <div class="rounded-xl border border-gray-800 bg-gray-900 p-4 space-y-4">
+
+            <!-- Header -->
+            <div class="flex justify-between items-start">
+
+                <div class="space-y-1">
+                    @for (column of columns; track column.key) {
+
+                    @if (column.key === 'name') {
+                    <p class="font-semibold text-white">
+                        {{ getValue(user, column) }}
+                    </p>
+                    }
+
+                    @else if (column.key === 'email') {
+                    <p class="text-sm text-gray-400">
+                        {{ getValue(user, column) }}
+                    </p>
+                    }
+
+                    }
+                </div>
+
+                <!-- Role Badge -->
+                @for (column of columns; track column.key) {
+                @if (column.type === 'role') {
+                <span class="text-xs px-2 py-1 rounded" [ngClass]="{
+                'bg-purple-600 text-white': getValue(user, column) === 'admin',
+                'bg-blue-600 text-white': getValue(user, column) === 'user'
+              }">
+                    {{ getValue(user, column) }}
+                </span>
+                }
+                }
+
+            </div>
+
+            <!-- Dynamic Fields -->
+            <div class="grid grid-cols-2 gap-3 text-sm">
+
+                @for (column of columns; track column.key) {
+
+                @if (column.key !== 'name' && column.key !== 'email' && column.type !== 'role') {
+
+                <div>
+                    <p class="text-gray-400 text-xs">{{ column.label }}</p>
+
+                    @if (column.type === 'date') {
+                    <p>{{ formatDate(getValue(user, column)) }}</p>
+                    }
+
+                    @else if (column.type === 'status') {
+                    <span class="text-xs px-2 py-1 rounded" [ngClass]="{
+                    'bg-green-600 text-white': getValue(user, column),
+                    'bg-red-600 text-white': !getValue(user, column)
+                  }">
+                        {{ getValue(user, column) ? 'Activo' : 'Inactivo' }}
+                    </span>
+                    }
+
+                    @else {
+                    <p>{{ getValue(user, column) }}</p>
+                    }
+
+                </div>
+
+                }
+
+                }
+
+            </div>
+
+            <!-- Footer -->
+            <div class="flex justify-end gap-2 pt-2 border-t border-gray-800">
+
+                <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs">
+                    Editar
+                </button>
+
+                <button class="px-3 py-1 rounded text-xs" [ngClass]="{
+            'bg-red-600 hover:bg-red-700': user.active,
+            'bg-green-600 hover:bg-green-700': !user.active
+          }" (click)="toggleStatus(user)">
+                    {{ user.active ? 'Desactivar' : 'Activar' }}
+                </button>
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+
+</div>

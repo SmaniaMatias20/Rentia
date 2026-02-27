@@ -20,7 +20,7 @@ export class App {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.showNavbar = event.url.includes('/home') || event.url.includes('/profile') || event.url.includes('/statistics') || event.url.includes('/payments') || event.url.includes('/tenants') || event.url.includes('/properties') || event.url.includes('/contracts');
+      this.showNavbar = event.url.includes('/home') || event.url.includes('/profile') || event.url.includes('/statistics') || event.url.includes('/payments') || event.url.includes('/tenants') || event.url.includes('/properties') || event.url.includes('/contracts') || event.url.includes('/admin');
     });
 
 

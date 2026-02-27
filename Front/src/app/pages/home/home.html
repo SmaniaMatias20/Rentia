@@ -53,8 +53,11 @@
 
     <!-- Opciones ADMIN -->
     @if (currentUser.role === 'admin') {
-    <app-card-option icon="settings" title="Administración" bgColor="bg-red-600"
-      backgroundImage="url('assets/images/settings.jpg')" url="/settings" />
+    <app-card-option icon="admin_panel_settings" title="Administración" bgColor="bg-blue-600"
+      backgroundImage="url('assets/images/settings.jpg')" url="/admin" />
+
+    <app-card-option icon="settings" title="Configuracion" bgColor="bg-green-600"
+      backgroundImage="url('assets/images/settings.jpg')" url="/admin" />
     }
 
   </div>
