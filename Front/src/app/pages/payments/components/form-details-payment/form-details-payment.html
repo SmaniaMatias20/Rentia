@@ -25,8 +25,8 @@
 
             @for (item of sortedDetails; track item.id) {
             <div class="flex justify-between items-center bg-gray-800/60 
-                border border-gray-700 rounded-xl p-4 
-                hover:bg-gray-800 transition">
+    border border-gray-700 rounded-xl p-4 
+    hover:bg-gray-800 transition">
 
                 <div class="flex flex-col">
                     <span class="text-sm font-medium text-white">
@@ -37,13 +37,19 @@
                     </span>
                 </div>
 
-                <div class="text-right">
+                <div class="flex items-center gap-3">
+
                     <span class="text-lg font-semibold" [class.text-green-400]="item.amount"
                         [class.text-red-400]="!item.amount">
                         $ {{ (item.amount || 0) | number:'1.0-0' }}
                     </span>
-                </div>
 
+                    <!-- Botón borrar -->
+                    <button (click)="deleteDetailPayment(item.id)" class="text-red-400 hover:text-red-500 transition">
+                        <span class="material-icons text-base">delete</span>
+                    </button>
+
+                </div>
             </div>
             }
 

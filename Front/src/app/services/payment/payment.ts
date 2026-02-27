@@ -23,6 +23,70 @@ export class PaymentService {
     return { data };
   }
 
+  async deleteDetailPayment(id: string): Promise<{ error?: PostgrestError }> {
+    try {
+      console.log('deleteDetailPayment', id);
+      // 1️⃣ Borrar la transacción y obtener los datos eliminados
+      const { error, data } = await this.database.client
+        .from('payment_transactions')
+        .delete()
+        .eq('id', id)
+        .select('*');
+
+      if (error) {
+        console.error('Error al borrar detalle de pago:', error.message);
+        return { error };
+      }
+
+      if (!data || data.length === 0) {
+        return {};
+      }
+
+      const deletedTransaction = data[0];
+      console.log('deletedTransaction', deletedTransaction);
+
+      // 2️⃣ Obtener el payment actual para calcular correctamente
+      const { data: payment, error: paymentFetchError } = await this.database.client
+        .from('payments')
+        .select('rent_amount')
+        .eq('id', deletedTransaction.payment_id)
+        .single();
+
+      if (paymentFetchError) {
+        console.error('Error al obtener payment:', paymentFetchError.message);
+        return { error: paymentFetchError };
+      }
+
+      console.log('payment', payment);
+
+      console.log(typeof deletedTransaction.rent_amount);
+      console.log(typeof payment.rent_amount);
+
+      const newAmount = (payment.rent_amount || 0) - (deletedTransaction.amount || 0);
+
+      console.log('newAmount', newAmount);
+
+      // 3️⃣ Actualizar el total del payment
+      const { error: errorPayment } = await this.database.client
+        .from('payments')
+        .update({ rent_amount: newAmount })
+        .eq('id', deletedTransaction.payment_id);
+
+      if (errorPayment) {
+        console.error('Error al actualizar total de pago:', errorPayment.message);
+        return { error: errorPayment };
+      }
+
+      console.log('Final');
+
+      return {};
+    } catch (error) {
+      console.error('Error al borrar detalle de pago:', error);
+    }
+
+    return {};
+  }
+
   async getPaymentsByContract(contractId: string): Promise<any[]> {
     const { data, error } = await this.database.client
       .from('payments')

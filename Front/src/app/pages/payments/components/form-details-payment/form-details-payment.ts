@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaymentService } from '../../../../services/payment/payment';
 
 @Component({
   selector: 'app-form-details-payment',
@@ -14,6 +15,8 @@ export class FormDetailsPayment {
 
   sortedDetails: any[] = [];
   totalPaid: number = 0;
+
+  constructor(private paymentService: PaymentService) { }
 
   ngOnInit(): void {
 
@@ -38,4 +41,18 @@ export class FormDetailsPayment {
   getPaymentMethodLabel(method: string): string {
     return this.paymentMethodLabels[method] || 'Desconocido';
   }
+
+  async deleteDetailPayment(id: string) {
+    console.log('deleteDetailPayment', id);
+    const { error } = await this.paymentService.deleteDetailPayment(id);
+
+    if (error) {
+      console.error('Error al borrar detalle de pago:', error);
+      return;
+    }
+
+    this.details = this.details.filter(d => d.id !== id);
+  }
+
+
 }
