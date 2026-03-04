@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 
@@ -13,67 +13,50 @@ interface Column {
   standalone: true,
   imports: [NgClass, FormsModule],
   templateUrl: './table-admin.html',
-  styleUrl: './table-admin.css',
+  styleUrls: ['./table-admin.css'],
 })
 export class TableAdmin {
-
-  // ================= STATE =================
+  @Input() data: any[] = [];
 
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
-  // ================= COLUMNS =================
+  constructor() { }
 
-  columns: Column[] = [
-    { key: 'name', label: 'Nombre', type: 'text' },
-    { key: 'email', label: 'Email', type: 'text' },
-    { key: 'role', label: 'Rol', type: 'role' },
-    { key: 'created_at', label: 'Fecha creación', type: 'date' },
-    { key: 'active', label: 'Estado', type: 'status' }
-  ];
+  // ================= COLUMNS DINÁMICAS =================
+  get columns(): Column[] {
+    if (this.data.length === 0) return [];
+    const first = this.data[0];
+    return Object.keys(first)
+      .filter(key => key !== 'password' && key !== 'image_url' && key !== 'url_image') // <- ignorar columnas
+      .map((key) => {
+        let type: Column['type'] = 'text';
 
-  // ================= DATA (GENÉRICA) =================
+        if (key.toLowerCase().includes('date') || key === 'created_at') type = 'date';
+        else if (key === 'active' || key === 'is_enabled') type = 'status';
+        else if (key === 'role') type = 'role';
 
-  data: any[] = [
-    {
-      id: 1,
-      name: 'Matias Smania',
-      email: 'matias@email.com',
-      role: 'admin',
-      created_at: new Date(),
-      active: true,
-      numero: 123456789,
-      fecha: new Date(),
-      direccion: 'Calle 123...',
-      telefono: '+54 123456789',
-    },
-    {
-      id: 2,
-      name: 'Juan Perez',
-      email: 'juan@email.com',
-      role: 'user',
-      created_at: new Date(),
-      active: false,
-      numero: 987654321,
-      fecha: new Date(),
-      direccion: 'Otra calle...',
-      telefono: '+54 987654321',
-    }
-  ];
+        return { key, label: this.formatLabel(key), type };
+      });
+  }
 
-  // ================= FILTER =================
+  private formatLabel(key: string) {
+    return key
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+  }
 
+  // ================= FILTRO =================
   get filteredData(): any[] {
-    return this.data.filter((row: any) =>
+    return this.data.filter((row) =>
       Object.values(row).some((value: any) =>
         value?.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
       )
     );
   }
 
-  // ================= PAGINATION =================
-
+  // ================= PAGINACIÓN =================
   get totalPages(): number {
     return Math.ceil(this.filteredData.length / this.itemsPerPage) || 1;
   }
@@ -84,8 +67,8 @@ export class TableAdmin {
   }
 
   // ================= HELPERS =================
-
   formatDate(date: any): string {
+    if (!date) return '';
     return new Date(date).toLocaleDateString();
   }
 
@@ -94,15 +77,15 @@ export class TableAdmin {
   }
 
   // ================= ACTIONS =================
-
   toggleStatus(row: any): void {
     if (row.hasOwnProperty('active')) {
       row.active = !row.active;
+    } else if (row.hasOwnProperty('is_enabled')) {
+      row.is_enabled = !row.is_enabled;
     }
   }
 
   editUser(row: any): void {
     console.log('Editar', row);
   }
-
 }

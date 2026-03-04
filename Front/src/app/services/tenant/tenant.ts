@@ -11,6 +11,21 @@ export class TenantService {
 
   constructor(private db: Database, private router: Router) { }
 
+  /** Obtiene todos los inquilinos del usuario logueado */
+  async getAll(): Promise<any[]> {
+    const { data, error } = await this.db.client
+      .from('users')
+      .select('*')
+      .eq('role', 'tenant'); // opcional pero recomendado
+
+    if (error) {
+      console.error('Error al obtener tenants:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
   /**
    * Crea un nuevo inquilino en la tabla "tenants"
    */

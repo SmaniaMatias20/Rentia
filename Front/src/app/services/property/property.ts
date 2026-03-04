@@ -10,6 +10,21 @@ export class PropertyService {
 
   constructor(private db: Database, private router: Router) { }
 
+  /** Obtiene todos los inquilinos del usuario logueado */
+  async getAll(): Promise<any[]> {
+    const { data, error } = await this.db.client
+      .from('properties')
+      .select('*')
+      .order('name');
+
+    if (error) {
+      console.error('Error al obtener propiedades:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
   /**
    * Crea una nueva propiedad en la tabla "properties"
    */

@@ -10,6 +10,20 @@ export class ContractService {
 
   constructor(private db: Database, private router: Router) { }
 
+  async getAll(): Promise<any[]> {
+    const { data, error } = await this.db.client
+      .from('contracts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error al obtener contratos:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
   async createContract(contract: {
     property_id: string,
     tenant_id: string,
