@@ -7,16 +7,18 @@ import { PropertyService } from '../../services/property/property';
 import { TenantService } from '../../services/tenant/tenant';
 import { PaymentService } from '../../services/payment/payment';
 import { ContractService } from '../../services/contract/contract';
+import { Spinner } from '../../components/spinner/spinner';
 
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableAdmin],
+  imports: [CommonModule, FormsModule, TableAdmin, Spinner],
   templateUrl: './admin.html',
   styleUrls: ['./admin.css'],
 })
 export class Admin {
+  loading = false;
   selectedTable = 'tenants'; // valor inicial
   tableData: any[] = [];      // aquí guardamos los datos del fetch
 
@@ -36,27 +38,37 @@ export class Admin {
     try {
       switch (this.selectedTable) {
         case 'tenants':
+          this.loading = true;
           this.tableData = await this.tenantService.getAll();
+          this.loading = false;
           console.log(this.tableData);
           break;
         case 'properties':
-          this.tableData = await this.propertyService.getAll()
+          this.loading = true;
+          this.tableData = await this.propertyService.getAll();
+          this.loading = false;
           console.log(this.tableData);
           break;
         case 'payments':
-          this.tableData = await this.paymentService.getAll()
+          this.loading = true;
+          this.tableData = await this.paymentService.getAll();
+          this.loading = false;
           console.log(this.tableData);
           break;
         case 'contracts':
-          this.tableData = await this.contractService.getAll()
+          this.loading = true;
+          this.tableData = await this.contractService.getAll();
+          this.loading = false;
           console.log(this.tableData);
           break;
         default:
           this.tableData = [];
+          this.loading = false;
       }
     } catch (err) {
       console.error('Error cargando datos:', err);
       this.tableData = [];
+      this.loading = false;
     }
   }
 
