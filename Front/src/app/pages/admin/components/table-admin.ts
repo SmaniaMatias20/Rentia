@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { ModalConfirm } from '../../../components/modal-confirm/modal-confirm';
 
 interface Column {
   key: string;
@@ -11,7 +12,7 @@ interface Column {
 @Component({
   selector: 'app-table-admin',
   standalone: true,
-  imports: [NgClass, FormsModule],
+  imports: [NgClass, FormsModule, ModalConfirm],
   templateUrl: './table-admin.html',
   styleUrls: ['./table-admin.css'],
 })
@@ -21,6 +22,8 @@ export class TableAdmin {
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
+
+  openConfirmModal: boolean = false;
 
   constructor() { }
 
@@ -33,8 +36,8 @@ export class TableAdmin {
       .map((key) => {
         let type: Column['type'] = 'text';
 
-        if (key.toLowerCase().includes('date') || key === 'created_at') type = 'date';
-        else if (key === 'active' || key === 'is_enabled') type = 'status';
+        if (key.toLowerCase().includes('date') || key === 'created_at' || key === 'valid_from' || key === 'valid_to' || key === 'rent_month') type = 'date';
+        else if (key === 'active' || key === 'is_enabled' || key === 'status') type = 'status';
         else if (key === 'role') type = 'role';
 
         return { key, label: this.formatLabel(key), type };
@@ -85,7 +88,7 @@ export class TableAdmin {
     }
   }
 
-  editUser(row: any): void {
-    console.log('Editar', row);
+  async delete(data: any): Promise<void> {
+    console.log('Eliminar', data);
   }
 }

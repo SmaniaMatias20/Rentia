@@ -11,17 +11,64 @@ export class ContractService {
   constructor(private db: Database, private router: Router) { }
 
   async getAll(): Promise<any[]> {
-    const { data, error } = await this.db.client
+    // 1️⃣ Traemos todos los contratos
+    const { data: contracts, error: contractError } = await this.db.client
       .from('contracts')
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error al obtener contratos:', error.message);
+    if (contractError) {
+      console.error('Error al obtener contratos:', contractError.message);
       return [];
     }
+    if (!contracts || contracts.length === 0) return [];
 
-    return data || [];
+    // 2️⃣ Extraemos IDs únicos de owner_id, tenant_id y property_id
+    const ownerIds = Array.from(new Set(contracts.map(c => c.owner_id).filter(Boolean)));
+    const tenantIds = Array.from(new Set(contracts.map(c => c.tenant_id).filter(Boolean)));
+    const propertyIds = Array.from(new Set(contracts.map(c => c.property_id).filter(Boolean)));
+
+    // 3️⃣ Traemos usuarios que coincidan con owner_id o tenant_id
+    const { data: users, error: userError } = await this.db.client
+      .from('users')
+      .select('id, username')
+      .in('id', [...ownerIds, ...tenantIds]);
+
+    if (userError) {
+      console.error('Error al obtener usuarios:', userError.message);
+    }
+
+    // 4️⃣ Creamos un mapa id -> username
+    const idToUsernameMap: Record<string, string> = {};
+    users?.forEach(user => {
+      idToUsernameMap[user.id] = user.username;
+    });
+
+    // 5️⃣ Traemos propiedades que coincidan con property_id
+    const { data: properties, error: propertyError } = await this.db.client
+      .from('properties')
+      .select('id, name')
+      .in('id', propertyIds);
+
+    if (propertyError) {
+      console.error('Error al obtener propiedades:', propertyError.message);
+    }
+
+    // 6️⃣ Creamos un mapa id -> property name
+    const idToPropertyNameMap: Record<string, string> = {};
+    properties?.forEach(prop => {
+      idToPropertyNameMap[prop.id] = prop.name;
+    });
+
+    // 7️⃣ Reemplazamos owner_id, tenant_id y property_id por nombres
+    const result = contracts.map(contract => ({
+      ...contract,
+      owner_id: contract.owner_id ? idToUsernameMap[contract.owner_id] || contract.owner_id : null,
+      tenant_id: contract.tenant_id ? idToUsernameMap[contract.tenant_id] || contract.tenant_id : null,
+      property_id: contract.property_id ? idToPropertyNameMap[contract.property_id] || contract.property_id : null
+    }));
+
+    return result;
   }
 
   async createContract(contract: {

@@ -24,7 +24,7 @@
 
             <!-- TBODY DINÁMICO -->
             <tbody>
-                @for (user of filteredData; track user.id) {
+                @for (data of filteredData; track data.id) {
 
                 <tr class="border-t border-gray-800 hover:bg-gray-800 transition">
 
@@ -33,29 +33,29 @@
                     <td class="px-4 py-3">
 
                         @if (column.type === 'date') {
-                        {{ formatDate(getValue(user, column)) }}
+                        {{ formatDate(getValue(data, column)) }}
                         }
 
                         @else if (column.type === 'status') {
                         <span class="px-2 py-1 rounded text-xs" [ngClass]="{
-                  'bg-green-600 text-white': getValue(user, column),
-                  'bg-red-600 text-white': !getValue(user, column)
+                  'bg-green-600 text-white': getValue(data, column),
+                  'bg-red-600 text-white': !getValue(data, column)
                 }">
-                            {{ getValue(user, column) ? 'Activo' : 'Inactivo' }}
+                            {{ getValue(data, column) ? 'Activo' : 'Inactivo' }}
                         </span>
                         }
 
                         @else if (column.type === 'role') {
                         <span class="px-2 py-1 rounded text-xs" [ngClass]="{
-                  'bg-purple-600 text-white': getValue(user, column) === 'admin',
-                  'bg-blue-600 text-white': getValue(user, column) === 'user'
+                  'bg-purple-600 text-white': getValue(data, column) === 'admin',
+                  'bg-blue-600 text-white': getValue(data, column) === 'data'
                 }">
-                            {{ getValue(user, column) }}
+                            {{ getValue(data, column) }}
                         </span>
                         }
 
                         @else {
-                        {{ getValue(user, column) }}
+                        {{ getValue(data, column) || '-' }}
                         }
 
                     </td>
@@ -64,16 +64,13 @@
 
                     <!-- ACCIONES -->
                     <td class="px-4 py-3 flex gap-2">
-                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
-                            (click)="editUser(user)">
+                        <!-- <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
+                            (click)="editdata(data)">
                             Editar
-                        </button>
+                        </button> -->
 
-                        <button class="px-3 py-1 rounded text-xs" [ngClass]="{
-                'bg-red-600 hover:bg-red-700': user.active,
-                'bg-green-600 hover:bg-green-700': !user.active
-              }" (click)="toggleStatus(user)">
-                            {{ user.active ? 'Desactivar' : 'Activar' }}
+                        <button class="px-3 py-1 rounded text-xs" (click)="openConfirmModal = true">
+                            Eliminar
                         </button>
                     </td>
 
@@ -183,5 +180,11 @@
         }
 
     </div>
+
+    <!-- MODAL CONFIRMACIÓN -->
+    @if (openConfirmModal) {
+    <app-modal-confirm (confirm)="delete(data); openConfirmModal = false" (cancel)="openConfirmModal = false"
+        message="¿Estás seguro que quieres eliminar este registro?"></app-modal-confirm>
+    }
 
 </div>

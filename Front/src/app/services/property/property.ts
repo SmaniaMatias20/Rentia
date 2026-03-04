@@ -12,17 +12,45 @@ export class PropertyService {
 
   /** Obtiene todos los inquilinos del usuario logueado */
   async getAll(): Promise<any[]> {
-    const { data, error } = await this.db.client
+    // 1️⃣ Traemos todas las propiedades
+    const { data: properties, error: propError } = await this.db.client
       .from('properties')
       .select('*')
       .order('name');
 
-    if (error) {
-      console.error('Error al obtener propiedades:', error.message);
+    if (propError) {
+      console.error('Error al obtener propiedades:', propError.message);
       return [];
     }
+    if (!properties || properties.length === 0) return [];
 
-    return data || [];
+    // 2️⃣ Extraemos los user_id únicos de las propiedades
+    const userIds = Array.from(new Set(properties.map(p => p.user_id).filter(Boolean)));
+
+    // 3️⃣ Traemos los usuarios que coincidan con esos IDs
+    const { data: users, error: userError } = await this.db.client
+      .from('users')
+      .select('id, username')
+      .in('id', userIds);
+
+    if (userError) {
+      console.error('Error al obtener usuarios:', userError.message);
+      return properties; // devolvemos propiedades sin reemplazar
+    }
+
+    // 4️⃣ Creamos un mapa id -> username
+    const idToUsernameMap: Record<string, string> = {};
+    users?.forEach(user => {
+      idToUsernameMap[user.id] = user.username;
+    });
+
+    // 5️⃣ Reemplazamos user_id por username
+    const result = properties.map(prop => ({
+      ...prop,
+      user_id: prop.user_id ? idToUsernameMap[prop.user_id] || prop.user_id : null
+    }));
+
+    return result;
   }
 
   /**

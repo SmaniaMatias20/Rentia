@@ -13,17 +13,31 @@ export class TenantService {
 
   /** Obtiene todos los inquilinos del usuario logueado */
   async getAll(): Promise<any[]> {
+    // 1️⃣ Traemos todos los usuarios
     const { data, error } = await this.db.client
       .from('users')
-      .select('*')
-      .eq('role', 'tenant'); // opcional pero recomendado
+      .select('*');
 
     if (error) {
-      console.error('Error al obtener tenants:', error.message);
+      console.error('Error al obtener usuarios:', error.message);
       return [];
     }
 
-    return data || [];
+    if (!data) return [];
+
+    // 2️⃣ Creamos un mapa id -> username
+    const idToUsernameMap: Record<string, string> = {};
+    data.forEach(user => {
+      idToUsernameMap[user.id] = user.username;
+    });
+
+    // 3️⃣ Reemplazamos owner_id por el username correspondiente
+    const result = data.map(user => ({
+      ...user,
+      owner_id: user.owner_id ? idToUsernameMap[user.owner_id] || user.owner_id : null
+    }));
+
+    return result;
   }
 
   /**
