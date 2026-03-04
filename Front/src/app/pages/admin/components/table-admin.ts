@@ -6,7 +6,7 @@ import { ModalConfirm } from '../../../components/modal-confirm/modal-confirm';
 interface Column {
   key: string;
   label: string;
-  type?: 'text' | 'date' | 'status' | 'role';
+  type?: 'text' | 'date' | 'status' | 'role' | 'currency' | 'increase_frequency';
 }
 
 @Component({
@@ -27,20 +27,91 @@ export class TableAdmin {
 
   constructor() { }
 
+  // ================= TRADUCCIONES =================
+
+  private columnsTranslate: Record<string, string> = {
+    created_at: 'Creado el',
+    currency: 'Moneda',
+    id: 'ID',
+    increase_frequency: 'Frecuencia de aumento',
+    increase_percentage: 'Porcentaje de aumento',
+    owner_id: 'Propietario',
+    property_id: 'Propiedad',
+    rent_amount: 'Monto del alquiler',
+    status: 'Estado',
+    tenant_id: 'Inquilino',
+    valid_from: 'Válido desde',
+    valid_to: 'Válido hasta',
+    cuit: 'CUIT',
+    document: 'Documento',
+    email: 'Correo electrónico',
+    firstname: 'Nombre',
+    lastname: 'Apellido',
+    password: 'Contraseña',
+    phone: 'Teléfono',
+    role: 'Rol',
+    username: 'Usuario',
+    contract_id: 'ID del contrato',
+    description: 'Descripción',
+    electricy: 'Electricidad',
+    electricy_amount: 'Monto electricidad',
+    gas: 'Gas',
+    gas_amount: 'Monto gas',
+    hoa_fees: 'Expensas',
+    hoa_fees_amount: 'Monto expensas',
+    payment_method: 'Método de pago',
+    rent_month: 'Mes de alquiler',
+    total_rent_amount: 'Total alquiler',
+    water: 'Agua',
+    water_amount: 'Monto agua',
+    is_enabled: 'Activo',
+    user_id: 'Usuario',
+    rooms: 'Habitaciones',
+    floor: 'Piso',
+    type: 'Tipo',
+    address: 'Dirección',
+    name: 'Nombre',
+  };
+
+  // Mapa de traducción de valores
+  private valuesTranslate: Record<string, string> = {
+    monthly: 'Mensual',
+    bimonthly: 'Bimestral',
+    quarterly: 'Trimestral',
+    four_monthly: 'Cuatrimestral',
+    semiannual: 'Semestral',
+    annual: 'Anual',
+    tenant: 'Inquilino',
+    admin: 'Administrador',
+    owner: 'Propietario',
+  };
+
+  // Función para obtener el label traducido
+  private columnTranslate(key: string): string {
+    return this.columnsTranslate[key] || this.formatLabel(key);
+  }
+
+
+
   // ================= COLUMNS DINÁMICAS =================
   get columns(): Column[] {
     if (this.data.length === 0) return [];
     const first = this.data[0];
     return Object.keys(first)
-      .filter(key => key !== 'password' && key !== 'image_url' && key !== 'url_image') // <- ignorar columnas
+      .filter(key => key !== 'password' && key !== 'image_url' && key !== 'url_image')
       .map((key) => {
         let type: Column['type'] = 'text';
-
-        if (key.toLowerCase().includes('date') || key === 'created_at' || key === 'valid_from' || key === 'valid_to' || key === 'rent_month') type = 'date';
-        else if (key === 'active' || key === 'is_enabled' || key === 'status') type = 'status';
+        if (key.toLowerCase().includes('date') || ['created_at', 'valid_from', 'valid_to', 'rent_month'].includes(key)) type = 'date';
+        else if (['active', 'is_enabled', 'status'].includes(key)) type = 'status';
         else if (key === 'role') type = 'role';
+        else if (key === 'currency') type = 'currency';
+        else if (key === 'increase_frequency') type = 'increase_frequency';
 
-        return { key, label: this.formatLabel(key), type };
+        return {
+          key,
+          label: this.columnTranslate(key),
+          type
+        };
       });
   }
 
@@ -76,6 +147,12 @@ export class TableAdmin {
   }
 
   getValue(row: any, column: Column) {
+    // Si es la columna increase_frequency, traducimos el valor
+    if (column.key === 'increase_frequency' || column.key === 'role') {
+      return this.valuesTranslate[row[column.key]] || row[column.key];
+    }
+
+    // Para todo lo demás
     return row[column.key];
   }
 

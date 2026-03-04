@@ -18,7 +18,7 @@
                         {{ column.label }}
                     </th>
                     }
-                    <th class="px-4 py-3 text-left">Acciones</th>
+                    <th class="px-4 py-3 text-left">Eliminar</th>
                 </tr>
             </thead>
 
@@ -47,8 +47,32 @@
 
                         @else if (column.type === 'role') {
                         <span class="px-2 py-1 rounded text-xs" [ngClass]="{
-                  'bg-purple-600 text-white': getValue(data, column) === 'admin',
-                  'bg-blue-600 text-white': getValue(data, column) === 'data'
+                  'bg-purple-600 text-white': getValue(data, column) === 'Administrador',
+                  'bg-blue-600 text-white': getValue(data, column) === 'Propietario',
+                  'bg-yellow-600 text-white': getValue(data, column) === 'Inquilino'
+                }">
+                            {{ getValue(data, column) }}
+                        </span>
+                        }
+
+                        @else if (column.type === 'currency') {
+                        <span class="px-2 py-1 rounded text-xs" [ngClass]="{
+                  'bg-purple-600 text-white': getValue(data, column) === 'USD',
+                  'bg-blue-600 text-white': getValue(data, column) === 'ARS',
+         
+                }">
+                            {{ getValue(data, column) }}
+                        </span>
+                        }
+
+                        @else if (column.type === 'increase_frequency') {
+                        <span class="px-2 py-1 rounded text-xs" [ngClass]="{
+                        'bg-purple-600 text-white': getValue(data, column) === 'Mensual',
+                        'bg-green-600 text-white': getValue(data, column) === 'Bimestral',
+                        'bg-yellow-600 text-white': getValue(data, column) === 'Trimestral',
+                        'bg-blue-600 text-white': getValue(data, column) === 'Cuatrimestral',
+                        'bg-red-600 text-white': getValue(data, column) === 'Semestral',
+                        'bg-gray-600 text-white': getValue(data, column) === 'Anual',
                 }">
                             {{ getValue(data, column) }}
                         </span>
@@ -63,13 +87,8 @@
                     }
 
                     <!-- ACCIONES -->
-                    <td class="px-4 py-3 flex gap-2">
-                        <!-- <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
-                            (click)="editdata(data)">
-                            Editar
-                        </button> -->
-
-                        <button class="px-3 py-1 rounded text-xs" (click)="openConfirmModal = true">
+                    <td class="px-4 py-3">
+                        <button class="px-3 py-1 rounded text-xs bg-red-600" (click)="openConfirmModal = true">
                             Eliminar
                         </button>
                     </td>
