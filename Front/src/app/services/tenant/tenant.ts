@@ -40,6 +40,20 @@ export class TenantService {
     return result;
   }
 
+  async getAllComments(): Promise<any[]> {
+    const { data, error } = await this.db.client
+      .from('comments')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error al obtener comentarios:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
   /**
    * Crea un nuevo inquilino en la tabla "tenants"
    */

@@ -23,6 +23,20 @@ export class PaymentService {
     return data || [];
   }
 
+  async getAllTransactions(): Promise<any[]> {
+    const { data, error } = await this.database.client
+      .from('payment_transactions')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error al obtener transacciones:', error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
   async getDetailPaymentsByPaymentId(paymentId: string): Promise<{ data: any[]; error?: PostgrestError }> {
     const { data, error } = await this.database.client
       .from('payment_transactions')

@@ -20,8 +20,8 @@ export class TableAdmin {
   @Input() data: any[] = [];
 
   searchTerm: string = '';
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
+  currentPage = 1;
+  itemsPerPage = 10;
 
   openConfirmModal: boolean = false;
 

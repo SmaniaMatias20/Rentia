@@ -61,6 +61,18 @@ export class Admin {
           this.loading = false;
           console.log(this.tableData);
           break;
+        case 'transactions':
+          this.loading = true;
+          this.tableData = await this.paymentService.getAllTransactions();
+          this.loading = false;
+          console.log(this.tableData);
+          break;
+        case 'comments':
+          this.loading = true;
+          this.tableData = await this.tenantService.getAllComments();
+          this.loading = false;
+          console.log(this.tableData);
+          break;
         default:
           this.tableData = [];
           this.loading = false;
