@@ -12,19 +12,16 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  /**
-   * Registro de usuario
-   */
   async signUp(username: string, email: string, password: string) {
     try {
       const response: any = await this.http
-        .post(`${this.API_URL}/register`, {
+        .post(`${this.API_URL}/auth/register`, {
           username: username.toLowerCase(),
+          email,
           password,
         })
         .toPromise();
 
-      // Guardar usuario (opcional)
       if (response.user) {
         localStorage.setItem('user', JSON.stringify(response.user));
       }

@@ -1,24 +1,29 @@
 const { pool } = require("../dbs/db.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-// 🔐 REGISTER
 async function register(req, res) {
     try {
-        const { username, password } = req.body;
+        const { username, email, password } = req.body;
 
         // Validación
-        if (!username || !password) {
+        if (!username || !email || !password) {
             return res.status(400).json({ error: "Faltan datos" });
         }
 
         // Hashear password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insertar usuario
+        // Insertar usuario con role por defecto (owner)
         const result = await pool.query(
-            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username",
-            [username, hashedPassword]
+            `INSERT INTO users (username, email, password, role)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, username, email, role`,
+            [
+                username.toLowerCase(),
+                email.toLowerCase(),
+                hashedPassword,
+                'owner' // 👈 explícito como pediste
+            ]
         );
 
         res.status(201).json({
@@ -27,9 +32,8 @@ async function register(req, res) {
         });
 
     } catch (error) {
-        // Usuario duplicado
         if (error.code === "23505") {
-            return res.status(400).json({ error: "El usuario ya existe" });
+            return res.status(400).json({ error: "Usuario o email ya existe" });
         }
 
         res.status(500).json({ error: error.message });
