@@ -35,11 +35,11 @@ export class TableAdmin {
     id: 'ID',
     increase_frequency: 'Frecuencia de aumento',
     increase_percentage: 'Porcentaje de aumento',
-    owner_id: 'Propietario',
-    property_id: 'Propiedad',
+    owner_id: 'Id propietario',
+    property_id: 'Id propiedad',
     rent_amount: 'Monto del alquiler',
     status: 'Estado',
-    tenant_id: 'Inquilino',
+    tenant_id: 'Id inquilino',
     valid_from: 'Válido desde',
     valid_to: 'Válido hasta',
     cuit: 'CUIT',
@@ -71,6 +71,11 @@ export class TableAdmin {
     type: 'Tipo',
     address: 'Dirección',
     name: 'Nombre',
+    amount: 'Monto',
+    payment_id: 'ID de pago',
+    content: 'Contenido',
+    show: 'Mostrar',
+    is_read: 'Leído',
   };
 
   // Mapa de traducción de valores
