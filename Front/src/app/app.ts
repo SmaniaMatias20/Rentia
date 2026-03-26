@@ -11,8 +11,6 @@ import { filter } from 'rxjs';
   styleUrl: './app.css'
 })
 export class App {
-
-
   showNavbar: boolean = false;
   constructor(private router: Router) { }
 
