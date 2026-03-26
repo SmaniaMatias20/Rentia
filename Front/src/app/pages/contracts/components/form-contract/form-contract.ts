@@ -5,6 +5,7 @@ import { TenantService } from '../../../../services/tenant/tenant';
 import { PropertyService } from '../../../../services/property/property';
 import { ContractService } from '../../../../services/contract/contract';
 import { Toast } from '../../../../components/toast/toast';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-form-contract',
@@ -72,10 +73,10 @@ export class FormContract implements OnInit {
       this.contractForm.value.owner_id = this.currentUser.id;
       const response = await this.contractService.createContract(this.contractForm.value);
 
-      if (response.error && response.error.message) {
-        this.toast.showToast(response.error.message, 'error');
-        return;
-      }
+      // if (response.error && response.error.message) {
+      //   this.toast.showToast(response.error.message, 'error');
+      //   return;
+      // }
 
       this.toast.showToast('Contrato creado correctamente', 'success');
       this.contractForm.reset();

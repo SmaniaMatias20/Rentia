@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,13 +13,13 @@ export class AuthService {
 
   async signUp(username: string, email: string, password: string) {
     try {
-      const response: any = await this.http
-        .post(`${this.API_URL}/register`, {
+      const response: any = await firstValueFrom(
+        this.http.post(`${this.API_URL}/register`, {
           username: username.toLowerCase(),
           email,
           password,
         })
-        .toPromise();
+      );
 
       if (response.user) {
         localStorage.setItem('user', JSON.stringify(response.user));
@@ -38,12 +39,12 @@ export class AuthService {
    */
   async signIn(username: string, password: string) {
     try {
-      const response: any = await this.http
-        .post(`${this.API_URL}/login`, {
+      const response: any = await firstValueFrom(
+        this.http.post(`${this.API_URL}/login`, {
           username: username.toLowerCase(),
           password,
         })
-        .toPromise();
+      );
 
       // 🔐 Guardar token
       localStorage.setItem('token', response.token);

@@ -13,6 +13,7 @@ import { FormNote } from './components/form-note/form-note';
 import { Toast } from '../../components/toast/toast';
 import { FormTotalRentAmount } from './components/form-total-rent-amount/form-total-rent-amount';
 import { FormServicesAmount } from './components/form-services-amount/form-services-amount';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-payments',

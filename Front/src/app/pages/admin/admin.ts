@@ -8,6 +8,8 @@ import { TenantService } from '../../services/tenant/tenant';
 import { PaymentService } from '../../services/payment/payment';
 import { ContractService } from '../../services/contract/contract';
 import { Spinner } from '../../components/spinner/spinner';
+import { firstValueFrom } from 'rxjs';
+
 
 
 @Component({
@@ -57,7 +59,7 @@ export class Admin {
           break;
         case 'contracts':
           this.loading = true;
-          this.tableData = await this.contractService.getAll();
+          this.tableData = await firstValueFrom(this.contractService.getAll());
           this.loading = false;
           console.log(this.tableData);
           break;
