@@ -61,9 +61,6 @@ export class Statistics {
       // 👤 Usuario actual
       this.currentUser = await this.auth.getCurrentUser();
 
-
-      console.log(this.currentUser);
-
       // 📊 Obtener respuesta
       const { data: stats, error } =
         await this.statisticsService.getStatisticsByUser(
@@ -215,8 +212,6 @@ export class Statistics {
       const today = new Date();
       const month = today.getMonth() + 1;
       const year = today.getFullYear();
-
-      console.log(this.currentUser);
 
       this.monthlyRentIncome =
         await this.paymentService.getMonthlyRentIncomeByUser(

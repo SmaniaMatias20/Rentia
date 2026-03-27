@@ -79,7 +79,6 @@ export class PaymentService {
 
   // ➕ CREATE PAYMENT (🔥 IMPORTANTE)
   async createPayment(payment: any) {
-    console.log("create", payment);
     try {
       const response: any = await firstValueFrom(
         this.http.post(`${this.API_URL}/create`, payment)
@@ -96,7 +95,6 @@ export class PaymentService {
 
   // ✏️ UPDATE
   async updatePayment(payment: any) {
-    console.log("update", payment);
     try {
       await firstValueFrom(
         this.http.put(`${this.API_URL}/${payment.id}`, payment)
@@ -208,6 +206,20 @@ export class PaymentService {
     } catch (error) {
       console.error('Error count:', error);
       return 0;
+    }
+  }
+
+  async getTransactionsByPaymentId(paymentId: string) {
+    try {
+      const data = await firstValueFrom(
+        this.http.get<any[]>(`${this.API_URL}/transactions/paymentId`, {
+          params: { paymentId }
+        })
+      );
+      return { data };
+    } catch (error) {
+      console.error('Error al obtener transacciones:', error);
+      return { data: [], error };
     }
   }
 }

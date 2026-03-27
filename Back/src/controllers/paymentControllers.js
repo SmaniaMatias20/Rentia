@@ -34,7 +34,6 @@ async function getTransactionsByPaymentId(req, res) {
             [paymentId]
         );
 
-        console.log(result.rows);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener detalles" });
@@ -230,12 +229,12 @@ async function createTransaction(req, res) {
             [paymentId, amount, payment_method]
         );
 
-        await client.query(
-            `UPDATE payments
-       SET rent_amount = rent_amount + $1
-       WHERE id = $2`,
-            [amount, paymentId]
-        );
+        // await client.query(
+        //     `UPDATE payments
+        //    SET rent_amount = rent_amount + $1
+        //    WHERE id = $2`,
+        //     [amount, paymentId]
+        // );
 
         await client.query("COMMIT");
 

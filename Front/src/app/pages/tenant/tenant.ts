@@ -55,7 +55,6 @@ export class Tenant {
 
       const id = this.route.snapshot.paramMap.get('id') || '';
       this.tenantData = await this.tenantService.getTenant(id);
-      console.log(this.tenantData);
       this.user = await this.authService.getCurrentUser();
 
       // 👉 Traer comentarios del inquilino

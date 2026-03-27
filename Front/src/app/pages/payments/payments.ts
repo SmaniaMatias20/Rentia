@@ -105,8 +105,6 @@ export class Payments {
     const { data: payments, error } =
       await this.paymentService.getPaymentsByContract(contractId);
 
-
-    console.log(payments);
     if (error) {
       console.error('Error al obtener pagos:', error);
       this.months = []; // 🔥 evita UI rota
@@ -176,8 +174,6 @@ export class Payments {
       date.setMonth(date.getMonth() + 1);
       monthIndex++;
     }
-
-    console.log(months);
 
     return months;
   }

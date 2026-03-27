@@ -26,8 +26,6 @@ export class FormDetailsPayment {
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    console.log('Sorted details:', this.sortedDetails);
-
     // calcular total (ignorar null)
     this.totalPaid = this.details.reduce((acc, d) =>
       acc + (d.amount || 0), 0

@@ -50,7 +50,7 @@ export class Admin {
 
           this.tableData = tenants;
           this.loading = false;
-          console.log(this.tableData);
+
           break;
         case 'properties':
           this.loading = true;
@@ -64,7 +64,7 @@ export class Admin {
             this.tableData = properties;
           }
           this.loading = false;
-          console.log(this.tableData);
+
           break;
         case 'payments':
           this.loading = true;
@@ -93,7 +93,7 @@ export class Admin {
             this.tableData = contracts;
           }
           this.loading = false;
-          console.log(this.tableData);
+
           break;
         case 'transactions':
           this.loading = true;
@@ -119,7 +119,7 @@ export class Admin {
           }
           this.tableData = data;
           this.loading = false;
-          console.log(this.tableData);
+
           break;
         default:
           this.tableData = [];

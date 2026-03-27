@@ -46,7 +46,6 @@ export class CardPayment {
       return;
     }
 
-    console.log(data);
     this.detailPayments = data || [];
   }
 
