@@ -70,7 +70,6 @@ export class PaymentService {
         this.http.get<any[]>(`${this.API_URL}/contract/${contractId}`)
       );
 
-      console.log(data);
       return { data };
     } catch (error) {
       console.error('Error al obtener pagos:', error);
@@ -80,6 +79,7 @@ export class PaymentService {
 
   // ➕ CREATE PAYMENT (🔥 IMPORTANTE)
   async createPayment(payment: any) {
+    console.log("create", payment);
     try {
       const response: any = await firstValueFrom(
         this.http.post(`${this.API_URL}/create`, payment)
@@ -96,6 +96,7 @@ export class PaymentService {
 
   // ✏️ UPDATE
   async updatePayment(payment: any) {
+    console.log("update", payment);
     try {
       await firstValueFrom(
         this.http.put(`${this.API_URL}/${payment.id}`, payment)

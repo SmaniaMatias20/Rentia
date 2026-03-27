@@ -323,6 +323,8 @@ export class Payments {
   async onSaveNote(note: string) {
     this.paymentMonthEdit.description = note;
 
+    console.log(this.paymentMonthEdit);
+
     if (!this.paymentMonthEdit.id) {
       delete this.paymentMonthEdit.id;
 

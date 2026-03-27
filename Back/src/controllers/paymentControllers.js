@@ -107,13 +107,32 @@ async function createPayment(req, res) {
             payment.electricy &&
             payment.gas &&
             payment.hoa_fees &&
-            payment.rent_amount >= payment.total_rent_amount;
+            Number(payment.rent_amount) >= Number(payment.total_rent_amount);
 
         const result = await pool.query(
             `INSERT INTO payments
-      (contract_id, rent_amount, total_rent_amount, water, electricy, gas, hoa_fees, status, rent_month)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-      RETURNING *`,
+            (
+                contract_id,
+                rent_amount,
+                total_rent_amount,
+                water,
+                electricy,
+                gas,
+                hoa_fees,
+                water_amount,
+                electricy_amount,
+                gas_amount,
+                hoa_fees_amount,
+                payment_method,
+                description,
+                status,
+                rent_month
+            )
+            VALUES (
+                $1,$2,$3,$4,$5,$6,$7,
+                $8,$9,$10,$11,$12,$13,$14,$15
+            )
+            RETURNING *`,
             [
                 payment.contract_id,
                 payment.rent_amount,
@@ -122,6 +141,12 @@ async function createPayment(req, res) {
                 payment.electricy,
                 payment.gas,
                 payment.hoa_fees,
+                payment.water_amount,
+                payment.electricy_amount,
+                payment.gas_amount,
+                payment.hoa_fees_amount,
+                payment.payment_method,
+                payment.description,
                 status,
                 payment.rent_month,
             ]
@@ -129,6 +154,7 @@ async function createPayment(req, res) {
 
         res.json(result.rows[0]);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error al crear pago" });
     }
 }
@@ -144,18 +170,25 @@ async function updatePayment(req, res) {
             payment.electricy &&
             payment.gas &&
             payment.hoa_fees &&
-            payment.rent_amount >= payment.total_rent_amount;
+            Number(payment.rent_amount) >= Number(payment.total_rent_amount);
 
         await pool.query(
             `UPDATE payments SET
-        rent_amount = $1,
-        total_rent_amount = $2,
-        water = $3,
-        electricy = $4,
-        gas = $5,
-        hoa_fees = $6,
-        status = $7
-      WHERE id = $8`,
+                rent_amount = $1,
+                total_rent_amount = $2,
+                water = $3,
+                electricy = $4,
+                gas = $5,
+                hoa_fees = $6,
+                water_amount = $7,
+                electricy_amount = $8,
+                gas_amount = $9,
+                hoa_fees_amount = $10,
+                payment_method = $11,
+                description = $12,
+                status = $13,
+                rent_month = $14
+            WHERE id = $15`,
             [
                 payment.rent_amount,
                 payment.total_rent_amount,
@@ -163,13 +196,21 @@ async function updatePayment(req, res) {
                 payment.electricy,
                 payment.gas,
                 payment.hoa_fees,
+                payment.water_amount,
+                payment.electricy_amount,
+                payment.gas_amount,
+                payment.hoa_fees_amount,
+                payment.payment_method,
+                payment.description,
                 status,
+                payment.rent_month,
                 id,
             ]
         );
 
         res.json({ message: "Pago actualizado" });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Error al actualizar pago" });
     }
 }
