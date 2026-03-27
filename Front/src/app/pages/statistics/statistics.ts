@@ -61,10 +61,17 @@ export class Statistics {
       // 👤 Usuario actual
       this.currentUser = await this.auth.getCurrentUser();
 
-      // 📊 Todas las estadísticas en UNA llamada lógica
-      const stats = await this.statisticsService.getStatisticsByUser(
-        this.currentUser.id
-      );
+      // 📊 Obtener respuesta
+      const { data: stats, error } =
+        await this.statisticsService.getStatisticsByUser(
+          this.currentUser.id
+        );
+
+      // ❌ manejar error
+      if (error || !stats) {
+        this.toast.showToast('Error al obtener estadísticas', 'error');
+        return;
+      }
 
       // 🏠 Propiedades
       this.quantityOfPropertiesByUser = stats.properties.total;
@@ -90,13 +97,14 @@ export class Statistics {
       this.quantityOfContractsVencedByUser = stats.contracts.expired;
       this.quantityOfContractsPendingByUser = stats.contracts.pending;
 
-      // 💵 Ingresos mensuales (se mantiene aparte)
+      // 💵 Ingresos mensuales
       await this.getDefaultMonthlyRentIncomeByUser();
 
       this.toast.showToast(
         'Estadísticas obtenidas correctamente',
         'success'
       );
+
     } catch (error) {
       console.error('Error al obtener estadísticas:', error);
       this.toast.showToast('Error al obtener estadísticas', 'error');
