@@ -34,6 +34,7 @@ async function getTransactionsByPaymentId(req, res) {
             [paymentId]
         );
 
+        console.log(result.rows);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener detalles" });
