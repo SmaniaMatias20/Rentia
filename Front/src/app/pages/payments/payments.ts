@@ -13,7 +13,6 @@ import { FormNote } from './components/form-note/form-note';
 import { Toast } from '../../components/toast/toast';
 import { FormTotalRentAmount } from './components/form-total-rent-amount/form-total-rent-amount';
 import { FormServicesAmount } from './components/form-services-amount/form-services-amount';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-payments',
@@ -67,6 +66,7 @@ export class Payments {
       this.currentUser = await this.authService.getCurrentUser();
       this.properties = await this.propertyService.getProperties(this.currentUser.id);
       this.contracts = await this.contractService.getContractsByUser(this.currentUser.id, "active");
+      console.log(this.contracts);
       this.loading = false;
     } catch (error) {
       console.error(error);
@@ -84,11 +84,20 @@ export class Payments {
 
     const contractId = contract.id;
 
-    // Traer pagos del contrato
-    const payments = await this.paymentService.getPaymentsByContract(contractId);
+    console.log(contract);
 
-    // Generar cards por mes
-    this.months = this.generateMonthlyCards(contract, payments);
+    const { data: payments, error } =
+      await this.paymentService.getPaymentsByContract(contractId);
+
+
+    console.log(payments);
+    if (error) {
+      console.error('Error al obtener pagos:', error);
+      this.months = []; // 🔥 evita UI rota
+      return;
+    }
+
+    this.months = this.generateMonthlyCards(contract, payments || []);
   }
 
 
@@ -151,6 +160,8 @@ export class Payments {
       date.setMonth(date.getMonth() + 1);
       monthIndex++;
     }
+
+    console.log(months);
 
     return months;
   }
@@ -223,23 +234,21 @@ export class Payments {
       const payload = { ...this.paymentMonthEdit };
       delete payload.id;
 
-      const { error, data } = await this.paymentService.createPayment(payload);
+      const { data, error } =
+        await this.paymentService.createPayment(payload);
 
-      if (error) {
+      if (error || !data) {
         console.error('Error al crear servicio:', error);
         this.toast.showToast('Error al crear servicio', 'error');
         return;
       }
 
-      if (!error && data) {
-        this.months[index].id = data.id;
-        this.paymentMonthEdit.id = data.id;
-      }
+      this.months[index].id = data.id;
+      this.paymentMonthEdit.id = data.id;
 
       this.toast.showToast('Servicio agregado correctamente', 'success');
       return;
     }
-
     try {
       await this.paymentService.updatePayment(this.paymentMonthEdit);
       this.toast.showToast('Servicio actualizado correctamente', 'success');
@@ -340,7 +349,7 @@ export class Payments {
         const payload = { ...this.paymentMonthEdit };
         delete payload.id;
 
-        const { error, data } =
+        const { data, error } =
           await this.paymentService.createPayment(payload);
 
         if (error || !data) {
@@ -412,37 +421,76 @@ export class Payments {
     }
   }
 
+  // async onSaveTotalRentAmount(total_rent_amount: number) {
+  //   this.paymentMonthEdit.total_rent_amount = total_rent_amount;
+
+  //   if (!this.paymentMonthEdit.id) {
+  //     delete this.paymentMonthEdit.id;
+
+  //     const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+
+  //     if (error) {
+  //       console.error('Error al crear total alquiler:', error);
+  //       this.toast.showToast('Error al crear total alquiler', 'error');
+  //       return;
+  //     }
+
+  //     this.paymentMonthEdit.id = data.id;
+
+  //     this.toast.showToast('Total alquiler creado correctamente', 'success');
+  //     this.openFormTotalRentAmount = false;
+  //     return;
+  //   }
+
+  //   const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
+
+  //   if (error) {
+  //     console.error('Error al actualizar total alquiler:', error);
+  //     this.toast.showToast('Error al actualizar total alquiler', 'error');
+  //     return;
+  //   }
+
+  //   this.toast.showToast('Total alquiler actualizado correctamente', 'success');
+  //   this.openFormTotalRentAmount = false;
+  // }
   async onSaveTotalRentAmount(total_rent_amount: number) {
     this.paymentMonthEdit.total_rent_amount = total_rent_amount;
 
-    if (!this.paymentMonthEdit.id) {
-      delete this.paymentMonthEdit.id;
+    try {
+      // 🆕 CREATE
+      if (!this.paymentMonthEdit.id) {
+        delete this.paymentMonthEdit.id;
 
-      const { error, data } = await this.paymentService.createPayment(this.paymentMonthEdit);
+        const { data, error } =
+          await this.paymentService.createPayment(this.paymentMonthEdit);
 
-      if (error) {
-        console.error('Error al crear total alquiler:', error);
-        this.toast.showToast('Error al crear total alquiler', 'error');
+        if (error || !data) {
+          throw error;
+        }
+
+        this.paymentMonthEdit.id = data.id;
+
+        this.toast.showToast('Total alquiler creado correctamente', 'success');
+        this.openFormTotalRentAmount = false;
         return;
       }
 
-      this.paymentMonthEdit.id = data.id;
+      // ✏️ UPDATE
+      await this.paymentService.updatePayment(this.paymentMonthEdit);
 
-      this.toast.showToast('Total alquiler creado correctamente', 'success');
+      this.toast.showToast('Total alquiler actualizado correctamente', 'success');
       this.openFormTotalRentAmount = false;
-      return;
+
+    } catch (error) {
+      console.error('Error:', error);
+
+      this.toast.showToast(
+        this.paymentMonthEdit.id
+          ? 'Error al actualizar total alquiler'
+          : 'Error al crear total alquiler',
+        'error'
+      );
     }
-
-    const { error } = await this.paymentService.updatePayment(this.paymentMonthEdit);
-
-    if (error) {
-      console.error('Error al actualizar total alquiler:', error);
-      this.toast.showToast('Error al actualizar total alquiler', 'error');
-      return;
-    }
-
-    this.toast.showToast('Total alquiler actualizado correctamente', 'success');
-    this.openFormTotalRentAmount = false;
   }
 
   async onSaveServicesAmount(services_amount: any) {
@@ -457,11 +505,12 @@ export class Payments {
       const payload = { ...this.paymentMonthEdit };
       delete payload.id;
 
-      const { error, data } = await this.paymentService.createPayment(payload);
+      const { data, error } =
+        await this.paymentService.createPayment(payload);
 
       if (error || !data) {
-        console.error('Error al cargar los valores de los servicios:', error);
-        this.toast.showToast('Error al cargar los valores de los servicios', 'error');
+        console.error('Error al cargar los valores:', error);
+        this.toast.showToast('Error al cargar los valores', 'error');
         return;
       }
 

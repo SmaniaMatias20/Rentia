@@ -70,14 +70,20 @@ async function getByUser(req, res) {
         const { filter } = req.query;
 
         let query = `
-      SELECT * FROM contracts
-      WHERE owner_id = $1
-    `;
+            SELECT 
+                c.*,
+                u.username AS tenant_name,
+                p.name AS property_name
+            FROM contracts c
+            JOIN users u ON u.id = c.tenant_id
+            JOIN properties p ON p.id = c.property_id
+            WHERE c.owner_id = $1
+        `;
 
         const params = [userId];
 
-        if (filter === 'active') query += ` AND status = true`;
-        if (filter === 'inactive') query += ` AND status = false`;
+        if (filter === 'active') query += ` AND c.status = true`;
+        if (filter === 'inactive') query += ` AND c.status = false`;
 
         const contracts = await pool.query(query, params);
 

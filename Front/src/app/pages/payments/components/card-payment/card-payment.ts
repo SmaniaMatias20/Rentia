@@ -42,7 +42,7 @@ export class CardPayment {
       await this.paymentService.getDetailPaymentsByPaymentId(this.month.id);
 
     if (error) {
-      console.error('Error al obtener detalles:', error.message);
+      console.error('Error al obtener detalles:', (error as any).message);
       return;
     }
 

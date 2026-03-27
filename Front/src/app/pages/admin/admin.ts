@@ -53,9 +53,18 @@ export class Admin {
           break;
         case 'payments':
           this.loading = true;
-          this.tableData = await this.paymentService.getAll();
+
+          const { data: payments, error: paymentsError } =
+            await this.paymentService.getAll();
+
+          if (paymentsError) {
+            console.error('Error:', paymentsError);
+            this.tableData = [];
+          } else {
+            this.tableData = payments;
+          }
+
           this.loading = false;
-          console.log(this.tableData);
           break;
         case 'contracts':
           this.loading = true;
@@ -65,9 +74,18 @@ export class Admin {
           break;
         case 'transactions':
           this.loading = true;
-          this.tableData = await this.paymentService.getAllTransactions();
+
+          const { data: transactions, error: transactionsError } =
+            await this.paymentService.getAllTransactions();
+
+          if (transactionsError) {
+            console.error('Error:', transactionsError);
+            this.tableData = [];
+          } else {
+            this.tableData = transactions;
+          }
+
           this.loading = false;
-          console.log(this.tableData);
           break;
         case 'comments':
           this.loading = true;
