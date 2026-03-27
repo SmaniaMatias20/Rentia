@@ -46,7 +46,15 @@ export class Tenants {
 
   async loadTenants() {
     this.loading = true;
-    this.tenants = await this.tenant.getTenantsByUser(this.user.id, this.filter);
+    const { data, error } = await this.tenant.getTenantsByUser(this.user.id, this.filter);
+
+    if (error) {
+      console.error('Error al obtener tenants:', error);
+      this.loading = false;
+      return;
+    }
+
+    this.tenants = data;
     this.loading = false;
   }
 

@@ -55,11 +55,18 @@ export class Tenant {
 
       const id = this.route.snapshot.paramMap.get('id') || '';
       this.tenantData = await this.tenantService.getTenant(id);
+      console.log(this.tenantData);
       this.user = await this.authService.getCurrentUser();
 
       // 👉 Traer comentarios del inquilino
-      this.comments = await this.tenantService.getCommentsByTenant(id);
+      const { data: comments, error: commentsError } = await this.tenantService.getCommentsByTenant(id);
+      if (commentsError) {
+        console.error('Error al obtener comentarios:', commentsError);
+        this.toast.showToast(commentsError, 'error');
+        return;
+      }
 
+      this.comments = comments;
       this.loading = false;
     } catch (error) {
       console.error(error);
@@ -94,7 +101,15 @@ export class Tenant {
       this.toast.showToast('Comentario guardado correctamente', 'success');
 
       // 🔁 Actualizar la lista local de comentarios para reflejarlo inmediatamente
-      this.comments = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+      const { data, error } = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+
+      if (error) {
+        console.error('Error al obtener comentarios:', error);
+        this.toast.showToast(error, 'error');
+        return;
+      }
+
+      this.comments = data;
     } catch (error) {
       console.error(error);
       this.toast.showToast('Error al guardar el comentario', 'error');
@@ -106,7 +121,15 @@ export class Tenant {
   async onDeleteComment(id: string) {
     try {
       await this.tenantService.deleteComment(id);
-      this.comments = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+      const { data, error } = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+
+      if (error) {
+        console.error('Error al eliminar comentario:', error);
+        this.toast.showToast(error, 'error');
+        return;
+      }
+
+      this.comments = data;
       this.toast.showToast('Comentario eliminado correctamente', 'success');
     } catch (error) {
       console.error('Error al eliminar comentario:', error);
@@ -117,7 +140,15 @@ export class Tenant {
   async onToggleComment(id: string) {
     try {
       await this.tenantService.showComment(id);
-      this.comments = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+      const { data, error } = await this.tenantService.getCommentsByTenant(this.tenantData.id);
+
+      if (error) {
+        console.error('Error al mostrar comentario:', error);
+        this.toast.showToast(error, 'error');
+        return;
+      }
+
+      this.comments = data;
       this.toast.showToast('Comentario actualizado correctamente', 'success');
     } catch (error) {
       console.error('Error al mostrar comentario:', error);
@@ -131,7 +162,7 @@ export class Tenant {
 
       if (error) {
         console.error('Error al actualizar datos:', error);
-        this.toast.showToast(error.message, 'error');
+        this.toast.showToast(error, 'error');
         this.closeFormEditTenant();
         return;
       }

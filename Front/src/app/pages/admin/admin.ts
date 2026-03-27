@@ -41,7 +41,14 @@ export class Admin {
       switch (this.selectedTable) {
         case 'tenants':
           this.loading = true;
-          this.tableData = await this.tenantService.getAll();
+          const { data: tenants, error: tenantsError } = await this.tenantService.getAll();
+
+          if (tenantsError) {
+            console.error('Error al obtener tenants:', tenantsError);
+            return;
+          }
+
+          this.tableData = tenants;
           this.loading = false;
           console.log(this.tableData);
           break;
@@ -105,7 +112,12 @@ export class Admin {
           break;
         case 'comments':
           this.loading = true;
-          this.tableData = await this.tenantService.getAllComments();
+          const { data, error } = await this.tenantService.getAllComments();
+          if (error) {
+            console.error('Error al obtener comentarios:', error);
+            return;
+          }
+          this.tableData = data;
           this.loading = false;
           console.log(this.tableData);
           break;

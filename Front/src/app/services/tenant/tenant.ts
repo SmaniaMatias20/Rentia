@@ -1,358 +1,241 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Database } from '../database/database';
-import { AuthError, User, PostgrestError } from '@supabase/supabase-js';
-import bcrypt from 'bcryptjs';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+type ApiResponse<T> = {
+  data: T;
+  error?: string;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class TenantService {
 
-  constructor(private db: Database, private router: Router) { }
+  private API_URL = 'http://localhost:3000/tenants';
 
-  /** Obtiene todos los inquilinos del usuario logueado */
-  async getAll(): Promise<any[]> {
-    // 1️⃣ Traemos todos los usuarios
-    const { data, error } = await this.db.client
-      .from('users')
-      .select('*');
+  constructor(private http: HttpClient) { }
 
-    if (error) {
-      console.error('Error al obtener usuarios:', error.message);
-      return [];
-    }
-
-    if (!data) return [];
-
-    // 2️⃣ Creamos un mapa id -> username
-    const idToUsernameMap: Record<string, string> = {};
-    data.forEach(user => {
-      idToUsernameMap[user.id] = user.username;
-    });
-
-    // 3️⃣ Reemplazamos owner_id por el username correspondiente
-    const result = data.map(user => ({
-      ...user,
-      owner_id: user.owner_id ? idToUsernameMap[user.owner_id] || user.owner_id : null
-    }));
-
-    return result;
-  }
-
-  async getAllComments(): Promise<any[]> {
-    const { data, error } = await this.db.client
-      .from('comments')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error al obtener comentarios:', error.message);
-      return [];
-    }
-
-    return data || [];
-  }
-
-  /**
-   * Crea un nuevo inquilino en la tabla "tenants"
-   */
-  async createTenant(
-    tenant: {
-      username: string;
-      phone: string;
-      email: string;
-      role: string;
-      owner_id: string;
-    }
-  ): Promise<{ user?: User; error?: AuthError | PostgrestError | any }> {
-
-    // Normalizar
-    const username = tenant.username.toLowerCase().trim();
-    const email = tenant.email.toLowerCase().trim();
-
-    // Validar duplicados
-    const { data: existingUser, error: checkError } = await this.db.client
-      .from('users')
-      .select('id')
-      .or(`username.eq.${username}`)
-      .limit(1)
-      .maybeSingle();
-
-    if (checkError) return { error: checkError };
-
-    if (existingUser) {
-      return { error: { message: 'El nombre de usuario ya se encuentra en uso' } };
-    }
-
-    // Hash password
-    const password_hash = await bcrypt.hash("1234", 10);
-
-    // Insertar
-    const { data: userData, error: profileError } = await this.db.client
-      .from('users')
-      .insert([
-        {
-          username,
-          email,
-          role: tenant.role,
-          phone: tenant.phone,
-          owner_id: tenant.owner_id,
-          password: password_hash
-        }
-      ])
-      .select()
-      .single();
-
-    if (profileError) return { error: profileError };
-
-    return { user: userData };
-  }
-
-
-  async updateTenant(tenantId: string, data: any): Promise<{ error?: PostgrestError }> {
+  /** Obtener todos los tenants */
+  async getAll(): Promise<ApiResponse<any[]>> {
     try {
-      const key = Object.keys(data)[0];
-
-      // Normalizar campos lowercase
-      if (['firstname', 'lastname', 'email', 'username'].includes(key) && typeof data[key] === 'string') {
-        data[key] = data[key].toLowerCase().trim();
-      }
-
-      // Validar username único si se está actualizando
-      if (key === 'username') {
-        const username = data.username;
-
-        const { data: existingUser, error: checkError } = await this.db.client
-          .from('users')
-          .select('id')
-          .eq('username', username)
-          .neq('id', tenantId) // evitar conflicto con el mismo usuario
-          .maybeSingle();
-
-        if (checkError) {
-          console.error('Error verificando username:', checkError.message);
-          return { error: checkError };
-        }
-
-        if (existingUser) {
-          return {
-            error: {
-              message: 'El nombre de usuario del inquilino ya se encuentra en uso'
-            } as PostgrestError
-          };
-        }
-      }
-
-      const { error } = await this.db.client
-        .from('users')
-        .update(data)
-        .eq('id', tenantId);
-
-      if (error) {
-        console.error('Error al actualizar tenant:', error.message);
-        return { error };
-      }
-
-      return {};
-    } catch (err: any) {
-      console.error('Error inesperado al actualizar tenant:', err.message);
-      return { error: { message: err.message } as PostgrestError };
+      const data = await firstValueFrom(
+        this.http.get<any[]>(`${this.API_URL}/all`)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al obtener tenants:', error);
+      return {
+        data: [],
+        error: error?.error?.message || 'Error al obtener tenants'
+      };
     }
   }
 
-
-  /**
-   * Obtiene todos los inquilinos del usuario logueado
-   */
-  async getTenantsByUser(user_id: string, filter = 'all'): Promise<any[]> {
-
+  /** Obtener tenants por usuario */
+  async getTenantsByUser(userId: string, filter: string = 'all'): Promise<ApiResponse<any[]>> {
     try {
-      // Filtrar inquilinos
-      let query = this.db.client
-        .from('users')
-        .select('*')
-        .eq('owner_id', user_id)
-        .eq('role', 'tenant'); // opcional pero recomendado
-
-      if (filter === 'active') {
-        query = query.eq('is_enabled', true);
-      } else if (filter === 'inactive') {
-        query = query.eq('is_enabled', false);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error al obtener tenants:', error.message);
-        return [];
-      }
-
-      return data || [];
-    } catch (err: any) {
-      console.error('Error inesperado:', err.message);
-      return [];
+      const data = await firstValueFrom(
+        this.http.get<any[]>(`${this.API_URL}/user/${userId}?filter=${filter}`)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al obtener tenants:', error);
+      return {
+        data: [],
+        error: error?.error?.message || 'Error al obtener tenants'
+      };
     }
-
   }
 
-  async getTenant(id: string): Promise<any> {
-    const { data, error } = await this.db.client
-      .from('users')
-      .select('*')
-      .eq('id', id);
-
-
-    if (error) {
-      console.error('Error al obtener tenant:', error.message);
-      return [];
-    }
-
-    return data[0] || [];
-  }
-
-  /**
-   * Elimina un inquilino en la tabla "tenants" y limpia referencias en properties si existen
-   */
-  async deleteTenant(id: number): Promise<{ error?: PostgrestError }> {
+  /** Obtener un tenant */
+  async getTenant(id: string): Promise<ApiResponse<any>> {
     try {
-      // Limpiar tenant_id en properties (si hay coincidencias, se actualizarán; si no, no pasa nada)
-      const { error: errorUpdate } = await this.db.client
-        .from('properties')
-        .update({ tenant_id: null })
-        .eq('tenant_id', id);
-
-      if (errorUpdate) {
-        console.error('Error al limpiar tenant_id en properties:', errorUpdate.message);
-        return { error: errorUpdate };
-      }
-
-
-      // Eliminar comentarios del tenant
-      const { error: errorDeleteComments } = await this.db.client
-        .from('comments')
-        .delete()
-        .eq('tenant_id', id);
-
-      if (errorDeleteComments) {
-        console.error('Error al eliminar comentarios del tenant:', errorDeleteComments.message);
-        return { error: errorDeleteComments };
-      }
-
-
-      // Eliminar el tenant
-      const { error: errorDelete } = await this.db.client
-        .from('users')
-        .delete()
-        .eq('id', id);
-
-      if (errorDelete) {
-        console.error('Error al eliminar tenant:', errorDelete.message);
-        return { error: errorDelete };
-      }
-
-      return {};
-    } catch (err: any) {
-      console.error('Error inesperado al eliminar tenant:', err.message);
-      return { error: { message: err.message } as PostgrestError };
+      const data = await firstValueFrom(
+        this.http.get<any>(`${this.API_URL}/${id}`)
+      );
+      return data;
+    } catch (error: any) {
+      console.error('Error al obtener tenant:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al obtener tenant'
+      };
     }
   }
 
-  async toggleTenant(tenant: any): Promise<any> {
-    const { data, error } = await this.db.client
-      .from('users')
-      .update({ is_enabled: tenant.is_enabled })
-      .eq('id', tenant.id);
-
-    if (error) {
-      console.error('Error al cambiar tenant:', error.message);
-      return { error: error };
+  /** Crear tenant */
+  async createTenant(tenant: {
+    username: string;
+    phone: string;
+    email: string;
+    role: string;
+    owner_id: string;
+  }): Promise<ApiResponse<any>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.post(`${this.API_URL}/create`, tenant)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al crear tenant:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al crear tenant'
+      };
     }
-
-    return {};
   }
 
-  async getCommentsByTenant(tenantId: string): Promise<string[]> {
-    const { data, error } = await this.db.client
-      .from('comments')
-      .select('*')
-      .eq('tenant_id', tenantId);
-
-    if (error) {
-      console.error('Error al obtener comentarios:', error.message);
-      return [];
+  /** Actualizar tenant */
+  async updateTenant(id: string, body: any): Promise<ApiResponse<any>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.put(`${this.API_URL}/${id}`, body)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al actualizar tenant:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al actualizar tenant'
+      };
     }
-
-    return data || [];
   }
 
-  async saveComment(tenantId: string, comment: string, ownerId: string): Promise<any> {
-    const { error } = await this.db.client
-      .from('comments')
-      .insert([
-        {
-          owner_id: ownerId,
+  /** Eliminar tenant */
+  async deleteTenant(id: number): Promise<ApiResponse<any>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.delete(`${this.API_URL}/${id}`)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al eliminar tenant:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al eliminar tenant'
+      };
+    }
+  }
+
+  /** Activar / desactivar tenant */
+  async toggleTenant(tenant: any): Promise<ApiResponse<any>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.put(`${this.API_URL}/toggle/${tenant.id}`, {
+          is_enabled: tenant.is_enabled,
+        })
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al cambiar estado:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al actualizar tenant'
+      };
+    }
+  }
+
+  // ===========================
+  // 💬 COMMENTS
+  // ===========================
+
+  /** Todos los comentarios */
+  async getAllComments(): Promise<ApiResponse<any[]>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.get<any[]>(`${this.API_URL}/comments`)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al obtener comentarios:', error);
+      return {
+        data: [],
+        error: error?.error?.message || 'Error al obtener comentarios'
+      };
+    }
+  }
+
+  /** Comentarios por tenant */
+  async getCommentsByTenant(tenantId: string): Promise<ApiResponse<any[]>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.get<any[]>(`${this.API_URL}/comments/${tenantId}`)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al obtener comentarios:', error);
+      return {
+        data: [],
+        error: error?.error?.message || 'Error al obtener comentarios'
+      };
+    }
+  }
+
+  /** Guardar comentario */
+  async saveComment(tenantId: string, comment: string, ownerId: string): Promise<ApiResponse<any>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.post(`${this.API_URL}/comments`, {
           tenant_id: tenantId,
+          owner_id: ownerId,
           content: comment
-        }
-      ])
-      .single();
-
-    if (error) {
-      console.error('Error al guardar comentario:', error.message);
-      return { error };
+        })
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al guardar comentario:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al guardar comentario'
+      };
     }
-
-    return {};
   }
 
-  async deleteComment(id: string): Promise<{ error?: PostgrestError }> {
+  /** Eliminar comentario */
+  async deleteComment(id: string): Promise<ApiResponse<any>> {
     try {
-      const { error } = await this.db.client
-        .from('comments')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        console.error('Error al eliminar comentario:', error.message);
-        return { error };
-      }
-
-      return {};
-    } catch (err: any) {
-      console.error('Error inesperado al eliminar comentario:', err.message);
-      return { error: { message: err.message } as PostgrestError };
+      const data = await firstValueFrom(
+        this.http.delete(`${this.API_URL}/comments/${id}`)
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al eliminar comentario:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al eliminar comentario'
+      };
     }
   }
 
-  async showComment(id: string): Promise<{ error?: PostgrestError }> {
+  /** Mostrar / ocultar comentario */
+  async toggleComment(id: string): Promise<ApiResponse<any>> {
     try {
-      // 1️⃣ Obtener el valor actual
-      const { data, error: selectError } = await this.db.client
-        .from('comments')
-        .select('show')
-        .eq('id', id)
-        .single();
-
-      if (selectError) return { error: selectError };
-
-      // 2️⃣ Alternar el valor
-      const newShowValue = !data.show;
-
-      // 3️⃣ Actualizar el registro
-      const { error: updateError } = await this.db.client
-        .from('comments')
-        .update({ show: newShowValue })
-        .eq('id', id);
-
-      if (updateError) return { error: updateError };
-
-      return {};
-    } catch (err: any) {
-      console.error('Error inesperado al mostrar comentario:', err.message);
-      return { error: { message: err.message } as PostgrestError };
+      const data = await firstValueFrom(
+        this.http.put(`${this.API_URL}/comments/toggle/${id}`, {})
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al cambiar comentario:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al actualizar comentario'
+      };
     }
   }
 
-
+  async showComment(id: string): Promise<ApiResponse<any>> {
+    try {
+      const data = await firstValueFrom(
+        this.http.put(`${this.API_URL}/comments/toggle/${id}`, {})
+      );
+      return { data };
+    } catch (error: any) {
+      console.error('Error al mostrar comentario:', error);
+      return {
+        data: null,
+        error: error?.error?.message || 'Error al mostrar comentario'
+      };
+    }
+  }
 }

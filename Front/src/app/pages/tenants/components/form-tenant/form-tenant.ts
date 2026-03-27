@@ -85,7 +85,7 @@ export class FormTenant implements OnInit {
     });
 
     if (error) {
-      this.toast.showToast(error.message, 'error');
+      this.toast.showToast(error, 'error');
       this.submitting = false;
       return;
     }
