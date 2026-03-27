@@ -7,8 +7,11 @@
     cursor-pointer
     transition-transform duration-300 hover:scale-[1.03]
     relative overflow-hidden
-  " [ngClass]="bgColor" [style.backgroundImage]="backgroundImage" [style.backgroundSize]="'cover'"
-  [style.backgroundPosition]="'center'" [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
+  " [ngClass]="[
+    bgColor,
+    tenant?.is_enabled === false ? 'border-4 border-red-500' : ''
+  ]" [style.backgroundImage]="backgroundImage" [style.backgroundSize]="'cover'" [style.backgroundPosition]="'center'"
+  [style.backgroundRepeat]="'no-repeat'" (click)="navigate()">
 
   <!-- Overlay -->
   <div class="absolute inset-0 bg-black/40 z-0"></div>
