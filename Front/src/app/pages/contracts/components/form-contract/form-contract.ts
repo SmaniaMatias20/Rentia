@@ -57,7 +57,14 @@ export class FormContract implements OnInit {
     this.currentUser = await this.auth.getCurrentUser();
     if (!this.currentUser) return;
 
-    this.properties = await this.propertyService.getProperties(this.currentUser.id, "active");
+    const { data: properties, error } = await this.propertyService.getProperties(this.currentUser.id);
+
+    if (error) {
+      console.error('Error al obtener propiedades:', error);
+      return;
+    }
+
+    this.properties = properties;
     this.tenants = await this.tenantService.getTenantsByUser(this.currentUser.id, "active");
   }
 

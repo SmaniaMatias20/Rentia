@@ -64,9 +64,27 @@ export class Payments {
     try {
       this.loading = true;
       this.currentUser = await this.authService.getCurrentUser();
-      this.properties = await this.propertyService.getProperties(this.currentUser.id);
-      this.contracts = await this.contractService.getContractsByUser(this.currentUser.id, "active");
-      console.log(this.contracts);
+      const { data: properties, error } = await this.propertyService.getProperties(this.currentUser.id);
+
+      if (error) {
+        console.error('Error al obtener propiedades:', error);
+        this.loading = false;
+        return;
+      }
+
+      this.properties = properties;
+
+      const { data: contracts, error: contractsError } =
+        await this.contractService.getContractsByUser(this.currentUser.id, "active");
+
+      if (contractsError) {
+        console.error('Error al obtener contratos:', contractsError);
+        this.loading = false;
+        return;
+      } else {
+        this.contracts = contracts;
+      }
+
       this.loading = false;
     } catch (error) {
       console.error(error);

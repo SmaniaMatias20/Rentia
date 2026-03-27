@@ -47,7 +47,15 @@ export class Admin {
           break;
         case 'properties':
           this.loading = true;
-          this.tableData = await this.propertyService.getAll();
+          const { data: properties, error: propertiesError } =
+            await this.propertyService.getAll();
+
+          if (propertiesError) {
+            console.error('Error:', propertiesError);
+            this.tableData = [];
+          } else {
+            this.tableData = properties;
+          }
           this.loading = false;
           console.log(this.tableData);
           break;
@@ -68,7 +76,15 @@ export class Admin {
           break;
         case 'contracts':
           this.loading = true;
-          this.tableData = await firstValueFrom(this.contractService.getAll());
+          const { data: contracts, error: contractsError } =
+            await this.contractService.getAll();
+
+          if (contractsError) {
+            console.error('Error:', contractsError);
+            this.tableData = [];
+          } else {
+            this.tableData = contracts;
+          }
           this.loading = false;
           console.log(this.tableData);
           break;

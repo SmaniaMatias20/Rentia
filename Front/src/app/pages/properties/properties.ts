@@ -55,7 +55,13 @@ export class Properties {
 
   async loadProperties() {
     this.loading = true;
-    this.properties = await this.property.getProperties(this.user.id, this.filter);
+    const { data: properties, error } = await this.property.getProperties(this.user.id, this.filter);
+    if (error) {
+      console.error('Error al obtener propiedades:', error);
+      this.loading = false;
+      return;
+    }
+    this.properties = properties;
     this.loading = false;
   }
 

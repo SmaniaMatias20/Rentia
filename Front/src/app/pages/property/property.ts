@@ -42,7 +42,9 @@ export class Property {
       this.loading = true;
 
       const id = this.route.snapshot.paramMap.get('id');
-      this.propertyData = await this.propertyService.getProperty(id);
+      this.propertyData = await this.propertyService.getProperty(id || '');
+
+      console.log(this.propertyData);
 
       // ✅ SOLO si hay inquilino
       if (this.propertyData?.tenant_id) {
