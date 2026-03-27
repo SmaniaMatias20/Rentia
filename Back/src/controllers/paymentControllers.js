@@ -259,8 +259,8 @@ async function getMonthlyRent(req, res) {
       JOIN contracts c ON c.id = p.contract_id
       WHERE c.owner_id = $1
       AND c.status = true
-      AND DATE_PART('year', p.rent_month) = $2
-      AND DATE_PART('month', p.rent_month) = $3
+      AND DATE_PART('year', p.rent_month::DATE) = $2
+      AND DATE_PART('month', p.rent_month::DATE) = $3
       `,
             [userId, year, month]
         );
@@ -283,8 +283,8 @@ async function getMonthlyElectricity(req, res) {
       WHERE c.owner_id = $1
       AND c.status = true
       AND p.electricy = true
-      AND DATE_PART('year', p.rent_month) = $2
-      AND DATE_PART('month', p.rent_month) = $3
+      AND DATE_PART('year', p.rent_month::DATE) = $2
+      AND DATE_PART('month', p.rent_month::DATE) = $3
       `,
             [userId, year, month]
         );
@@ -306,8 +306,8 @@ async function getMonthlyCount(req, res) {
       JOIN contracts c ON c.id = p.contract_id
       WHERE c.owner_id = $1
       AND c.status = true
-      AND DATE_PART('year', p.rent_month) = $2
-      AND DATE_PART('month', p.rent_month) = $3
+      AND DATE_PART('year', p.rent_month::DATE) = $2
+      AND DATE_PART('month', p.rent_month::DATE) = $3
       `,
             [userId, year, month]
         );
@@ -330,8 +330,8 @@ async function getMonthlyGas(req, res) {
       WHERE c.owner_id = $1
       AND c.status = true
       AND p.gas = true
-      AND DATE_PART('year', p.rent_month) = $2
-      AND DATE_PART('month', p.rent_month) = $3
+      AND DATE_PART('year', p.rent_month::DATE) = $2
+      AND DATE_PART('month', p.rent_month::DATE) = $3
       `,
             [userId, year, month]
         );
@@ -355,8 +355,8 @@ async function getMonthlyWater(req, res) {
       WHERE c.owner_id = $1
       AND c.status = true
       AND p.water = true
-      AND DATE_PART('year', p.rent_month) = $2
-      AND DATE_PART('month', p.rent_month) = $3
+      AND DATE_PART('year', p.rent_month::DATE) = $2
+      AND DATE_PART('month', p.rent_month::DATE) = $3
       `,
             [userId, year, month]
         );
@@ -380,8 +380,8 @@ async function getMonthlyHoa(req, res) {
       WHERE c.owner_id = $1
       AND c.status = true
       AND p.hoa_fees = true
-      AND DATE_PART('year', p.rent_month) = $2
-      AND DATE_PART('month', p.rent_month) = $3
+      AND DATE_PART('year', p.rent_month::DATE) = $2
+      AND DATE_PART('month', p.rent_month::DATE) = $3
       `,
             [userId, year, month]
         );
